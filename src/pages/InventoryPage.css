@@ -1,0 +1,38 @@
+.inventory-page__wrapper {
+  height: 100%;
+  padding: 2em;
+}
+
+.inventory-page__padded-container {
+  height: 100%;
+  overflow: auto;
+}
+
+.inventory-page__title {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-left: 0.5em;
+}
+
+.inventory-page__title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  width: 33%;
+}
+
+.inventory-page__title-row--end {
+  justify-content: end;
+}
+
+.inventory-page__row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 3em;
+}
+
+.inventory-page__input {
+  width: 100%;
+}

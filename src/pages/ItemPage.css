@@ -1,0 +1,29 @@
+.item-page__wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 2em;
+}
+
+.item-page__input {
+  width: 20em;
+}
+
+.item-page__row {
+  display: flex;
+  flex-direction: row;
+}
+
+.item-page__row--sb {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-page__input--lrg {
+  width: 42em;
+}
+
+.item-page__notes {
+  color: grey;
+  font-size: 12px;
+}

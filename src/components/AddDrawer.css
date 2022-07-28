@@ -1,0 +1,45 @@
+.add-drawer__wrapper {
+  width: 30em;
+  height: 100vh;
+}
+
+.add-drawer__col {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-drawer__col--padded {
+  padding: 2em;
+  height: 100%;
+}
+
+.add-drawer__col--space-btwn {
+  justify-content: space-between;
+  height: 100%;
+}
+
+.add-drawer__title {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-left: 0.3em;
+}
+
+.add-drawer__row {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 2em;
+}
+
+.add-drawer__input {
+  margin-bottom: 1em;
+}
+
+.add-drawer__row--end {
+  justify-content: end;
+}
+
+.add-drawer__cta {
+  margin-right: 2em;
+}
