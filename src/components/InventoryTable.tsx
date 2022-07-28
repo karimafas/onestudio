@@ -66,10 +66,6 @@ function getItemValue(column: string, item: InventoryItem): string {
   return "";
 }
 
-function SelectedHeader() {
-  return <div className="ivt-table__header">13 selected</div>;
-}
-
 export default function InventoryTable() {
   const search = useAppSelector(
     (state) => state.inventory.search

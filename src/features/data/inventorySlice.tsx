@@ -30,6 +30,13 @@ export const updateItem = createAsyncThunk(
   }
 );
 
+export const deleteItem = createAsyncThunk(
+  "inventory/deleteItem",
+  async (id: number) => {
+    return await ApiHelper.deleteItem(id);
+  }
+);
+
 export const counterSlice = createSlice({
   name: "inventory",
   initialState,

@@ -22,6 +22,10 @@
   width: 33%;
 }
 
+.inventory-page__title-row--slim {
+  width: 0px;
+}
+
 .inventory-page__title-row--end {
   justify-content: end;
 }

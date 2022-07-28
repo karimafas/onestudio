@@ -7,12 +7,18 @@ import { search, setDrawer } from "../features/data/inventorySlice";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { useEffect, useState } from "react";
 import { AddDrawer } from "../components/AddDrawer";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteItem } from "../features/data/inventorySlice";
+import { initialLoad, selectItem } from "../features/data/dataSlice";
 
 export function InventoryPage() {
   const drawer = useAppSelector((state) => state.inventory.drawer);
   const searchValue = useAppSelector((state) => state.inventory.search);
   const dispatch = useAppDispatch();
   const [isDesktop, setDesktop] = useState(window.innerWidth > 700);
+  const selectedItems = useAppSelector((state) =>
+    state.data.items.filter((i) => i.selected)
+  );
 
   const updateMedia = () => {
     setDesktop(window.innerWidth > 700);
@@ -22,6 +28,10 @@ export function InventoryPage() {
     window.addEventListener("resize", updateMedia);
     return () => window.removeEventListener("resize", updateMedia);
   });
+
+  async function _delete(id: number) {
+    await dispatch(deleteItem(id));
+  }
 
   return (
     <div className="inventory-page__wrapper">
@@ -65,6 +75,21 @@ export function InventoryPage() {
           )}
         </div>
         <div className="inventory-page__title-row inventory-page__title-row--end">
+          {selectedItems.length > 0 ? (
+            <div>
+              <IconButton
+                aria-label="delete"
+                size="medium"
+                sx={{ marginRight: "1em" }}
+                color="error"
+                onClick={() => _delete(selectedItems[0].id)}
+              >
+                <DeleteIcon fontSize="inherit" />
+              </IconButton>
+            </div>
+          ) : (
+            <div></div>
+          )}
           <Button variant="contained" onClick={() => dispatch(setDrawer(true))}>
             Add new item +
           </Button>

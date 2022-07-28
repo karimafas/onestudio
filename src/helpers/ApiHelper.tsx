@@ -11,7 +11,7 @@ export class ApiHelper {
     try {
       const resp = await axios.get(url + `/items`);
 
-      Logger.log("Loaded inventory items from API.", resp.data);
+      Logger.log("Loaded inventory items from API.");
 
       items = resp.data;
     } catch (e) {
@@ -29,7 +29,7 @@ export class ApiHelper {
         m_number: i.mNumber,
         manufacturer: i.manufacturer,
         model: i.model,
-        notes: i.notes,
+        notes: i.notes || "",
         serial: i.serial,
         location_id: i.locationId,
         category_id: i.categoryId,
@@ -72,6 +72,22 @@ export class ApiHelper {
       }
     } catch (e) {
       Logger.log(`Couldn't update item.`);
+    }
+
+    return success;
+  }
+
+  public static async deleteItem(id: number): Promise<boolean> {
+    let success: boolean = false;
+    try {
+      const resp = await axios.delete(url + `items/${id}`);
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log("Deleted item.", resp.data);
+      }
+    } catch (e) {
+      Logger.log(`Couldn't delete item.`);
     }
 
     return success;

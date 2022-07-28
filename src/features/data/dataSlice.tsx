@@ -28,8 +28,22 @@ export const counterSlice = createSlice({
   name: "data",
   initialState,
   reducers: {
-    addItem: (state: DataState, action: PayloadAction<InventoryItem>) => {
-      state.items.push(action.payload);
+    deleteDataItem: (state: DataState, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const index = state.items.map((i) => i.id).indexOf(id);
+      state.items.splice(index, 1);
+    },
+    replaceDataItem: (
+      state: DataState,
+      action: PayloadAction<InventoryItem>
+    ) => {
+      const item = action.payload;
+      const index = state.items.map((i) => i.id).indexOf(item.id);
+      Object.assign(state.items[index], item);
+      return {
+        ...state,
+        items: [...state.items],
+      };
     },
     selectItem: (
       state: DataState,
@@ -81,6 +95,7 @@ export const counterSlice = createSlice({
   },
 });
 
-export const { addItem, selectItem } = counterSlice.actions;
+export const { selectItem, deleteDataItem, replaceDataItem } =
+  counterSlice.actions;
 
 export default counterSlice.reducer;
