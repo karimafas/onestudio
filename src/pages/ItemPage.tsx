@@ -1,13 +1,17 @@
 import { Breadcrumbs, Button, Divider, Link, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { SubmittedData } from "../components/AddDrawer";
+import ConfirmDialog from "../components/ConfirmDialog";
 import { deleteDataItem, replaceDataItem } from "../features/data/dataSlice";
-import { deleteItem, updateItem } from "../features/data/inventorySlice";
+import { deleteItems, updateItem } from "../features/data/inventorySlice";
 import { InventoryItem } from "../objects/InventoryItem";
 import "./ItemPage.css";
+import BentoIcon from "@mui/icons-material/Bento";
+import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
+import moment from "moment";
 
 export function ItemPage() {
   const navigate = useNavigate();
@@ -17,7 +21,8 @@ export function ItemPage() {
   const item = useAppSelector(
     (state) => state.data.items.filter((i) => i.id === id)[0]
   );
-  const [disabled, setDisabled] = React.useState<boolean>(false);
+  const [disabled, setDisabled] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
 
   async function _submit(data: SubmittedData) {
     setDisabled(true);
@@ -32,18 +37,22 @@ export function ItemPage() {
       parseFloat(data.price),
       parseInt(data.categoryId),
       parseInt(data.ownerId),
-      data.notes
+      data.notes,
+      new Date(),
+      new Date()
     );
 
-    await dispatch(updateItem(_item));
-    dispatch(replaceDataItem(_item));
+    const result = await dispatch(updateItem(_item));
+    if (result) dispatch(replaceDataItem(_item));
     setDisabled(false);
   }
 
   async function _delete() {
-    await dispatch(deleteItem(id));
-    dispatch(deleteDataItem(id));
-    navigate("/inventory");
+    const success = await dispatch(deleteItems([id]));
+    if (success) {
+      dispatch(deleteDataItem(id));
+      navigate("/inventory");
+    }
   }
 
   if (!item) {
@@ -66,19 +75,38 @@ export function ItemPage() {
         defaultValues={initialValues}
         onSuccess={(data: SubmittedData) => _submit(data)}
       >
+        <ConfirmDialog
+          title="Delete Item"
+          body="Are you sure you want to delete this item?"
+          open={deleteOpen}
+          setOpen={() => setDeleteOpen(!deleteOpen)}
+          onConfirm={_delete}
+        />
         <div className="item-page__wrapper">
           <div className="item-page__row item-page__row--sb">
             <Breadcrumbs aria-label="breadcrumb">
-              <Link underline="hover" color="inherit" href="/inventory">
+              <Link
+                underline="hover"
+                sx={{ display: "flex", alignItems: "center" }}
+                color="inherit"
+                href="/inventory"
+              >
+                <BentoIcon sx={{ mr: 0.5 }} fontSize="inherit" />
                 Inventory
               </Link>
-              <Typography color="text.primary">{item.model}</Typography>
+              <Typography
+                sx={{ display: "flex", alignItems: "center" }}
+                color="text.primary"
+              >
+                <LibraryMusicIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                {item.manufacturer} {item.model}
+              </Typography>
             </Breadcrumbs>
             <div className="item-page__row">
               <Button
                 color="error"
                 sx={{ marginRight: "1em" }}
-                onClick={_delete}
+                onClick={() => setDeleteOpen(true)}
               >
                 Delete Item
               </Button>
@@ -175,10 +203,10 @@ export function ItemPage() {
             />
           </div>
           <span className="item-page__notes">
-            Created on 28 Jul 2022 by Karim Afas.
+            {`Created on ${item.createdAtStr} by Karim Afas.`}
           </span>
           <span className="item-page__notes">
-            Last updated on 28 Jul 2022 by Karim Afas.
+            {`Last updated on ${item.updatedAtStr} by Karim Afas.`}
           </span>
         </div>
       </FormContainer>

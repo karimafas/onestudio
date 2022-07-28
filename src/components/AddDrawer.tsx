@@ -38,7 +38,9 @@ export function AddDrawer() {
       parseFloat(data.price),
       parseInt(data.categoryId),
       parseInt(data.ownerId),
-      data.notes
+      data.notes,
+      new Date(),
+      new Date()
     );
 
     const result = await dispatch(createItem(item));

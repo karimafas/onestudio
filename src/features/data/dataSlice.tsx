@@ -29,9 +29,12 @@ export const counterSlice = createSlice({
   initialState,
   reducers: {
     deleteDataItem: (state: DataState, action: PayloadAction<number>) => {
+      const changedItems = state.items;
       const id = action.payload;
-      const index = state.items.map((i) => i.id).indexOf(id);
-      state.items.splice(index, 1);
+      const index = changedItems.map((i) => i.id).indexOf(id);
+      changedItems.splice(index, 1);
+
+      Object.assign(state.items, changedItems);
     },
     replaceDataItem: (
       state: DataState,
@@ -90,6 +93,7 @@ export const counterSlice = createSlice({
     builder.addCase(initialLoad.fulfilled, (state: DataState, action) => {
       const payload = action.payload;
       state.items = payload.items.map((i) => InventoryItem.fromJson(i));
+      console.log(state.items);
       state.loading = false;
     });
   },

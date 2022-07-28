@@ -11,7 +11,7 @@ export class ApiHelper {
     try {
       const resp = await axios.get(url + `/items`);
 
-      Logger.log("Loaded inventory items from API.");
+      Logger.log("Loaded inventory items from API.", resp);
 
       items = resp.data;
     } catch (e) {
@@ -77,17 +77,18 @@ export class ApiHelper {
     return success;
   }
 
-  public static async deleteItem(id: number): Promise<boolean> {
+  public static async deleteItems(ids: Array<number>): Promise<boolean> {
     let success: boolean = false;
     try {
-      const resp = await axios.delete(url + `items/${id}`);
+      const params = `?ids=${ids.join(",")}`;
+      const resp = await axios.delete(url + `items${params}`);
 
       if (resp.status === 200) {
         success = true;
-        Logger.log("Deleted item.", resp.data);
+        Logger.log("Deleted item(s).", resp.data);
       }
     } catch (e) {
-      Logger.log(`Couldn't delete item.`);
+      Logger.log(`Couldn't delete item(s).`);
     }
 
     return success;

@@ -8,8 +8,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import React, { useEffect, useState } from "react";
 import { AddDrawer } from "../components/AddDrawer";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteItem } from "../features/data/inventorySlice";
-import { initialLoad, selectItem } from "../features/data/dataSlice";
+import { deleteItems } from "../features/data/inventorySlice";
+import { deleteDataItem } from "../features/data/dataSlice";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 export function InventoryPage() {
   const drawer = useAppSelector((state) => state.inventory.drawer);
@@ -19,6 +20,7 @@ export function InventoryPage() {
   const selectedItems = useAppSelector((state) =>
     state.data.items.filter((i) => i.selected)
   );
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
 
   const updateMedia = () => {
     setDesktop(window.innerWidth > 700);
@@ -29,12 +31,27 @@ export function InventoryPage() {
     return () => window.removeEventListener("resize", updateMedia);
   });
 
-  async function _delete(id: number) {
-    await dispatch(deleteItem(id));
+  async function _delete(ids: Array<number>) {
+    const success = await dispatch(deleteItems(ids));
+
+    if (success) {
+      for (const id of ids) {
+        dispatch(deleteDataItem(id));
+      }
+    }
   }
 
   return (
     <div className="inventory-page__wrapper">
+      <ConfirmDialog
+        title="Delete Item"
+        body={`Are you sure you want to delete ${selectedItems.length} item${
+          selectedItems.length > 1 ? "s" : ""
+        }?`}
+        open={deleteOpen}
+        setOpen={() => setDeleteOpen(!deleteOpen)}
+        onConfirm={() => _delete(selectedItems.map((i) => i.id))}
+      />
       <React.Fragment key="right">
         <Drawer
           transitionDuration={300}
@@ -82,7 +99,7 @@ export function InventoryPage() {
                 size="medium"
                 sx={{ marginRight: "1em" }}
                 color="error"
-                onClick={() => _delete(selectedItems[0].id)}
+                onClick={() => setDeleteOpen(true)}
               >
                 <DeleteIcon fontSize="inherit" />
               </IconButton>

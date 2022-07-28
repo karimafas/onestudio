@@ -1,3 +1,6 @@
+import moment from "moment";
+import { Constants } from "../utils/Constants";
+
 export class InventoryItem {
   id: number;
   manufacturer: string;
@@ -9,9 +12,21 @@ export class InventoryItem {
   categoryId: number;
   ownerId: number;
   notes: string;
+  createdAt: Date;
+  updatedAt: Date;
 
   // Internal properties.
   selected: boolean = false;
+
+  public get createdAtStr(): string {
+    if (!this.createdAt) return "";
+    return moment(this.createdAt).format(Constants.dateTimeFormat);
+  }
+
+  public get updatedAtStr(): string {
+    if (!this.updatedAt) return "";
+    return moment(this.updatedAt).format(Constants.dateTimeFormat);
+  }
 
   //   category: Category;
   //   location: StudioLocation;
@@ -38,7 +53,9 @@ export class InventoryItem {
       json["price"],
       json["category_id"],
       json["owner_id"],
-      json["notes"]
+      json["notes"],
+      moment(json["created_at"]).toDate(),
+      moment(json["updated_at"]).toDate()
     );
   }
 
@@ -52,7 +69,9 @@ export class InventoryItem {
     price: number,
     categoryId: number,
     ownerId: number,
-    notes: string
+    notes: string,
+    createdAt: Date,
+    updatedAt: Date
   ) {
     this.id = id;
     this.manufacturer = manufacturer;
@@ -64,5 +83,7 @@ export class InventoryItem {
     this.categoryId = categoryId;
     this.ownerId = ownerId;
     this.notes = notes;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 }

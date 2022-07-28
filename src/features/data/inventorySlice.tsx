@@ -30,10 +30,10 @@ export const updateItem = createAsyncThunk(
   }
 );
 
-export const deleteItem = createAsyncThunk(
+export const deleteItems = createAsyncThunk(
   "inventory/deleteItem",
-  async (id: number) => {
-    return await ApiHelper.deleteItem(id);
+  async (ids: Array<number>) => {
+    return await ApiHelper.deleteItems(ids);
   }
 );
 
