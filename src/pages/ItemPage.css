@@ -14,6 +14,12 @@
   flex-direction: row;
 }
 
+.item-page__col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
 .item-page__row--sb {
   justify-content: space-between;
   align-items: center;
@@ -26,4 +32,10 @@
 .item-page__notes {
   color: grey;
   font-size: 12px;
+}
+
+.item-page__title {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 1em;
 }

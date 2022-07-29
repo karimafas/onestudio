@@ -11,7 +11,8 @@ import { InventoryItem } from "../objects/InventoryItem";
 import "./ItemPage.css";
 import BentoIcon from "@mui/icons-material/Bento";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
-import moment from "moment";
+import { TimelineCard } from "./TimelineCard";
+import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
 
 export function ItemPage() {
   const navigate = useNavigate();
@@ -114,100 +115,122 @@ export function ItemPage() {
             </div>
           </div>
           <Divider sx={{ marginBottom: "3em", marginTop: "1em" }} />
-          <div className="item-page__row">
-            <TextFieldElement
-              name="manufacturer"
-              disabled={disabled}
-              style={{ marginBottom: "1em" }}
-              label="Manufacturer"
-              required
-              className="item-page__input"
-              sx={{ marginRight: "2em" }}
+          <div className="item-page__row item-page__row">
+            <div className="item-page__col">
+              <span className="item-page__title">Details</span>
+              <div className="item-page__row">
+                <TextFieldElement
+                  name="manufacturer"
+                  disabled={disabled}
+                  style={{ marginBottom: "1em" }}
+                  label="Manufacturer"
+                  required
+                  className="item-page__input"
+                  sx={{ marginRight: "2em" }}
+                />
+                <TextFieldElement
+                  name="model"
+                  disabled={disabled}
+                  style={{ marginBottom: "1em" }}
+                  label="Model"
+                  required
+                  className="item-page__input"
+                />
+              </div>
+              <div className="item-page__row">
+                <TextFieldElement
+                  name="categoryId"
+                  disabled={disabled}
+                  style={{ marginBottom: "1em" }}
+                  label="Category"
+                  required
+                  className="item-page__input"
+                  sx={{ marginRight: "2em" }}
+                />
+                <TextFieldElement
+                  name="price"
+                  disabled={disabled}
+                  style={{ marginBottom: "1em" }}
+                  label="Price"
+                  required
+                  className="item-page__input"
+                  InputProps={{
+                    endAdornment: "£",
+                  }}
+                />
+              </div>
+              <div className="item-page__row">
+                <TextFieldElement
+                  name="serial"
+                  disabled={disabled}
+                  style={{ marginBottom: "1em" }}
+                  label="Serial #"
+                  required
+                  className="item-page__input"
+                  sx={{ marginRight: "2em" }}
+                />
+                <TextFieldElement
+                  name="mNumber"
+                  disabled={disabled}
+                  style={{ marginBottom: "1em" }}
+                  label="M-Number"
+                  required
+                  className="item-page__input"
+                />
+              </div>
+              <div className="item-page__row">
+                <TextFieldElement
+                  name="ownerId"
+                  disabled={disabled}
+                  style={{ marginBottom: "1em" }}
+                  label="Owner"
+                  required
+                  className="item-page__input"
+                  sx={{ marginRight: "2em" }}
+                />
+                <TextFieldElement
+                  name="locationId"
+                  disabled={disabled}
+                  style={{ marginBottom: "1em" }}
+                  label="Location"
+                  required
+                  className="item-page__input"
+                />
+              </div>
+              <div className="item-page__row">
+                <TextFieldElement
+                  name="notes"
+                  disabled={disabled}
+                  style={{ marginBottom: "1em" }}
+                  label="Notes"
+                  className="item-page__input--lrg"
+                />
+              </div>
+              <span className="item-page__notes">
+                {`Created on ${item.createdAtStr} by Karim Afas.`}
+              </span>
+              <span className="item-page__notes">
+                {`Last updated on ${item.updatedAtStr} by Karim Afas.`}
+              </span>
+            </div>
+            <Divider
+              orientation="vertical"
+              sx={{ marginLeft: "4em", marginRight: "4em" }}
             />
-            <TextFieldElement
-              name="model"
-              disabled={disabled}
-              style={{ marginBottom: "1em" }}
-              label="Model"
-              required
-              className="item-page__input"
-            />
+            <div className="item-page__col">
+              <span className="item-page__title">Timeline</span>
+              <TimelineCard
+                event={
+                  new TimelineEvent(1, new Date(), TimelineEventType.edited)
+                }
+              />
+              <TimelineCard
+                event={
+                  new TimelineEvent(1, new Date(), TimelineEventType.created)
+                }
+              />
+            </div>
           </div>
-          <div className="item-page__row">
-            <TextFieldElement
-              name="categoryId"
-              disabled={disabled}
-              style={{ marginBottom: "1em" }}
-              label="Category"
-              required
-              className="item-page__input"
-              sx={{ marginRight: "2em" }}
-            />
-            <TextFieldElement
-              name="price"
-              disabled={disabled}
-              style={{ marginBottom: "1em" }}
-              label="Price"
-              required
-              className="item-page__input"
-              InputProps={{
-                endAdornment: "£",
-              }}
-            />
-          </div>
-          <div className="item-page__row">
-            <TextFieldElement
-              name="serial"
-              disabled={disabled}
-              style={{ marginBottom: "1em" }}
-              label="Serial #"
-              required
-              className="item-page__input"
-              sx={{ marginRight: "2em" }}
-            />
-            <TextFieldElement
-              name="mNumber"
-              disabled={disabled}
-              style={{ marginBottom: "1em" }}
-              label="M-Number"
-              required
-              className="item-page__input"
-            />
-          </div>
-          <div className="item-page__row">
-            <TextFieldElement
-              name="ownerId"
-              disabled={disabled}
-              style={{ marginBottom: "1em" }}
-              label="Owner"
-              required
-              className="item-page__input"
-              sx={{ marginRight: "2em" }}
-            />
-            <TextFieldElement
-              name="locationId"
-              disabled={disabled}
-              style={{ marginBottom: "1em" }}
-              label="Location"
-              required
-              className="item-page__input"
-            />
-          </div>
-          <div className="item-page__row">
-            <TextFieldElement
-              name="notes"
-              disabled={disabled}
-              style={{ marginBottom: "1em" }}
-              label="Notes"
-              className="item-page__input--lrg"
-            />
-          </div>
-          <span className="item-page__notes">
-            {`Created on ${item.createdAtStr} by Karim Afas.`}
-          </span>
-          <span className="item-page__notes">
-            {`Last updated on ${item.updatedAtStr} by Karim Afas.`}
-          </span>
         </div>
       </FormContainer>
     );
