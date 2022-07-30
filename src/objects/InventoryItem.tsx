@@ -1,5 +1,8 @@
 import moment from "moment";
+import { ApiHelper } from "../helpers/ApiHelper";
+import { Logger } from "../services/logger";
 import { Constants } from "../utils/Constants";
+import { TimelineEvent, TimelineEventType } from "./TimelineEvent";
 
 export class InventoryItem {
   id: number;
@@ -15,6 +18,8 @@ export class InventoryItem {
   createdAt: Date;
   updatedAt: Date;
 
+  events: Array<TimelineEvent> = [];
+
   // Internal properties.
   selected: boolean = false;
 
@@ -28,19 +33,10 @@ export class InventoryItem {
     return moment(this.updatedAt).format(Constants.dateTimeFormat);
   }
 
-  //   category: Category;
-  //   location: StudioLocation;
-  //   owner: Owner;
-
-  //   initialise(
-  //     categories: Array<Category>,
-  //     locations: Array<StudioLocation>,
-  //     owners: Array<Owner>
-  //   ) {
-  //     this.category = categories.filter((c) => c.id === this.categoryId)[0];
-  //     this.location = locations.filter((l) => l.id === this.locationId)[0];
-  //     this.owner = owners.filter((o) => o.id === this.ownerId)[0];
-  //   }
+  async initEvents() {
+    Logger.log(`Initialising event for item ${this.id}`);
+    this.events = await ApiHelper.getItemEvents(this.id);
+  }
 
   static fromJson(json: { [key: string]: any }) {
     return new InventoryItem(

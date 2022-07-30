@@ -19,6 +19,7 @@ interface Column {
     | "chk"
     | "manufacturer"
     | "model"
+    | "price"
     | "location"
     | "category"
     | "owner"
@@ -35,6 +36,7 @@ const columns: readonly Column[] = [
   { id: "chk", label: "", minWidth: 30 },
   { id: "manufacturer", label: "Manufacturer", minWidth: 100 },
   { id: "model", label: "Model", minWidth: 170 },
+  { id: "price", label: "Price", minWidth: 170 },
   { id: "location", label: "Location", minWidth: 60 },
   { id: "category", label: "Category", minWidth: 60 },
   { id: "owner", label: "Owner", minWidth: 60 },
@@ -49,6 +51,8 @@ function getItemValue(column: string, item: InventoryItem): string {
       return item.manufacturer;
     case "model":
       return item.model;
+    case "price":
+      return `£${item.price}`;
     case "location":
       return item.locationId.toString();
     case "category":

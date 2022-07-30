@@ -18,8 +18,9 @@ const initialState: InventoryState = {
 
 export const createItem = createAsyncThunk(
   "inventory/createItem",
-  async (item: InventoryItem) => {
-    return await ApiHelper.createItem(item);
+  async (item: InventoryItem): Promise<{ success: boolean; id: any }> => {
+    const response = await ApiHelper.createItem(item);
+    return { success: response.success, id: response.id };
   }
 );
 

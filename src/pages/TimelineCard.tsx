@@ -4,6 +4,8 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import "./TimelineCard.css";
 import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
+import moment from "moment";
+import { Constants } from "../utils/Constants";
 
 function getText(type: TimelineEventType) {
   switch (type) {
@@ -26,14 +28,15 @@ function getIcon(type: TimelineEventType) {
 
 export function TimelineCard(props: { event: TimelineEvent }) {
   return (
-    <Card sx={{ borderRadius: "0.5em" }} className="timeline-card__wrapper">
+    <Card className="timeline-card__wrapper">
       <CardContent>
         <div className="timeline-card__row">
           <AccessTimeIcon
             sx={{ color: "white", fontSize: "0.8em", marginRight: "0.3em" }}
           />
           <span className="timeline-card__datetime">
-            29 Jul 2022, 20:27 by Karim Afas
+            {moment(props.event.createdAt).format(Constants.dateTimeFormat)} by
+            Karim Afas
           </span>
         </div>
         <div className="timeline-card__row time-card__mt1">

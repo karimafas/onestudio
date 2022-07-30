@@ -2,6 +2,11 @@
   background: linear-gradient(to right top, #1057aa, #186bcc, #4b8edc);
   width: 18em;
   margin-bottom: 0.6em;
+  border-radius: 0.5em;
+  height: 5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 .timeline-card__row {
@@ -22,5 +27,5 @@
 }
 
 .time-card__mt1 {
-  margin-top: 1em;
+  margin-top: 0.5em;
 }

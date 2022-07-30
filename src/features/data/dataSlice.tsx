@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { ApiHelper } from "../../helpers/ApiHelper";
 import { InventoryItem } from "../../objects/InventoryItem";
+import { Logger } from "../../services/logger";
 
 // Define a type for the slice state
 interface DataState {
@@ -17,10 +18,32 @@ const initialState: DataState = {
 export const initialLoad = createAsyncThunk(
   "users/fetchByIdStatus",
   async () => {
-    const items: Array<{}> = await ApiHelper.getInventoryItems();
+    const items: Array<InventoryItem> = await ApiHelper.getInventoryItems();
+
+    for (const item of items) {
+      await item.initEvents();
+    }
+
     return {
       items: items,
     };
+  }
+);
+
+export const loadItemEvents = createAsyncThunk(
+  "users/loadItemEvents",
+  async (item: InventoryItem) => {
+    await item.initEvents();
+    return item;
+  }
+);
+
+export const reloadItem = createAsyncThunk(
+  "users/reloadItem",
+  async (itemId: number) => {
+    const item = await ApiHelper.getInventoryItem(itemId);
+    if (item) await item!.initEvents();
+    return item;
   }
 );
 
@@ -92,9 +115,30 @@ export const counterSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(initialLoad.fulfilled, (state: DataState, action) => {
       const payload = action.payload;
-      state.items = payload.items.map((i) => InventoryItem.fromJson(i));
-      console.log(state.items);
+      state.items = payload.items;
       state.loading = false;
+    });
+    builder.addCase(reloadItem.fulfilled, (state: DataState, action) => {
+      const payload: InventoryItem | undefined = action.payload;
+
+      if (payload) {
+        const index = state.items.map((i) => i.id).indexOf(payload.id);
+        Object.assign(state.items[index], payload);
+      }
+
+      return {
+        ...state,
+        items: [...state.items],
+      };
+    });
+    builder.addCase(loadItemEvents.fulfilled, (state: DataState, action) => {
+      const payload: InventoryItem = action.payload;
+      const index = state.items.map((i) => i.id).indexOf(payload.id);
+      Object.assign(state.items[index], payload);
+      return {
+        ...state,
+        items: [...state.items],
+      };
     });
   },
 });

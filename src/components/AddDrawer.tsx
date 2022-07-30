@@ -1,12 +1,8 @@
 import { Box, Button } from "@mui/material";
 import "./AddDrawer.css";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import { InventoryItem } from "../objects/InventoryItem";
-import { useAppDispatch } from "../app/hooks";
-import { createItem, setDrawer } from "../features/data/inventorySlice";
 import React from "react";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
-import { initialLoad } from "../features/data/dataSlice";
 
 export interface SubmittedData {
   manufacturer: string;
@@ -20,42 +16,18 @@ export interface SubmittedData {
   notes: string;
 }
 
-export function AddDrawer() {
-  const dispatch = useAppDispatch();
+export function AddDrawer(props: { submit: Function }) {
   const [disabled, setDisabled] = React.useState(false);
-
-  async function submit(data: SubmittedData) {
-    console.log(data);
-    setDisabled(true);
-
-    const item: InventoryItem = new InventoryItem(
-      0,
-      data.manufacturer,
-      data.model,
-      parseInt(data.locationId),
-      data.serial,
-      data.mNumber,
-      parseFloat(data.price),
-      parseInt(data.categoryId),
-      parseInt(data.ownerId),
-      data.notes,
-      new Date(),
-      new Date()
-    );
-
-    const result = await dispatch(createItem(item));
-
-    if (result) {
-      dispatch(setDrawer(false));
-      dispatch(initialLoad());
-    }
-
-    setDisabled(false);
-  }
 
   return (
     <div>
-      <FormContainer onSuccess={(data: SubmittedData) => submit(data)}>
+      <FormContainer
+        onSuccess={async (data: SubmittedData) => {
+          setDisabled(true);
+          await props.submit(data);
+          setDisabled(false);
+        }}
+      >
         <Box className="add-drawer__wrapper" role="presentation">
           <div className="add-drawer__col add-drawer__col--space-btwn">
             <div className="add-drawer__col add-drawer__col--padded">

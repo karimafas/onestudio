@@ -1,19 +1,26 @@
 import { InventoryItem } from "../objects/InventoryItem";
+import { TimelineEvent } from "../objects/TimelineEvent";
 import { Logger } from "../services/logger";
 
 const axios = require("axios");
 const url = "http://localhost:9999/api/";
 
 export class ApiHelper {
-  public static async getInventoryItems(): Promise<Array<{}>> {
-    let items = [];
+  public static async getInventoryItems(): Promise<Array<InventoryItem>> {
+    let items: Array<InventoryItem> = [];
 
     try {
       const resp = await axios.get(url + `/items`);
 
       Logger.log("Loaded inventory items from API.", resp);
 
-      items = resp.data;
+      const _items = resp.data;
+
+      if (_items) {
+        for (const item of _items) {
+          items.push(InventoryItem.fromJson(item));
+        }
+      }
     } catch (e) {
       Logger.log(`Couldn't load items.`);
     }
@@ -21,7 +28,30 @@ export class ApiHelper {
     return items;
   }
 
-  public static async createItem(i: InventoryItem): Promise<boolean> {
+  public static async getInventoryItem(
+    id: number
+  ): Promise<InventoryItem | undefined> {
+    let item;
+
+    try {
+      const resp = await axios.get(url + `/items/${id}`);
+
+      Logger.log(`Loaded inventory item with id ${id} from API.`, resp);
+
+      if (resp.data) {
+        item = InventoryItem.fromJson(resp.data[0]);
+      }
+    } catch (e) {
+      Logger.log(`Couldn't load items.`);
+    }
+
+    return item;
+  }
+
+  public static async createItem(
+    i: InventoryItem
+  ): Promise<{ success: boolean; id: any }> {
+    let id;
     let success: boolean = false;
 
     try {
@@ -41,12 +71,14 @@ export class ApiHelper {
         success = true;
       }
 
+      id = parseInt(resp.data.id);
+
       Logger.log("Added new item.", success);
     } catch (e: any) {
       Logger.log(e.toString());
     }
 
-    return success;
+    return { success: success, id: id };
   }
 
   public static async updateItem(i: InventoryItem): Promise<boolean> {
@@ -92,5 +124,27 @@ export class ApiHelper {
     }
 
     return success;
+  }
+
+  public static async getItemEvents(
+    itemId: number
+  ): Promise<Array<TimelineEvent>> {
+    let events: Array<TimelineEvent> = [];
+
+    try {
+      const resp = await axios.get(url + `/events/${itemId}`);
+
+      const _events = resp.data;
+
+      if (_events) {
+        for (const event of _events) {
+          events.push(TimelineEvent.fromJson(event));
+        }
+      }
+    } catch (e) {
+      Logger.log(`Couldn't load items.`);
+    }
+
+    return events;
   }
 }

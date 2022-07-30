@@ -1,20 +1,26 @@
 import { Breadcrumbs, Button, Divider, Link, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { SubmittedData } from "../components/AddDrawer";
 import ConfirmDialog from "../components/ConfirmDialog";
-import { deleteDataItem, replaceDataItem } from "../features/data/dataSlice";
+import { deleteDataItem, reloadItem } from "../features/data/dataSlice";
 import { deleteItems, updateItem } from "../features/data/inventorySlice";
 import { InventoryItem } from "../objects/InventoryItem";
 import "./ItemPage.css";
 import BentoIcon from "@mui/icons-material/Bento";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import { TimelineCard } from "./TimelineCard";
-import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
+import { Logger } from "../services/logger";
+
+function useForceUpdate() {
+  const [value, setValue] = useState(0);
+  return () => setValue((value) => value + 1);
+}
 
 export function ItemPage() {
+  const forceUpdate = useForceUpdate();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const params = useParams();
@@ -44,13 +50,16 @@ export function ItemPage() {
     );
 
     const result = await dispatch(updateItem(_item));
-    if (result) dispatch(replaceDataItem(_item));
+    if (result.payload) {
+      await dispatch(reloadItem(item.id));
+      forceUpdate();
+    }
     setDisabled(false);
   }
 
   async function _delete() {
     const success = await dispatch(deleteItems([id]));
-    if (success) {
+    if (success.payload) {
       dispatch(deleteDataItem(id));
       navigate("/inventory");
     }
@@ -219,16 +228,9 @@ export function ItemPage() {
             />
             <div className="item-page__col">
               <span className="item-page__title">Timeline</span>
-              <TimelineCard
-                event={
-                  new TimelineEvent(1, new Date(), TimelineEventType.edited)
-                }
-              />
-              <TimelineCard
-                event={
-                  new TimelineEvent(1, new Date(), TimelineEventType.created)
-                }
-              />
+              {item.events.map((e) => (
+                <TimelineCard key={e.id} event={e} />
+              ))}
             </div>
           </div>
         </div>

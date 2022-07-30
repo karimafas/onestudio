@@ -1,18 +1,21 @@
 import InventoryTable from "../components/InventoryTable";
 import "./InventoryPage.css";
 import BentoIcon from "@mui/icons-material/Bento";
-import { Button, Drawer, IconButton, TextField } from "@mui/material";
+import { Button, Drawer, IconButton, Snackbar, TextField } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { search, setDrawer } from "../features/data/inventorySlice";
+import { createItem, search, setDrawer } from "../features/data/inventorySlice";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { useEffect, useState } from "react";
-import { AddDrawer } from "../components/AddDrawer";
+import { AddDrawer, SubmittedData } from "../components/AddDrawer";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteItems } from "../features/data/inventorySlice";
-import { deleteDataItem } from "../features/data/dataSlice";
+import { deleteDataItem, initialLoad } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
+import { InventoryItem } from "../objects/InventoryItem";
+import { useNavigate } from "react-router-dom";
 
 export function InventoryPage() {
+  const navigate = useNavigate();
   const drawer = useAppSelector((state) => state.inventory.drawer);
   const searchValue = useAppSelector((state) => state.inventory.search);
   const dispatch = useAppDispatch();
@@ -21,6 +24,8 @@ export function InventoryPage() {
     state.data.items.filter((i) => i.selected)
   );
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [snackOpen, setSnackOpen] = useState<boolean>(false);
+  const [snackId, setSnackId] = useState<any>(null);
 
   const updateMedia = () => {
     setDesktop(window.innerWidth > 700);
@@ -41,8 +46,49 @@ export function InventoryPage() {
     }
   }
 
+  async function _create(data: SubmittedData) {
+    const item: InventoryItem = new InventoryItem(
+      0,
+      data.manufacturer,
+      data.model,
+      parseInt(data.locationId),
+      data.serial,
+      data.mNumber,
+      parseFloat(data.price),
+      parseInt(data.categoryId),
+      parseInt(data.ownerId),
+      data.notes,
+      new Date(),
+      new Date()
+    );
+
+    const result = await dispatch(createItem(item));
+
+    if ((result.payload as { success: boolean; id: any }).success) {
+      dispatch(setDrawer(false));
+      setSnackOpen(true);
+      setSnackId((result.payload as { success: boolean; id: any }).id);
+      dispatch(initialLoad());
+    }
+  }
+
   return (
     <div className="inventory-page__wrapper">
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={6000}
+        message="Item created successfully."
+        action={
+          <Button
+            color="inherit"
+            size="small"
+            onClick={() => navigate(`/inventory/${snackId}`)}
+          >
+            View
+          </Button>
+        }
+        sx={{ bottom: { xs: 90, sm: 0 }, marginBottom: "1em" }}
+      />
       <ConfirmDialog
         title="Delete Item"
         body={`Are you sure you want to delete ${selectedItems.length} item${
@@ -59,7 +105,7 @@ export function InventoryPage() {
           open={drawer}
           onClose={() => dispatch(setDrawer(false))}
         >
-          <AddDrawer />
+          <AddDrawer submit={(data: SubmittedData) => _create(data)} />
         </Drawer>
       </React.Fragment>
       <div className="inventory-page__row">
