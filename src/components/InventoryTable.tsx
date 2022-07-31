@@ -9,14 +9,16 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import "./InventoryTable.css";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { InventoryItem } from "../objects/InventoryItem";
+import { InventoryItem, ItemStatus } from "../objects/InventoryItem";
 import { Checkbox } from "@mui/material";
 import { selectItem } from "../features/data/dataSlice";
 import { useNavigate } from "react-router-dom";
+import { StatusCard } from "./StatusCard";
 
 interface Column {
   id:
     | "chk"
+    | "status"
     | "manufacturer"
     | "model"
     | "price"
@@ -34,6 +36,7 @@ interface Column {
 
 const columns: readonly Column[] = [
   { id: "chk", label: "", minWidth: 30 },
+  { id: "status", label: "", minWidth: 5 },
   { id: "manufacturer", label: "Manufacturer", minWidth: 100 },
   { id: "model", label: "Model", minWidth: 170 },
   { id: "price", label: "Price", minWidth: 170 },
@@ -45,8 +48,19 @@ const columns: readonly Column[] = [
   { id: "notes", label: "Notes", minWidth: 170 },
 ];
 
-function getItemValue(column: string, item: InventoryItem): string {
+function statusIndicator(status: ItemStatus) {
+  const color = status === ItemStatus.working ? "#b2ffb6" : "#f19797";
+  return (
+    <div
+      style={{ height: "0.6em", width: "0.6em", backgroundColor: color, borderRadius: '100%' }}
+    ></div>
+  );
+}
+
+function getItemValue(column: string, item: InventoryItem): any {
   switch (column) {
+    case "status":
+      return statusIndicator(item.status);
     case "manufacturer":
       return item.manufacturer;
     case "model":

@@ -1,9 +1,20 @@
 import { InventoryItem } from "../objects/InventoryItem";
-import { TimelineEvent } from "../objects/TimelineEvent";
+import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
 import { Logger } from "../services/logger";
 
 const axios = require("axios");
 const url = "http://localhost:9999/api/";
+
+function eventToString(type: TimelineEventType) {
+  switch (type) {
+    case TimelineEventType.created:
+      return "create";
+    case TimelineEventType.edited:
+      return "edit";
+    case TimelineEventType.fault:
+      return "fault";
+  }
+}
 
 export class ApiHelper {
   public static async getInventoryItems(): Promise<Array<InventoryItem>> {
@@ -146,5 +157,32 @@ export class ApiHelper {
     }
 
     return events;
+  }
+
+  public static async createEvent(
+    itemId: number,
+    notes: string,
+    eventType: TimelineEventType
+  ): Promise<boolean> {
+    let success = false;
+
+    try {
+      const body = {
+        item_id: itemId,
+        notes: notes,
+        type: eventToString(eventType),
+      };
+
+      const resp = await axios.post(url + `events`, body);
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log("Created event.", resp.data);
+      }
+    } catch (e) {
+      Logger.log(`Couldn't create event.`);
+    }
+
+    return success;
   }
 }

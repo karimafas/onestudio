@@ -2,7 +2,21 @@ import moment from "moment";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { Logger } from "../services/logger";
 import { Constants } from "../utils/Constants";
-import { TimelineEvent, TimelineEventType } from "./TimelineEvent";
+import { TimelineEvent } from "./TimelineEvent";
+
+export enum ItemStatus {
+  working,
+  faulty,
+}
+
+function stringToStatus(status: "faulty" | "working"): ItemStatus {
+  switch (status) {
+    case "faulty":
+      return ItemStatus.faulty;
+    case "working":
+      return ItemStatus.working;
+  }
+}
 
 export class InventoryItem {
   id: number;
@@ -17,6 +31,8 @@ export class InventoryItem {
   notes: string;
   createdAt: Date;
   updatedAt: Date;
+
+  status: ItemStatus;
 
   events: Array<TimelineEvent> = [];
 
@@ -51,7 +67,8 @@ export class InventoryItem {
       json["owner_id"],
       json["notes"],
       moment(json["created_at"]).toDate(),
-      moment(json["updated_at"]).toDate()
+      moment(json["updated_at"]).toDate(),
+      stringToStatus(json["status"])
     );
   }
 
@@ -67,7 +84,8 @@ export class InventoryItem {
     ownerId: number,
     notes: string,
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+    status: ItemStatus
   ) {
     this.id = id;
     this.manufacturer = manufacturer;
@@ -81,5 +99,6 @@ export class InventoryItem {
     this.notes = notes;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.status = status;
   }
 }

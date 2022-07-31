@@ -117,6 +117,7 @@ export const counterSlice = createSlice({
       const payload = action.payload;
       state.items = payload.items;
       state.loading = false;
+      Logger.log("items loaded", state.items);
     });
     builder.addCase(reloadItem.fulfilled, (state: DataState, action) => {
       const payload: InventoryItem | undefined = action.payload;

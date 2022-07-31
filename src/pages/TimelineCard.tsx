@@ -6,13 +6,16 @@ import "./TimelineCard.css";
 import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
 import moment from "moment";
 import { Constants } from "../utils/Constants";
+import { HeartBroken } from "@mui/icons-material";
 
-function getText(type: TimelineEventType) {
+function getText(type: TimelineEventType): string {
   switch (type) {
     case TimelineEventType.created:
       return "Created item";
     case TimelineEventType.edited:
       return "Edited item";
+    case TimelineEventType.fault:
+      return "Fault reported";
   }
 }
 
@@ -23,12 +26,27 @@ function getIcon(type: TimelineEventType) {
       return <NoteAddIcon sx={_sx} />;
     case TimelineEventType.edited:
       return <ModeEditIcon sx={_sx} />;
+    case TimelineEventType.fault:
+      return <HeartBroken sx={_sx} />;
+  }
+}
+
+function getBackground(type: TimelineEventType): string {
+  switch (type) {
+    case TimelineEventType.created:
+      return "timeline-card--nrm-bg";
+    case TimelineEventType.edited:
+      return "timeline-card--nrm-bg";
+    case TimelineEventType.fault:
+      return "timeline-card--fault-bg";
   }
 }
 
 export function TimelineCard(props: { event: TimelineEvent }) {
   return (
-    <Card className="timeline-card__wrapper">
+    <Card
+      className={`timeline-card__wrapper ${getBackground(props.event.type)}`}
+    >
       <CardContent>
         <div className="timeline-card__row">
           <AccessTimeIcon
@@ -45,6 +63,9 @@ export function TimelineCard(props: { event: TimelineEvent }) {
             {getText(props.event.type)}
           </span>
         </div>
+        {props.event.notes ? <span className="timeline-card__datetime">
+          Notes: {props.event.notes}
+        </span> : <div></div>}
       </CardContent>
     </Card>
   );

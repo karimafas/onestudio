@@ -11,7 +11,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteItems } from "../features/data/inventorySlice";
 import { deleteDataItem, initialLoad } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
-import { InventoryItem } from "../objects/InventoryItem";
+import { InventoryItem, ItemStatus } from "../objects/InventoryItem";
 import { useNavigate } from "react-router-dom";
 
 export function InventoryPage() {
@@ -59,7 +59,8 @@ export function InventoryPage() {
       parseInt(data.ownerId),
       data.notes,
       new Date(),
-      new Date()
+      new Date(),
+      ItemStatus.working
     );
 
     const result = await dispatch(createItem(item));

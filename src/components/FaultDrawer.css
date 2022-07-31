@@ -1,0 +1,25 @@
+.fault-drawer__item-title {
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.fault-drawer__item-body {
+  font-size: 0.9em;
+}
+
+.fault-drawer__item-title--mb {
+  margin-bottom: 1em;
+}
+
+.fault-drawer__item--ml {
+  margin-left: 0.5em;
+}
+
+.fault-drawer__row {
+  display: flex;
+  flex-direction: row;
+}
+
+.fault-drawer__row--mb {
+  margin-bottom: 1em;
+}
