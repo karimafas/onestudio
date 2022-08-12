@@ -13,7 +13,6 @@ import { InventoryItem, ItemStatus } from "../objects/InventoryItem";
 import { Checkbox } from "@mui/material";
 import { selectItem } from "../features/data/dataSlice";
 import { useNavigate } from "react-router-dom";
-import { StatusCard } from "./StatusCard";
 
 interface Column {
   id:
@@ -49,7 +48,7 @@ const columns: readonly Column[] = [
 ];
 
 function statusIndicator(status: ItemStatus) {
-  const color = status === ItemStatus.working ? "#b2ffb6" : "#f19797";
+  const color = status === ItemStatus.working ? "#1EE726" : "#DB1818";
   return (
     <div
       style={{ height: "0.6em", width: "0.6em", backgroundColor: color, borderRadius: '100%' }}

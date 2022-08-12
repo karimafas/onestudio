@@ -26,9 +26,10 @@ import { ApiHelper } from "../helpers/ApiHelper";
 import { TimelineCard } from "./TimelineCard";
 import "../App.css";
 import { StatusCard } from "../components/StatusCard";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 
 function useForceUpdate() {
-  const [value, setValue] = useState(0);
+  const [_, setValue] = useState(0);
   return () => setValue((value) => value + 1);
 }
 
@@ -175,11 +176,20 @@ export function ItemPage() {
                     sx={{ marginRight: "1em" }}
                     onClick={() => setDrawer(true)}
                   >
-                    <HeartBrokenIcon
-                      fontSize="small"
-                      sx={{ marginRight: "0.3em" }}
-                    />
-                    Report Fault
+                    {item.status === ItemStatus.faulty ? (
+                      <AutoFixHighIcon
+                        fontSize="small"
+                        sx={{ marginRight: "0.3em" }}
+                      />
+                    ) : (
+                      <HeartBrokenIcon
+                        fontSize="small"
+                        sx={{ marginRight: "0.3em" }}
+                      />
+                    )}
+                    {item.status === ItemStatus.faulty
+                      ? "Report Fix"
+                      : "Report Fault"}
                   </Button>
                   <Button type="submit">
                     <SaveIcon fontSize="small" sx={{ marginRight: "0.3em" }} />
@@ -298,8 +308,12 @@ export function ItemPage() {
                 <div className="item-page__timeline-wrapper">
                   <div className="item-page__col--timeline">
                     <span className="item-page__title">Timeline</span>
-                    {item.events.map((e) => (
-                      <TimelineCard key={e.id} event={e} />
+                    {item.events.map((e, index) => (
+                      <TimelineCard
+                        key={e.id}
+                        event={e}
+                        last={index === item.events.length - 1}
+                      />
                     ))}
                   </div>
                 </div>

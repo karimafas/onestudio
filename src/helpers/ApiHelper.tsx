@@ -13,6 +13,8 @@ function eventToString(type: TimelineEventType) {
       return "edit";
     case TimelineEventType.fault:
       return "fault";
+    case TimelineEventType.fix:
+      return "fix";
   }
 }
 
@@ -148,6 +150,7 @@ export class ApiHelper {
       const _events = resp.data;
 
       if (_events) {
+        Logger.log(`Found events ${_events}`);
         for (const event of _events) {
           events.push(TimelineEvent.fromJson(event));
         }

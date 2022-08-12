@@ -3,8 +3,9 @@ import "./FaultDrawer.css";
 import React from "react";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
-import { InventoryItem } from "../objects/InventoryItem";
+import { InventoryItem, ItemStatus } from "../objects/InventoryItem";
 import { TimelineEventType } from "../objects/TimelineEvent";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 
 export interface EventSubmittedData {
   itemId: number;
@@ -23,7 +24,10 @@ export function FaultDrawer(props: { submit: Function; item: InventoryItem }) {
           const data: EventSubmittedData = {
             itemId: props.item.id,
             notes: formData.notes,
-            type: TimelineEventType.fault,
+            type:
+              props.item.status === ItemStatus.faulty
+                ? TimelineEventType.fix
+                : TimelineEventType.fault,
           };
           setDisabled(true);
           await props.submit(data);
@@ -34,8 +38,16 @@ export function FaultDrawer(props: { submit: Function; item: InventoryItem }) {
           <div className="add-drawer__col add-drawer__col--space-btwn">
             <div className="add-drawer__col add-drawer__col--padded">
               <div className="fault-drawer__row fault-drawer__row--mb">
-                <HeartBrokenIcon />
-                <span className="add-drawer__title">Report Fault</span>
+                {props.item.status === ItemStatus.faulty ? (
+                  <AutoFixHighIcon />
+                ) : (
+                  <HeartBrokenIcon />
+                )}
+                <span className="add-drawer__title">
+                  {props.item.status === ItemStatus.faulty
+                    ? "Report Fix"
+                    : "Report Fault"}
+                </span>
               </div>
               <div className="fault-drawer__row">
                 <span className="fault-drawer__item-title">Model: </span>
@@ -64,11 +76,20 @@ export function FaultDrawer(props: { submit: Function; item: InventoryItem }) {
                 sx={{ marginRight: "2em" }}
                 variant="outlined"
               >
-                <HeartBrokenIcon
-                  fontSize="small"
-                  sx={{ marginRight: "0.3em" }}
-                />
-                Report Fault
+                {props.item.status === ItemStatus.faulty ? (
+                  <AutoFixHighIcon
+                    fontSize="small"
+                    sx={{ marginRight: "0.3em" }}
+                  />
+                ) : (
+                  <HeartBrokenIcon
+                    fontSize="small"
+                    sx={{ marginRight: "0.3em" }}
+                  />
+                )}
+                {props.item.status === ItemStatus.faulty
+                  ? "Report Fix"
+                  : "Report Fault"}
               </Button>
             </div>
           </div>

@@ -4,14 +4,19 @@ export enum TimelineEventType {
   created,
   edited,
   fault,
+  fix,
 }
 
 function stringToType(type: string): TimelineEventType {
   switch (type) {
+    case "created":
+      return TimelineEventType.created;
     case "edit":
       return TimelineEventType.edited;
     case "fault":
       return TimelineEventType.fault;
+    case "fix":
+      return TimelineEventType.fix;
   }
 
   return TimelineEventType.created;

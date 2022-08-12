@@ -1,7 +1,7 @@
 .timeline-card__wrapper {
   width: 100%;
   margin-bottom: 0.6em;
-  border-radius: 0.5em;
+  border-radius: 0.2em;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -9,6 +9,10 @@
 
 .timeline-card--nrm-bg {
   background: linear-gradient(to right top, #1057aa, #186bcc, #4b8edc);
+}
+
+.timeline-card--fix-bg {
+  background: linear-gradient(to right top, #149D1A, #15BA1C, #1EE726);
 }
 
 .timeline-card--fault-bg {
