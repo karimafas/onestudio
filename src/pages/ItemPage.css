@@ -1,7 +1,7 @@
 .item-page__wrapper {
   display: flex;
   flex-direction: column;
-  height: (100vh - 4em);
+  height: (100vh - 3.2em);
   padding-top: 2em;
 }
 
@@ -16,13 +16,13 @@
 }
 
 .item-page__title-wrapper {
-  height: 3em;
+  height: 2.3em;
   padding-left: 2em;
   padding-right: 1em;
 }
 
 .item-page__body-wrapper {
-  height: calc(100vh - 7em);
+  height: calc(100vh - 6.3em);
   padding-left: 2em;
   padding-top: 2em;
 }

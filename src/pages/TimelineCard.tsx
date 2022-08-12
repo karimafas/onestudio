@@ -8,7 +8,6 @@ import moment from "moment";
 import { Constants } from "../utils/Constants";
 import { HeartBroken } from "@mui/icons-material";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
-import "../App.css";
 
 function getText(type: TimelineEventType): string {
   switch (type) {
@@ -50,12 +49,18 @@ function getBackground(type: TimelineEventType): string {
   }
 }
 
-export function TimelineCard(props: { event: TimelineEvent; last: boolean }) {
+export function TimelineCard(props: { event: TimelineEvent }) {
   return (
     <Card
       className={`timeline-card__wrapper ${getBackground(props.event.type)}`}
     >
-      <CardContent sx={{ "&:last-child": { pb: 1.5 } }}>
+      <CardContent
+        sx={{
+          "&:last-child": {
+            pb: (props.event.type === TimelineEventType.fault || props.event.type === TimelineEventType.fix) ? 1.5 : 2,
+          },
+        }}
+      >
         <div className="timeline-card__row">
           <AccessTimeIcon
             sx={{ color: "white", fontSize: "0.8em", marginRight: "0.3em" }}

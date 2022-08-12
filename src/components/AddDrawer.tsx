@@ -1,8 +1,8 @@
 import { Box, Button } from "@mui/material";
 import "./AddDrawer.css";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 import React from "react";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 
 export interface SubmittedData {
   manufacturer: string;
@@ -32,7 +32,7 @@ export function AddDrawer(props: { submit: Function }) {
           <div className="add-drawer__col add-drawer__col--space-btwn">
             <div className="add-drawer__col add-drawer__col--padded">
               <div className="add-drawer__row">
-                <AddBoxIcon />
+                <DataSaverOnIcon />
                 <span className="add-drawer__title">Add new item</span>
               </div>
               <TextFieldElement
@@ -111,10 +111,13 @@ export function AddDrawer(props: { submit: Function }) {
               <Button
                 type={"submit"}
                 sx={{ marginRight: "2em" }}
-                size="small"
-                variant="contained"
+                variant="outlined"
               >
                 Create Item
+                <DataSaverOnIcon
+                  fontSize="small"
+                  sx={{ marginLeft: "0.3em" }}
+                />
               </Button>
             </div>
           </div>

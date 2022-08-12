@@ -13,6 +13,7 @@ import { deleteDataItem, initialLoad } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { InventoryItem, ItemStatus } from "../objects/InventoryItem";
 import { useNavigate } from "react-router-dom";
+import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 
 export function InventoryPage() {
   const navigate = useNavigate();
@@ -155,7 +156,8 @@ export function InventoryPage() {
             <div></div>
           )}
           <Button variant="contained" onClick={() => dispatch(setDrawer(true))}>
-            Add new item +
+            Add new item
+            <DataSaverOnIcon fontSize="small" sx={{ marginLeft: "0.3em" }} />
           </Button>
         </div>
       </div>

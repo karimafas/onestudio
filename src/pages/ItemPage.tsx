@@ -309,11 +309,7 @@ export function ItemPage() {
                   <div className="item-page__col--timeline">
                     <span className="item-page__title">Timeline</span>
                     {item.events.map((e, index) => (
-                      <TimelineCard
-                        key={e.id}
-                        event={e}
-                        last={index === item.events.length - 1}
-                      />
+                      <TimelineCard key={e.id} event={e} />
                     ))}
                   </div>
                 </div>
