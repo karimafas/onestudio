@@ -8,7 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import {
+  FormContainer,
+  SelectElement,
+  TextFieldElement,
+} from "react-hook-form-mui";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { SubmittedData } from "../components/AddDrawer";
@@ -28,6 +32,9 @@ import { TimelineCard } from "./TimelineCard";
 import "../App.css";
 import { StatusCard } from "../components/StatusCard";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+import { Category } from "../objects/Category";
+import { StudioLocation } from "../objects/StudioLocation";
+import { Owner } from "../objects/Owner";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -48,6 +55,13 @@ export function ItemPage() {
   const [drawer, setDrawer] = useState<boolean>(false);
   const [loadingTimeline, setLoadingTimeline] = useState<boolean>(true);
   const [loadingUser, setLoadingUser] = useState<boolean>(true);
+  const categories: Array<Category> = useAppSelector(
+    (state) => state.data.categories
+  );
+  const locations: Array<StudioLocation> = useAppSelector(
+    (state) => state.data.locations
+  );
+  const owners: Array<Owner> = useAppSelector((state) => state.data.owners);
 
   useEffect(() => {
     if (item && item.events && item.events.length === 0) {
@@ -242,14 +256,15 @@ export function ItemPage() {
                     />
                   </div>
                   <div className="item-page__row">
-                    <TextFieldElement
-                      name="categoryId"
-                      disabled={disabled}
-                      style={{ marginBottom: "1em" }}
-                      label="Category"
-                      required
+                    <SelectElement
                       className="item-page__input"
                       sx={{ marginRight: "2em" }}
+                      style={{ marginBottom: "1em" }}
+                      label="Category"
+                      name="categoryId"
+                      options={categories.map((c) => {
+                        return { id: `${c.id}`, label: c.name };
+                      })}
                     />
                     <TextFieldElement
                       name="price"
@@ -283,22 +298,24 @@ export function ItemPage() {
                     />
                   </div>
                   <div className="item-page__row">
-                    <TextFieldElement
-                      name="ownerId"
-                      disabled={disabled}
-                      style={{ marginBottom: "1em" }}
-                      label="Owner"
-                      required
+                    <SelectElement
                       className="item-page__input"
                       sx={{ marginRight: "2em" }}
+                      style={{ marginBottom: "1em" }}
+                      label="Owner"
+                      name="ownerId"
+                      options={owners.map((o) => {
+                        return { id: `${o.id}`, label: o.name };
+                      })}
                     />
-                    <TextFieldElement
-                      name="locationId"
-                      disabled={disabled}
+                    <SelectElement
+                      className="item-page__input"
                       style={{ marginBottom: "1em" }}
                       label="Location"
-                      required
-                      className="item-page__input"
+                      name="locationId"
+                      options={locations.map((l) => {
+                        return { id: `${l.id}`, label: l.name };
+                      })}
                     />
                   </div>
                   <div className="item-page__row">
