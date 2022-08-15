@@ -13,6 +13,9 @@ import { InventoryItem, ItemStatus } from "../objects/InventoryItem";
 import { Checkbox } from "@mui/material";
 import { selectItem } from "../features/data/dataSlice";
 import { useNavigate } from "react-router-dom";
+import { Category } from "../objects/Category";
+import { StudioLocation } from "../objects/StudioLocation";
+import { Owner } from "../objects/Owner";
 
 interface Column {
   id:
@@ -38,10 +41,10 @@ const columns: readonly Column[] = [
   { id: "status", label: "", minWidth: 5 },
   { id: "manufacturer", label: "Manufacturer", minWidth: 100 },
   { id: "model", label: "Model", minWidth: 170 },
-  { id: "price", label: "Price", minWidth: 170 },
-  { id: "location", label: "Location", minWidth: 60 },
-  { id: "category", label: "Category", minWidth: 60 },
-  { id: "owner", label: "Owner", minWidth: 60 },
+  { id: "price", label: "Price", minWidth: 70 },
+  { id: "location", label: "Location", minWidth: 100 },
+  { id: "category", label: "Category", minWidth: 100 },
+  { id: "owner", label: "Owner", minWidth: 100 },
   { id: "mNumber", label: "M-Number", minWidth: 100 },
   { id: "serial", label: "Serial", minWidth: 100 },
   { id: "notes", label: "Notes", minWidth: 170 },
@@ -51,12 +54,23 @@ function statusIndicator(status: ItemStatus) {
   const color = status === ItemStatus.working ? "#1EE726" : "#DB1818";
   return (
     <div
-      style={{ height: "0.6em", width: "0.6em", backgroundColor: color, borderRadius: '100%' }}
+      style={{
+        height: "0.6em",
+        width: "0.6em",
+        backgroundColor: color,
+        borderRadius: "100%",
+      }}
     ></div>
   );
 }
 
-function getItemValue(column: string, item: InventoryItem): any {
+function getItemValue(
+  column: string,
+  item: InventoryItem,
+  locations: Array<StudioLocation>,
+  categories: Array<Category>,
+  owners: Array<Owner>
+): any {
   switch (column) {
     case "status":
       return statusIndicator(item.status);
@@ -67,11 +81,11 @@ function getItemValue(column: string, item: InventoryItem): any {
     case "price":
       return `£${item.price}`;
     case "location":
-      return item.locationId.toString();
+      return locations.filter((l) => l.id === item.locationId)[0].name;
     case "category":
-      return item.categoryId.toString();
+      return categories.filter((c) => c.id === item.categoryId)[0].name;
     case "owner":
-      return item.ownerId.toString();
+      return owners.filter((o) => o.id === item.ownerId)[0].name;
     case "mNumber":
       return item.mNumber;
     case "serial":
@@ -98,6 +112,13 @@ export default function InventoryTable() {
         r.notes.toLowerCase().includes(search)
     )
   );
+  const categories: Array<Category> = useAppSelector(
+    (state) => state.data.categories
+  );
+  const locations: Array<StudioLocation> = useAppSelector(
+    (state) => state.data.locations
+  );
+  const owners: Array<Owner> = useAppSelector((state) => state.data.owners);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -170,7 +191,13 @@ export default function InventoryTable() {
                     sx={{ backgroundColor: row.selected ? "#EBF4FF" : "white" }}
                   >
                     {columns.map((column) => {
-                      const value = getItemValue(column.id, row);
+                      const value = getItemValue(
+                        column.id,
+                        row,
+                        locations,
+                        categories,
+                        owners
+                      );
                       return (
                         <TableCell
                           size="small"
