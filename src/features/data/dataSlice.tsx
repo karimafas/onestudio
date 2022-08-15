@@ -6,29 +6,24 @@ import { Logger } from "../../services/logger";
 // Define a type for the slice state
 interface DataState {
   loading: boolean;
+  loggedIn: boolean;
   items: Array<InventoryItem>;
 }
 
 // Define the initial state using that type
 const initialState: DataState = {
   loading: true,
+  loggedIn: false,
   items: [],
 };
 
-export const initialLoad = createAsyncThunk(
-  "users/fetchByIdStatus",
-  async () => {
-    const items: Array<InventoryItem> = await ApiHelper.getInventoryItems();
+export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
+  const items: Array<InventoryItem> = await ApiHelper.getInventoryItems();
 
-    for (const item of items) {
-      await item.initEvents();
-    }
-
-    return {
-      items: items,
-    };
-  }
-);
+  return {
+    items: items,
+  };
+});
 
 export const loadItemEvents = createAsyncThunk(
   "users/loadItemEvents",

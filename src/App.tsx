@@ -1,27 +1,47 @@
-import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
-import "./App.css";
+import { useEffect, useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { initialLoad } from "./features/data/dataSlice";
+import { ApiHelper } from "./helpers/ApiHelper";
 import { InventoryPage } from "./pages/InventoryPage";
 import { ItemPage } from "./pages/ItemPage";
+import { LoginPage } from "./pages/LoginPage";
 
 function App() {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.data.loading);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    dispatch(initialLoad());
+    ApiHelper.checkToken().then((value) => {
+      setLoggedIn(value);
+      if (value) {
+        dispatch(initialLoad());
+        navigate("/");
+      } else {
+        ApiHelper.refreshToken().then((result) => {
+          setLoggedIn(result);
+          if (!result) {
+            navigate("/login");
+          } else {
+            dispatch(initialLoad());
+            navigate("/");
+          }
+        });
+      }
+    });
     return () => {};
   }, []);
 
-  if (loading) {
+  if (loading && loggedIn) {
     return <div></div>;
   } else {
     return (
       <div className="App">
         <Routes>
-          <Route path="/" element={<div></div>} />
+          <Route path="/" element={<InventoryPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/inventory" element={<InventoryPage />} />
           <Route path="/inventory/:id" element={<ItemPage />} />
         </Routes>

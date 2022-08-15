@@ -1,9 +1,9 @@
 import { InventoryItem } from "../objects/InventoryItem";
 import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
 import { Logger } from "../services/logger";
+import { HttpHelper, RequestType } from "./HttpHelper";
 
-const axios = require("axios");
-const url = "http://localhost:9999/api/";
+const url = "/api/";
 
 function eventToString(type: TimelineEventType) {
   switch (type) {
@@ -23,7 +23,7 @@ export class ApiHelper {
     let items: Array<InventoryItem> = [];
 
     try {
-      const resp = await axios.get(url + `/items`);
+      const resp = await HttpHelper.request(url + `/items`, RequestType.get);
 
       Logger.log("Loaded inventory items from API.", resp);
 
@@ -47,7 +47,10 @@ export class ApiHelper {
     let item;
 
     try {
-      const resp = await axios.get(url + `/items/${id}`);
+      const resp = await HttpHelper.request(
+        url + `/items/${id}`,
+        RequestType.get
+      );
 
       Logger.log(`Loaded inventory item with id ${id} from API.`, resp);
 
@@ -68,7 +71,7 @@ export class ApiHelper {
     let success: boolean = false;
 
     try {
-      const resp = await axios.post(url + "items", {
+      const body = {
         m_number: i.mNumber,
         manufacturer: i.manufacturer,
         model: i.model,
@@ -78,7 +81,15 @@ export class ApiHelper {
         category_id: i.categoryId,
         owner_id: i.ownerId,
         price: i.price,
-      });
+      };
+
+      Logger.log(`adding item with body`, body);
+
+      const resp = await HttpHelper.request(
+        url + "items",
+        RequestType.post,
+        body
+      );
 
       if (resp.status === 200) {
         success = true;
@@ -109,14 +120,18 @@ export class ApiHelper {
         price: i.price,
       };
 
-      const resp = await axios.put(url + `items/${i.id}`, body);
+      const resp = await HttpHelper.request(
+        url + `items/${i.id}`,
+        RequestType.put,
+        body
+      );
 
       if (resp.status === 200) {
         success = true;
         Logger.log("Updated item.", resp.data);
       }
     } catch (e) {
-      Logger.log(`Couldn't update item.`);
+      Logger.log(`Couldn't update item.`, e);
     }
 
     return success;
@@ -126,7 +141,11 @@ export class ApiHelper {
     let success: boolean = false;
     try {
       const params = `?ids=${ids.join(",")}`;
-      const resp = await axios.delete(url + `items${params}`);
+
+      const resp = await HttpHelper.request(
+        url + `items${params}`,
+        RequestType.delete
+      );
 
       if (resp.status === 200) {
         success = true;
@@ -145,12 +164,14 @@ export class ApiHelper {
     let events: Array<TimelineEvent> = [];
 
     try {
-      const resp = await axios.get(url + `/events/${itemId}`);
+      const resp = await HttpHelper.request(
+        url + `/events/${itemId}`,
+        RequestType.get
+      );
 
       const _events = resp.data;
 
       if (_events) {
-        Logger.log(`Found events ${_events}`);
         for (const event of _events) {
           events.push(TimelineEvent.fromJson(event));
         }
@@ -176,7 +197,11 @@ export class ApiHelper {
         type: eventToString(eventType),
       };
 
-      const resp = await axios.post(url + `events`, body);
+      const resp = await HttpHelper.request(
+        url + `events`,
+        RequestType.post,
+        body
+      );
 
       if (resp.status === 200) {
         success = true;
@@ -184,6 +209,78 @@ export class ApiHelper {
       }
     } catch (e) {
       Logger.log(`Couldn't create event.`);
+    }
+
+    return success;
+  }
+
+  public static async login(email: string, password: string): Promise<boolean> {
+    let success: boolean = false;
+
+    try {
+      const body = {
+        email: email,
+        password: password,
+      };
+
+      const resp = await HttpHelper.request(
+        url + `login`,
+        RequestType.post,
+        body,
+        false
+      );
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log("Logged in user.", resp.data);
+        // AuthorizationHelper.saveJwtCookie(resp.data.token);
+      }
+    } catch (e) {
+      Logger.log(`Couldn't login user.`);
+    }
+
+    return success;
+  }
+
+  public static async checkToken(): Promise<boolean> {
+    let success: boolean = false;
+
+    try {
+      const resp = await HttpHelper.request(
+        url + `jwt-token-chk`,
+        RequestType.get,
+        undefined,
+        false
+      );
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log("Found valid token.", resp.data);
+      }
+    } catch (e) {
+      Logger.log(`Couldn't find valid token.`);
+    }
+
+    return success;
+  }
+
+  public static async refreshToken(): Promise<boolean> {
+    let success: boolean = false;
+
+    try {
+      const resp = await HttpHelper.request(
+        url + `refresh-token`,
+        RequestType.post,
+        undefined,
+        false
+      );
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log("Token refreshed successfully.", resp.data);
+      }
+    } catch (e) {
+      Logger.log(`Could not refresh token.`);
     }
 
     return success;

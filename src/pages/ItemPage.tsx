@@ -1,12 +1,13 @@
 import {
   Breadcrumbs,
   Button,
+  CircularProgress,
   Divider,
   Drawer,
   Link,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -45,6 +46,17 @@ export function ItemPage() {
   const [disabled, setDisabled] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [drawer, setDrawer] = useState<boolean>(false);
+  const [loadingTimeline, setLoadingTimeline] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (item && item.events && item.events.length === 0) {
+      item.initEvents().then((_) => {
+        setLoadingTimeline(false);
+      });
+    } else {
+      setLoadingTimeline(false);
+    }
+  }, []);
 
   async function _createEvent(data: EventSubmittedData) {
     const success = await ApiHelper.createEvent(
@@ -305,14 +317,20 @@ export function ItemPage() {
                   orientation="vertical"
                   sx={{ marginLeft: "4em", marginRight: "2em" }}
                 />
-                <div className="item-page__timeline-wrapper">
-                  <div className="item-page__col--timeline">
-                    <span className="item-page__title">Timeline</span>
-                    {item.events.map((e, index) => (
-                      <TimelineCard key={e.id} event={e} />
-                    ))}
+                {loadingTimeline ? (
+                  <div className="item-page__timeline-loading">
+                    <CircularProgress />
                   </div>
-                </div>
+                ) : (
+                  <div className="item-page__timeline-wrapper">
+                    <div className="item-page__col--timeline">
+                      <span className="item-page__title">Timeline</span>
+                      {item.events.map((e, index) => (
+                        <TimelineCard key={e.id} event={e} />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
