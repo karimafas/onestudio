@@ -3,6 +3,7 @@ import { InventoryItem } from "../objects/InventoryItem";
 import { Owner } from "../objects/Owner";
 import { StudioLocation } from "../objects/StudioLocation";
 import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
+import { TimelineUser } from "../objects/TimelineUser";
 import { Logger } from "../services/logger";
 import { HttpHelper, RequestType } from "./HttpHelper";
 
@@ -98,10 +99,7 @@ export class ApiHelper {
     let owners: Array<Owner> = [];
 
     try {
-      const resp = await HttpHelper.request(
-        url + `/owners`,
-        RequestType.get
-      );
+      const resp = await HttpHelper.request(url + `/owners`, RequestType.get);
 
       Logger.log("Loaded owners from API.", resp);
 
@@ -251,7 +249,9 @@ export class ApiHelper {
 
       if (_events) {
         for (const event of _events) {
-          events.push(TimelineEvent.fromJson(event));
+          const e = TimelineEvent.fromJson(event);
+          await e.initialise();
+          events.push(e);
         }
       }
     } catch (e) {
@@ -362,5 +362,28 @@ export class ApiHelper {
     }
 
     return success;
+  }
+
+  public static async getUser(id: number): Promise<TimelineUser | undefined> {
+    let user: TimelineUser | undefined;
+
+    try {
+      const resp = await HttpHelper.request(
+        url + `user?id=${id}`,
+        RequestType.get
+      );
+
+      if (resp.status === 200) {
+        Logger.log("Found user info.", resp.data);
+
+        if (resp.data) {
+          user = TimelineUser.fromJson(resp.data);
+        }
+      }
+    } catch (e) {
+      Logger.log(`Couldn't find user info.`);
+    }
+
+    return user;
   }
 }

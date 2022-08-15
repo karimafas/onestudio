@@ -57,7 +57,11 @@ export function TimelineCard(props: { event: TimelineEvent }) {
       <CardContent
         sx={{
           "&:last-child": {
-            pb: (props.event.type === TimelineEventType.fault || props.event.type === TimelineEventType.fix) ? 1.5 : 2,
+            pb:
+              props.event.type === TimelineEventType.fault ||
+              props.event.type === TimelineEventType.fix
+                ? 1.5
+                : 2,
           },
         }}
       >
@@ -66,8 +70,9 @@ export function TimelineCard(props: { event: TimelineEvent }) {
             sx={{ color: "white", fontSize: "0.8em", marginRight: "0.3em" }}
           />
           <span className="timeline-card__datetime">
-            {moment(props.event.createdAt).format(Constants.dateTimeFormat)} by
-            Karim Afas
+            {moment(props.event.createdAt).format(Constants.dateTimeFormat)} by 
+             {` ${props.event.user?.firstName}` ?? ""}{" "}
+            {props.event.user?.lastName ?? ""}
           </span>
         </div>
         <div className="timeline-card__row time-card__mt1">

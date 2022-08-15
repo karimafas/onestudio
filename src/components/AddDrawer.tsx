@@ -1,8 +1,19 @@
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import "./AddDrawer.css";
-import React from "react";
+import React, { useState } from "react";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
+import { useAppSelector } from "../app/hooks";
+import { Category } from "../objects/Category";
+import { StudioLocation } from "../objects/StudioLocation";
+import { Owner } from "../objects/Owner";
 
 export interface SubmittedData {
   manufacturer: string;
@@ -18,11 +29,24 @@ export interface SubmittedData {
 
 export function AddDrawer(props: { submit: Function }) {
   const [disabled, setDisabled] = React.useState(false);
+  const categories: Array<Category> = useAppSelector(
+    (state) => state.data.categories
+  );
+  const locations: Array<StudioLocation> = useAppSelector(
+    (state) => state.data.locations
+  );
+  const owners: Array<Owner> = useAppSelector((state) => state.data.owners);
+  const [categoryId, setCategory] = useState<number>(categories[0].id);
+  const [locationId, setLocation] = useState<number>(locations[0].id);
+  const [ownerId, setOwner] = useState<number>(owners[0].id);
 
   return (
     <div>
       <FormContainer
         onSuccess={async (data: SubmittedData) => {
+          data.categoryId = categoryId.toString();
+          data.locationId = locationId.toString();
+          data.ownerId = ownerId.toString();
           setDisabled(true);
           await props.submit(data);
           setDisabled(false);
@@ -51,14 +75,25 @@ export function AddDrawer(props: { submit: Function }) {
                 label="Model"
                 required
               />
-              <TextFieldElement
-                name="categoryId"
-                disabled={disabled}
-                style={{ marginBottom: "1em" }}
-                size="small"
-                label="Category"
-                required
-              />
+              <FormControl size="small">
+                <InputLabel>Category</InputLabel>
+                <Select
+                  defaultValue={categoryId}
+                  sx={{ marginBottom: "1em" }}
+                  size="small"
+                  name="categoryId"
+                  label="Category"
+                  onChange={(event) => {
+                    setCategory(event.target.value as number);
+                  }}
+                >
+                  {categories.map((c) => (
+                    <MenuItem value={c.id} key={`cat-${c.id}`}>
+                      {c.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <TextFieldElement
                 name="price"
                 disabled={disabled}
@@ -83,22 +118,44 @@ export function AddDrawer(props: { submit: Function }) {
                 label="M-Number"
                 required
               />
-              <TextFieldElement
-                name="ownerId"
-                disabled={disabled}
-                style={{ marginBottom: "1em" }}
-                size="small"
-                label="Owner"
-                required
-              />
-              <TextFieldElement
-                name="locationId"
-                disabled={disabled}
-                style={{ marginBottom: "1em" }}
-                size="small"
-                label="Location"
-                required
-              />
+              <FormControl size="small">
+                <InputLabel>Owner</InputLabel>
+                <Select
+                  defaultValue={ownerId}
+                  sx={{ marginBottom: "1em" }}
+                  size="small"
+                  name="ownerId"
+                  label="Owner"
+                  onChange={(event) => {
+                    setOwner(event.target.value as number);
+                  }}
+                >
+                  {owners.map((o) => (
+                    <MenuItem value={o.id} key={`own-${o.id}`}>
+                      {o.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl size="small">
+                <InputLabel>Location</InputLabel>
+                <Select
+                  defaultValue={locationId}
+                  sx={{ marginBottom: "1em" }}
+                  size="small"
+                  name="locationId"
+                  label="Location"
+                  onChange={(event) => {
+                    setLocation(event.target.value as number);
+                  }}
+                >
+                  {locations.map((l) => (
+                    <MenuItem value={l.id} key={`loc-${l.id}`}>
+                      {l.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <TextFieldElement
                 name="notes"
                 disabled={disabled}

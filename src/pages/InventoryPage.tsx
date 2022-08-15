@@ -61,7 +61,8 @@ export function InventoryPage() {
       data.notes,
       new Date(),
       new Date(),
-      ItemStatus.working
+      ItemStatus.working,
+      0
     );
 
     const result = await dispatch(createItem(item));

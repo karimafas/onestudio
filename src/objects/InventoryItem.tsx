@@ -3,6 +3,7 @@ import { ApiHelper } from "../helpers/ApiHelper";
 import { Logger } from "../services/logger";
 import { Constants } from "../utils/Constants";
 import { TimelineEvent } from "./TimelineEvent";
+import { TimelineUser } from "./TimelineUser";
 
 export enum ItemStatus {
   working,
@@ -31,6 +32,9 @@ export class InventoryItem {
   notes: string;
   createdAt: Date;
   updatedAt: Date;
+  createdBy: number;
+
+  user?: TimelineUser;
 
   status: ItemStatus;
 
@@ -49,9 +53,13 @@ export class InventoryItem {
     return moment(this.updatedAt).format(Constants.dateTimeFormat);
   }
 
-  async initEvents() {
+  public async initEvents() {
     Logger.log(`Initialising event for item ${this.id}`);
     this.events = await ApiHelper.getItemEvents(this.id);
+  }
+
+  public async loadUser() {
+    this.user = await ApiHelper.getUser(this.createdBy);
   }
 
   static fromJson(json: { [key: string]: any }) {
@@ -68,7 +76,8 @@ export class InventoryItem {
       json["notes"],
       moment(json["created_at"]).toDate(),
       moment(json["updated_at"]).toDate(),
-      stringToStatus(json["status"])
+      stringToStatus(json["status"]),
+      json["created_by"]
     );
   }
 
@@ -85,7 +94,8 @@ export class InventoryItem {
     notes: string,
     createdAt: Date,
     updatedAt: Date,
-    status: ItemStatus
+    status: ItemStatus,
+    createdBy: number
   ) {
     this.id = id;
     this.manufacturer = manufacturer;
@@ -100,5 +110,6 @@ export class InventoryItem {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.status = status;
+    this.createdBy = createdBy;
   }
 }

@@ -47,6 +47,7 @@ export function ItemPage() {
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [drawer, setDrawer] = useState<boolean>(false);
   const [loadingTimeline, setLoadingTimeline] = useState<boolean>(true);
+  const [loadingUser, setLoadingUser] = useState<boolean>(true);
 
   useEffect(() => {
     if (item && item.events && item.events.length === 0) {
@@ -55,6 +56,12 @@ export function ItemPage() {
       });
     } else {
       setLoadingTimeline(false);
+    }
+
+    if (item && item.createdBy) {
+      item.loadUser().then((_) => {
+        setLoadingUser(false);
+      });
     }
   }, []);
 
@@ -88,7 +95,8 @@ export function ItemPage() {
       data.notes,
       new Date(),
       new Date(),
-      ItemStatus.working
+      ItemStatus.working,
+      0
     );
 
     const result = await dispatch(updateItem(_item));
@@ -306,12 +314,22 @@ export function ItemPage() {
                     <span className="mr-05em font-bold">Item Status: </span>
                     <StatusCard status={item.status} />
                   </div>
-                  <span className="item-page__notes mt-1em">
-                    {`Created on ${item.createdAtStr} by Karim Afas.`}
-                  </span>
-                  <span className="item-page__notes">
-                    {`Last updated on ${item.updatedAtStr} by Karim Afas.`}
-                  </span>
+                  {loadingUser ? (
+                    <div></div>
+                  ) : (
+                    <>
+                      <span className="item-page__notes mt-1em">
+                        {`Created on ${item.createdAtStr} by ${
+                          item.user?.firstName ?? ""
+                        } ${item.user?.lastName ?? ""}.`}
+                      </span>
+                      <span className="item-page__notes">
+                        {`Last updated on ${item.updatedAtStr} by ${
+                          item.user?.firstName ?? ""
+                        } ${item.user?.lastName ?? ""}.`}
+                      </span>
+                    </>
+                  )}
                 </div>
                 <Divider
                   orientation="vertical"

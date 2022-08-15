@@ -1,4 +1,6 @@
 import moment from "moment";
+import { ApiHelper } from "../helpers/ApiHelper";
+import { TimelineUser } from "./TimelineUser";
 
 export enum TimelineEventType {
   created,
@@ -28,6 +30,12 @@ export class TimelineEvent {
   createdAt: Date;
   type: TimelineEventType;
   notes: string;
+
+  user?: TimelineUser | undefined;
+
+  public async initialise() {
+    this.user = await ApiHelper.getUser(this.userId);
+  }
 
   constructor(
     id: number,
