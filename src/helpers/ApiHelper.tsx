@@ -1,4 +1,7 @@
+import { Category } from "../objects/Category";
 import { InventoryItem } from "../objects/InventoryItem";
+import { Owner } from "../objects/Owner";
+import { StudioLocation } from "../objects/StudioLocation";
 import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
 import { Logger } from "../services/logger";
 import { HttpHelper, RequestType } from "./HttpHelper";
@@ -39,6 +42,81 @@ export class ApiHelper {
     }
 
     return items;
+  }
+
+  public static async getLocations(): Promise<Array<StudioLocation>> {
+    let locations: Array<StudioLocation> = [];
+
+    try {
+      const resp = await HttpHelper.request(
+        url + `/locations`,
+        RequestType.get
+      );
+
+      Logger.log("Loaded locations from API.", resp);
+
+      const _locations = resp.data;
+
+      if (_locations) {
+        for (const location of _locations) {
+          locations.push(StudioLocation.fromJson(location));
+        }
+      }
+    } catch (e) {
+      Logger.log(`Couldn't load locations.`);
+    }
+
+    return locations;
+  }
+
+  public static async getCategories(): Promise<Array<Category>> {
+    let categories: Array<Category> = [];
+
+    try {
+      const resp = await HttpHelper.request(
+        url + `/categories`,
+        RequestType.get
+      );
+
+      Logger.log("Loaded categories from API.", resp);
+
+      const _categories = resp.data;
+
+      if (_categories) {
+        for (const category of _categories) {
+          categories.push(Category.fromJson(category));
+        }
+      }
+    } catch (e) {
+      Logger.log(`Couldn't load categories.`);
+    }
+
+    return categories;
+  }
+
+  public static async getOwners(): Promise<Array<Owner>> {
+    let owners: Array<Owner> = [];
+
+    try {
+      const resp = await HttpHelper.request(
+        url + `/owners`,
+        RequestType.get
+      );
+
+      Logger.log("Loaded owners from API.", resp);
+
+      const _owners = resp.data;
+
+      if (_owners) {
+        for (const owner of _owners) {
+          owners.push(Owner.fromJson(owner));
+        }
+      }
+    } catch (e) {
+      Logger.log(`Couldn't load owners.`);
+    }
+
+    return owners;
   }
 
   public static async getInventoryItem(

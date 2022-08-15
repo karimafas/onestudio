@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { ApiHelper } from "../../helpers/ApiHelper";
+import { Category } from "../../objects/Category";
 import { InventoryItem } from "../../objects/InventoryItem";
+import { Owner } from "../../objects/Owner";
+import { StudioLocation } from "../../objects/StudioLocation";
 import { Logger } from "../../services/logger";
 
 // Define a type for the slice state
@@ -8,6 +11,9 @@ interface DataState {
   loading: boolean;
   loggedIn: boolean;
   items: Array<InventoryItem>;
+  categories: Array<Category>;
+  owners: Array<Owner>;
+  locations: Array<StudioLocation>;
 }
 
 // Define the initial state using that type
@@ -15,13 +21,22 @@ const initialState: DataState = {
   loading: true,
   loggedIn: false,
   items: [],
+  categories: [],
+  owners: [],
+  locations: [],
 };
 
 export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
   const items: Array<InventoryItem> = await ApiHelper.getInventoryItems();
+  const categories: Array<Category> = await ApiHelper.getCategories();
+  const owners: Array<Owner> = await ApiHelper.getOwners();
+  const locations: Array<StudioLocation> = await ApiHelper.getLocations();
 
   return {
     items: items,
+    categories: categories,
+    owners: owners,
+    locations: locations,
   };
 });
 
@@ -75,7 +90,6 @@ export const counterSlice = createSlice({
       }>
     ) => {
       if (!action.payload.selectAll) {
-        console.log(state.items);
         const id = action.payload.id!;
         const value = action.payload.value;
 
@@ -111,8 +125,10 @@ export const counterSlice = createSlice({
     builder.addCase(initialLoad.fulfilled, (state: DataState, action) => {
       const payload = action.payload;
       state.items = payload.items;
+      state.categories = payload.categories;
+      state.locations = payload.locations;
+      state.owners = payload.owners;
       state.loading = false;
-      Logger.log("items loaded", state.items);
     });
     builder.addCase(reloadItem.fulfilled, (state: DataState, action) => {
       const payload: InventoryItem | undefined = action.payload;
