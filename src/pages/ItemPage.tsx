@@ -265,6 +265,7 @@ export function ItemPage() {
                       options={categories.map((c) => {
                         return { id: `${c.id}`, label: c.name };
                       })}
+                      required
                     />
                     <TextFieldElement
                       name="price"
@@ -307,6 +308,7 @@ export function ItemPage() {
                       options={owners.map((o) => {
                         return { id: `${o.id}`, label: o.name };
                       })}
+                      required
                     />
                     <SelectElement
                       className="item-page__input"
@@ -316,6 +318,7 @@ export function ItemPage() {
                       options={locations.map((l) => {
                         return { id: `${l.id}`, label: l.name };
                       })}
+                      required
                     />
                   </div>
                   <div className="item-page__row">

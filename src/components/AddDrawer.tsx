@@ -74,6 +74,7 @@ export function AddDrawer(props: { submit: Function }) {
                 options={categories.map((c) => {
                   return { id: `${c.id}`, label: c.name };
                 })}
+                required
               />
               <TextFieldElement
                 name="price"
@@ -107,6 +108,7 @@ export function AddDrawer(props: { submit: Function }) {
                 options={owners.map((o) => {
                   return { id: `${o.id}`, label: o.name };
                 })}
+                required
               />
               <SelectElement
                 size="small"
@@ -116,6 +118,7 @@ export function AddDrawer(props: { submit: Function }) {
                 options={locations.map((l) => {
                   return { id: `${l.id}`, label: l.name };
                 })}
+                required
               />
               <TextFieldElement
                 name="notes"
