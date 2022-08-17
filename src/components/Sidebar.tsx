@@ -5,13 +5,21 @@ import Box from "@mui/material/Box";
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsIcon from "@mui/icons-material/Settings";
 import BentoIcon from "@mui/icons-material/Bento";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import styled from "@emotion/styled";
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
 }
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+
+  &:focus, &:hover, &:visited, &:link, &:active {
+      text-decoration: none;
+`;
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -41,9 +49,22 @@ function getTab(path: string): number {
 
 export default function VerticalTabs() {
   const [value, setValue] = React.useState(0);
+  const navigate = useNavigate();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+
+    switch (newValue) {
+      case 0:
+        navigate("/");
+        break;
+      case 1:
+        navigate("/inventory");
+        break;
+      case 2:
+        navigate("/settings");
+        break;
+    }
   };
 
   const pathLocation = useLocation();
@@ -65,15 +86,9 @@ export default function VerticalTabs() {
         aria-label="Vertical tabs example"
         sx={{ borderRight: 1, borderColor: "divider" }}
       >
-        <Link to={"/"} style={{ color: "#186BCC" }}>
-          <Tab icon={<HomeIcon />} />
-        </Link>
-        <Link style={{ color: "#186BCC" }} to={"/inventory"}>
-          <Tab icon={<BentoIcon />} />
-        </Link>
-        <Link style={{ color: "#186BCC" }} to={"/settings"}>
-          <Tab icon={<SettingsIcon />} />
-        </Link>
+        <Tab icon={<HomeIcon />} />
+        <Tab icon={<BentoIcon />} />
+        <Tab icon={<SettingsIcon />} />
       </Tabs>
       <TabPanel value={value} index={0}>
         Dashboard
