@@ -52,7 +52,10 @@ export const reloadItem = createAsyncThunk(
   "users/reloadItem",
   async (itemId: number) => {
     const item = await ApiHelper.getInventoryItem(itemId);
-    if (item) await item!.initEvents();
+    if (item) {
+      await item!.initEvents();
+      await item!.loadUser();
+    }
     return item;
   }
 );

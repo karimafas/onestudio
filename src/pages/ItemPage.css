@@ -1,8 +1,12 @@
 .item-page__wrapper {
   display: flex;
   flex-direction: column;
-  height: (100vh - 3.2em);
-  padding-top: 2em;
+  height: (100vh - 2.2em);
+}
+
+.item-page__padding {
+  padding-top: 1.5em;
+  padding-left: 2em;
 }
 
 .item-page__input {
@@ -17,26 +21,24 @@
 
 .item-page__title-wrapper {
   height: 2.3em;
-  padding-left: 2em;
-  padding-right: 1em;
+  margin-bottom: 2em;
+  margin-right: 1em;
 }
 
 .item-page__body-wrapper {
-  height: calc(100vh - 6.3em);
-  padding-left: 2em;
-  padding-top: 2em;
+  height: calc(100vh - 5.8em);
 }
 
 .item-page__col {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 70vw;
+  width: 70%;
   height: 50vh;
 }
 
 .item-page__timeline-wrapper {
-  width: 25em;
+  width: 30%;
   height: 100%;
   max-height: 100%;
   flex: 1 1 0%;

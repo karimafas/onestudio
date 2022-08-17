@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { initialLoad } from "./features/data/dataSlice";
 import { ApiHelper } from "./helpers/ApiHelper";
 import { InventoryPage } from "./pages/InventoryPage";
 import { ItemPage } from "./pages/ItemPage";
 import { LoginPage } from "./pages/LoginPage";
+import Sidebar from "./components/Sidebar";
 
 function App() {
   const navigate = useNavigate();
@@ -18,7 +19,6 @@ function App() {
       setLoggedIn(value);
       if (value) {
         dispatch(initialLoad());
-        navigate("/");
       } else {
         ApiHelper.refreshToken().then((result) => {
           setLoggedIn(result);
@@ -26,7 +26,6 @@ function App() {
             navigate("/login");
           } else {
             dispatch(initialLoad());
-            navigate("/");
           }
         });
       }
@@ -39,12 +38,15 @@ function App() {
   } else {
     return (
       <div className="App">
-        <Routes>
-          <Route path="/" element={<InventoryPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/inventory" element={<InventoryPage />} />
-          <Route path="/inventory/:id" element={<ItemPage />} />
-        </Routes>
+        {loggedIn ? <Sidebar /> : <></>}
+        <div style={{ width: "calc(100vw - 6em)" }}>
+          <Routes>
+            <Route path="/" element={<></>} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/inventory" element={<InventoryPage />} />
+            <Route path="/inventory/:id" element={<ItemPage />} />
+          </Routes>
+        </div>
       </div>
     );
   }

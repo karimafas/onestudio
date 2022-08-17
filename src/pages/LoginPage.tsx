@@ -3,8 +3,9 @@ import "./LoginPage.css";
 import "../App.css";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logger } from "../services/logger";
+import { useNavigate } from "react-router-dom";
 
 interface LoginData {
   email: string;
@@ -13,6 +14,14 @@ interface LoginData {
 
 export function LoginPage() {
   const [disabled, setDisabled] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    ApiHelper.checkToken().then((value) => {
+      if (value) navigate("/");
+    });
+    return () => {};
+  }, []);
 
   async function _login(data: LoginData) {
     Logger.log(`logging in user with data`, data);

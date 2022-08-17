@@ -1,6 +1,12 @@
+.inventory-page__padding {
+  padding-top: 2em;
+  padding-left: 2em;
+  padding-right: 2em;
+}
+
 .inventory-page__wrapper {
   height: 100%;
-  padding: 2em;
+  width: 100%;
 }
 
 .inventory-page__padded-container {

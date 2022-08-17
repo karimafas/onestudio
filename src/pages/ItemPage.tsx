@@ -174,201 +174,206 @@ export function ItemPage() {
             onConfirm={_delete}
           />
           <div className="item-page__wrapper">
-            <div className="item-page__title-wrapper">
-              <div className="item-page__row item-page__row--sb">
-                <Breadcrumbs aria-label="breadcrumb">
-                  <Link
-                    underline="hover"
-                    sx={{ display: "flex", alignItems: "center" }}
-                    color="inherit"
-                    href="/inventory"
-                  >
-                    <BentoIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                    Inventory
-                  </Link>
-                  <Typography
-                    sx={{ display: "flex", alignItems: "center" }}
-                    color="text.primary"
-                  >
-                    <LibraryMusicIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                    {item.manufacturer} {item.model}
-                  </Typography>
-                </Breadcrumbs>
-                <div className="item-page__row">
-                  <Button
-                    color="error"
-                    sx={{ marginRight: "1em" }}
-                    onClick={() => setDeleteOpen(true)}
-                  >
-                    <DeleteIcon
-                      fontSize="small"
-                      sx={{ marginRight: "0.3em" }}
-                    />
-                    Delete Item
-                  </Button>
-                  <Button
-                    sx={{ marginRight: "1em" }}
-                    onClick={() => setDrawer(true)}
-                  >
-                    {item.status === ItemStatus.faulty ? (
-                      <AutoFixHighIcon
+            <div className="item-page__padding">
+              <div className="item-page__title-wrapper">
+                <div className="item-page__row item-page__row--sb">
+                  <Breadcrumbs aria-label="breadcrumb">
+                    <Link
+                      underline="hover"
+                      sx={{ display: "flex", alignItems: "center" }}
+                      color="inherit"
+                      href="/inventory"
+                    >
+                      <BentoIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      Inventory
+                    </Link>
+                    <Typography
+                      sx={{ display: "flex", alignItems: "center" }}
+                      color="text.primary"
+                    >
+                      <LibraryMusicIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      {item.manufacturer} {item.model}
+                    </Typography>
+                  </Breadcrumbs>
+                  <div className="item-page__row">
+                    <Button
+                      color="error"
+                      sx={{ marginRight: "1em" }}
+                      onClick={() => setDeleteOpen(true)}
+                    >
+                      <DeleteIcon
                         fontSize="small"
                         sx={{ marginRight: "0.3em" }}
                       />
-                    ) : (
-                      <HeartBrokenIcon
+                      Delete Item
+                    </Button>
+                    <Button
+                      sx={{ marginRight: "1em" }}
+                      onClick={() => setDrawer(true)}
+                    >
+                      {item.status === ItemStatus.faulty ? (
+                        <AutoFixHighIcon
+                          fontSize="small"
+                          sx={{ marginRight: "0.3em" }}
+                        />
+                      ) : (
+                        <HeartBrokenIcon
+                          fontSize="small"
+                          sx={{ marginRight: "0.3em" }}
+                        />
+                      )}
+                      {item.status === ItemStatus.faulty
+                        ? "Report Fix"
+                        : "Report Fault"}
+                    </Button>
+                    <Button type="submit">
+                      <SaveIcon
                         fontSize="small"
                         sx={{ marginRight: "0.3em" }}
                       />
-                    )}
-                    {item.status === ItemStatus.faulty
-                      ? "Report Fix"
-                      : "Report Fault"}
-                  </Button>
-                  <Button type="submit">
-                    <SaveIcon fontSize="small" sx={{ marginRight: "0.3em" }} />
-                    Save Item
-                  </Button>
+                      Save Item
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="item-page__body-wrapper">
-              <div className="item-page__row">
-                <div className="item-page__col">
-                  <span className="item-page__title">Details</span>
-                  <div className="item-page__row">
-                    <TextFieldElement
-                      name="manufacturer"
-                      disabled={disabled}
-                      style={{ marginBottom: "1em" }}
-                      label="Manufacturer"
-                      required
-                      className="item-page__input"
-                      sx={{ marginRight: "2em" }}
-                    />
-                    <TextFieldElement
-                      name="model"
-                      disabled={disabled}
-                      style={{ marginBottom: "1em" }}
-                      label="Model"
-                      required
-                      className="item-page__input"
-                    />
+              <div className="item-page__body-wrapper">
+                <div className="item-page__row">
+                  <div className="item-page__col">
+                    <span className="item-page__title">Details</span>
+                    <div className="item-page__row">
+                      <TextFieldElement
+                        name="manufacturer"
+                        disabled={disabled}
+                        style={{ marginBottom: "1em" }}
+                        label="Manufacturer"
+                        required
+                        className="item-page__input"
+                        sx={{ marginRight: "2em" }}
+                      />
+                      <TextFieldElement
+                        name="model"
+                        disabled={disabled}
+                        style={{ marginBottom: "1em" }}
+                        label="Model"
+                        required
+                        className="item-page__input"
+                      />
+                    </div>
+                    <div className="item-page__row">
+                      <SelectElement
+                        className="item-page__input"
+                        sx={{ marginRight: "2em" }}
+                        style={{ marginBottom: "1em" }}
+                        label="Category"
+                        name="categoryId"
+                        options={categories.map((c) => {
+                          return { id: `${c.id}`, label: c.name };
+                        })}
+                        required
+                      />
+                      <TextFieldElement
+                        name="price"
+                        disabled={disabled}
+                        style={{ marginBottom: "1em" }}
+                        label="Price"
+                        required
+                        className="item-page__input"
+                        InputProps={{
+                          endAdornment: "£",
+                        }}
+                      />
+                    </div>
+                    <div className="item-page__row">
+                      <TextFieldElement
+                        name="serial"
+                        disabled={disabled}
+                        style={{ marginBottom: "1em" }}
+                        label="Serial #"
+                        required
+                        className="item-page__input"
+                        sx={{ marginRight: "2em" }}
+                      />
+                      <TextFieldElement
+                        name="mNumber"
+                        disabled={disabled}
+                        style={{ marginBottom: "1em" }}
+                        label="M-Number"
+                        required
+                        className="item-page__input"
+                      />
+                    </div>
+                    <div className="item-page__row">
+                      <SelectElement
+                        className="item-page__input"
+                        sx={{ marginRight: "2em" }}
+                        style={{ marginBottom: "1em" }}
+                        label="Owner"
+                        name="ownerId"
+                        options={owners.map((o) => {
+                          return { id: `${o.id}`, label: o.name };
+                        })}
+                        required
+                      />
+                      <SelectElement
+                        className="item-page__input"
+                        style={{ marginBottom: "1em" }}
+                        label="Location"
+                        name="locationId"
+                        options={locations.map((l) => {
+                          return { id: `${l.id}`, label: l.name };
+                        })}
+                        required
+                      />
+                    </div>
+                    <div className="item-page__row">
+                      <TextFieldElement
+                        name="notes"
+                        disabled={disabled}
+                        style={{ marginBottom: "1em" }}
+                        label="Notes"
+                        className="item-page__input--lrg"
+                      />
+                    </div>
+                    <div className="flex-row ai-center">
+                      <span className="mr-05em font-bold">Item Status: </span>
+                      <StatusCard status={item.status} />
+                    </div>
+                    {loadingUser ? (
+                      <div></div>
+                    ) : (
+                      <>
+                        <span className="item-page__notes mt-1em">
+                          {`Created on ${item.createdAtStr} by ${
+                            item.user?.firstName ?? ""
+                          } ${item.user?.lastName ?? ""}.`}
+                        </span>
+                        <span className="item-page__notes">
+                          {`Last updated on ${item.updatedAtStr} by ${
+                            item.user?.firstName ?? ""
+                          } ${item.user?.lastName ?? ""}.`}
+                        </span>
+                      </>
+                    )}
                   </div>
-                  <div className="item-page__row">
-                    <SelectElement
-                      className="item-page__input"
-                      sx={{ marginRight: "2em" }}
-                      style={{ marginBottom: "1em" }}
-                      label="Category"
-                      name="categoryId"
-                      options={categories.map((c) => {
-                        return { id: `${c.id}`, label: c.name };
-                      })}
-                      required
-                    />
-                    <TextFieldElement
-                      name="price"
-                      disabled={disabled}
-                      style={{ marginBottom: "1em" }}
-                      label="Price"
-                      required
-                      className="item-page__input"
-                      InputProps={{
-                        endAdornment: "£",
-                      }}
-                    />
-                  </div>
-                  <div className="item-page__row">
-                    <TextFieldElement
-                      name="serial"
-                      disabled={disabled}
-                      style={{ marginBottom: "1em" }}
-                      label="Serial #"
-                      required
-                      className="item-page__input"
-                      sx={{ marginRight: "2em" }}
-                    />
-                    <TextFieldElement
-                      name="mNumber"
-                      disabled={disabled}
-                      style={{ marginBottom: "1em" }}
-                      label="M-Number"
-                      required
-                      className="item-page__input"
-                    />
-                  </div>
-                  <div className="item-page__row">
-                    <SelectElement
-                      className="item-page__input"
-                      sx={{ marginRight: "2em" }}
-                      style={{ marginBottom: "1em" }}
-                      label="Owner"
-                      name="ownerId"
-                      options={owners.map((o) => {
-                        return { id: `${o.id}`, label: o.name };
-                      })}
-                      required
-                    />
-                    <SelectElement
-                      className="item-page__input"
-                      style={{ marginBottom: "1em" }}
-                      label="Location"
-                      name="locationId"
-                      options={locations.map((l) => {
-                        return { id: `${l.id}`, label: l.name };
-                      })}
-                      required
-                    />
-                  </div>
-                  <div className="item-page__row">
-                    <TextFieldElement
-                      name="notes"
-                      disabled={disabled}
-                      style={{ marginBottom: "1em" }}
-                      label="Notes"
-                      className="item-page__input--lrg"
-                    />
-                  </div>
-                  <div className="flex-row ai-center">
-                    <span className="mr-05em font-bold">Item Status: </span>
-                    <StatusCard status={item.status} />
-                  </div>
-                  {loadingUser ? (
-                    <div></div>
+                  <Divider
+                    orientation="vertical"
+                    sx={{ marginLeft: "4em", marginRight: "2em" }}
+                  />
+                  {loadingTimeline ? (
+                    <div className="item-page__timeline-loading">
+                      <CircularProgress />
+                    </div>
                   ) : (
-                    <>
-                      <span className="item-page__notes mt-1em">
-                        {`Created on ${item.createdAtStr} by ${
-                          item.user?.firstName ?? ""
-                        } ${item.user?.lastName ?? ""}.`}
-                      </span>
-                      <span className="item-page__notes">
-                        {`Last updated on ${item.updatedAtStr} by ${
-                          item.user?.firstName ?? ""
-                        } ${item.user?.lastName ?? ""}.`}
-                      </span>
-                    </>
+                    <div className="item-page__timeline-wrapper">
+                      <div className="item-page__col--timeline">
+                        <span className="item-page__title">Timeline</span>
+                        {item.events.map((e, index) => (
+                          <TimelineCard key={e.id} event={e} />
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
-                <Divider
-                  orientation="vertical"
-                  sx={{ marginLeft: "4em", marginRight: "2em" }}
-                />
-                {loadingTimeline ? (
-                  <div className="item-page__timeline-loading">
-                    <CircularProgress />
-                  </div>
-                ) : (
-                  <div className="item-page__timeline-wrapper">
-                    <div className="item-page__col--timeline">
-                      <span className="item-page__title">Timeline</span>
-                      {item.events.map((e, index) => (
-                        <TimelineCard key={e.id} event={e} />
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>

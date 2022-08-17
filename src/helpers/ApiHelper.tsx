@@ -311,10 +311,27 @@ export class ApiHelper {
       if (resp.status === 200) {
         success = true;
         Logger.log("Logged in user.", resp.data);
-        // AuthorizationHelper.saveJwtCookie(resp.data.token);
       }
     } catch (e) {
       Logger.log(`Couldn't login user.`);
+    }
+
+    return success;
+  }
+
+  public static async logout(): Promise<boolean> {
+    let success: boolean = false;
+
+    try {
+      const resp = await HttpHelper.request(url + `logout`, RequestType.post);
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log("Logged out.", resp.data);
+        window.location.reload();
+      }
+    } catch (e) {
+      Logger.log(`Couldn't log out user.`);
     }
 
     return success;
