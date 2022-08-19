@@ -5,21 +5,13 @@ import Box from "@mui/material/Box";
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsIcon from "@mui/icons-material/Settings";
 import BentoIcon from "@mui/icons-material/Bento";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import styled from "@emotion/styled";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
 }
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-
-  &:focus, &:hover, &:visited, &:link, &:active {
-      text-decoration: none;
-`;
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;

@@ -36,6 +36,27 @@ import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
 import { Owner } from "../objects/Owner";
 
+function hasDifferences(
+  newItem: SubmittedData,
+  oldItem: InventoryItem
+): boolean {
+  let hasDifferences = false;
+
+  if (newItem.categoryId !== oldItem.categoryId.toString())
+    hasDifferences = true;
+  if (newItem.ownerId !== oldItem.ownerId.toString()) hasDifferences = true;
+  if (newItem.locationId !== oldItem.locationId.toString())
+    hasDifferences = true;
+  if (newItem.mNumber !== oldItem.mNumber) hasDifferences = true;
+  if (newItem.serial !== oldItem.serial) hasDifferences = true;
+  if (newItem.manufacturer !== oldItem.manufacturer) hasDifferences = true;
+  if (newItem.model !== oldItem.model) hasDifferences = true;
+  if (newItem.notes !== oldItem.notes) hasDifferences = true;
+  if (newItem.price !== oldItem.price.toString()) hasDifferences = true;
+
+  return hasDifferences;
+}
+
 function useForceUpdate() {
   const [_, setValue] = useState(0);
   return () => setValue((value) => value + 1);
@@ -94,6 +115,8 @@ export function ItemPage() {
   }
 
   async function _updateItem(data: SubmittedData) {
+    if (!hasDifferences(data, item)) return;
+
     setDisabled(true);
 
     const _item: InventoryItem = new InventoryItem(
@@ -262,6 +285,7 @@ export function ItemPage() {
                     <div className="item-page__row">
                       <SelectElement
                         className="item-page__input"
+                        disabled={disabled}
                         sx={{ marginRight: "2em" }}
                         style={{ marginBottom: "1em" }}
                         label="Category"
@@ -305,6 +329,7 @@ export function ItemPage() {
                     <div className="item-page__row">
                       <SelectElement
                         className="item-page__input"
+                        disabled={disabled}
                         sx={{ marginRight: "2em" }}
                         style={{ marginBottom: "1em" }}
                         label="Owner"
@@ -316,6 +341,7 @@ export function ItemPage() {
                       />
                       <SelectElement
                         className="item-page__input"
+                        disabled={disabled}
                         style={{ marginBottom: "1em" }}
                         label="Location"
                         name="locationId"

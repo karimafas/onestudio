@@ -7,6 +7,7 @@ import { InventoryPage } from "./pages/InventoryPage";
 import { ItemPage } from "./pages/ItemPage";
 import { LoginPage } from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
+import { SettingsPage } from "./pages/SettingsPage";
 
 function App() {
   const navigate = useNavigate();
@@ -39,12 +40,13 @@ function App() {
     return (
       <div className="App">
         {loggedIn ? <Sidebar /> : <></>}
-        <div style={{ width: "calc(100vw - 6em)" }}>
+        <div style={{ width: loggedIn ? "calc(100vw - 6em)" : '100vw' }}>
           <Routes>
             <Route path="/" element={<></>} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/inventory" element={<InventoryPage />} />
             <Route path="/inventory/:id" element={<ItemPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </div>
       </div>

@@ -161,8 +161,8 @@ export function InventoryPage() {
               variant="contained"
               onClick={() => dispatch(setDrawer(true))}
             >
+              <DataSaverOnIcon fontSize="small" sx={{ marginRight: "0.3em" }} />
               Add new item
-              <DataSaverOnIcon fontSize="small" sx={{ marginLeft: "0.3em" }} />
             </Button>
           </div>
         </div>

@@ -4,12 +4,13 @@ import { Category } from "../../objects/Category";
 import { InventoryItem } from "../../objects/InventoryItem";
 import { Owner } from "../../objects/Owner";
 import { StudioLocation } from "../../objects/StudioLocation";
-import { Logger } from "../../services/logger";
+import { TimelineUser } from "../../objects/TimelineUser";
 
 // Define a type for the slice state
 interface DataState {
   loading: boolean;
   loggedIn: boolean;
+  user: TimelineUser | undefined;
   items: Array<InventoryItem>;
   categories: Array<Category>;
   owners: Array<Owner>;
@@ -20,6 +21,7 @@ interface DataState {
 const initialState: DataState = {
   loading: true,
   loggedIn: false,
+  user: undefined,
   items: [],
   categories: [],
   owners: [],
@@ -31,12 +33,14 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
   const categories: Array<Category> = await ApiHelper.getCategories();
   const owners: Array<Owner> = await ApiHelper.getOwners();
   const locations: Array<StudioLocation> = await ApiHelper.getLocations();
+  const user = await ApiHelper.getCurrentUser();
 
   return {
     items: items,
     categories: categories,
     owners: owners,
     locations: locations,
+    user: user,
   };
 });
 
@@ -59,6 +63,18 @@ export const reloadItem = createAsyncThunk(
     return item;
   }
 );
+
+export const reloadTypes = createAsyncThunk("users/reloadTypes", async () => {
+  const categories: Array<Category> = await ApiHelper.getCategories();
+  const owners: Array<Owner> = await ApiHelper.getOwners();
+  const locations: Array<StudioLocation> = await ApiHelper.getLocations();
+
+  return {
+    categories: categories,
+    owners: owners,
+    locations: locations,
+  };
+});
 
 export const counterSlice = createSlice({
   name: "data",
@@ -131,6 +147,7 @@ export const counterSlice = createSlice({
       state.categories = payload.categories;
       state.locations = payload.locations;
       state.owners = payload.owners;
+      state.user = payload.user;
       state.loading = false;
     });
     builder.addCase(reloadItem.fulfilled, (state: DataState, action) => {
@@ -154,6 +171,12 @@ export const counterSlice = createSlice({
         ...state,
         items: [...state.items],
       };
+    });
+    builder.addCase(reloadTypes.fulfilled, (state: DataState, action) => {
+      const payload = action.payload;
+      Object.assign(state.locations, payload.locations);
+      Object.assign(state.categories, payload.categories);
+      Object.assign(state.owners, payload.owners);
     });
   },
 });

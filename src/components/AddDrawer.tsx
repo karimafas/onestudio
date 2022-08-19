@@ -134,11 +134,11 @@ export function AddDrawer(props: { submit: Function }) {
                 sx={{ marginRight: "2em" }}
                 variant="outlined"
               >
-                Create Item
                 <DataSaverOnIcon
                   fontSize="small"
-                  sx={{ marginLeft: "0.3em" }}
+                  sx={{ marginRight: "0.3em" }}
                 />
+                Create Item
               </Button>
             </div>
           </div>

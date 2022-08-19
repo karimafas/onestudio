@@ -1,3 +1,4 @@
+import { TypesDrawerType } from "../components/TypesDrawer";
 import { Category } from "../objects/Category";
 import { InventoryItem } from "../objects/InventoryItem";
 import { Owner } from "../objects/Owner";
@@ -402,5 +403,57 @@ export class ApiHelper {
     }
 
     return user;
+  }
+
+  public static async getCurrentUser(): Promise<TimelineUser | undefined> {
+    let user: TimelineUser | undefined;
+
+    try {
+      const resp = await HttpHelper.request(
+        url + `current-user`,
+        RequestType.get
+      );
+
+      if (resp.status === 200) {
+        Logger.log("Found current user info.", resp.data);
+
+        if (resp.data) {
+          user = TimelineUser.fromJson(resp.data);
+        }
+      }
+    } catch (e) {
+      Logger.log(`Couldn't find current user info.`);
+    }
+
+    return user;
+  }
+
+  public static async createType(
+    name: string,
+    type: TypesDrawerType
+  ): Promise<boolean> {
+    let success = false;
+
+    try {
+      const body = {
+        name: name,
+      };
+
+      const resp = await HttpHelper.request(
+        url +
+          `${type === TypesDrawerType.category ? "categories" : "locations"}`,
+        RequestType.post,
+        body
+      );
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log("Created type.", resp.data);
+      }
+    } catch (e) {
+      Logger.log(`Couldn't create type.`);
+    }
+
+    return success;
   }
 }
