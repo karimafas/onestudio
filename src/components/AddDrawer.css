@@ -27,7 +27,7 @@
 .add-drawer__row {
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 2em;
 }

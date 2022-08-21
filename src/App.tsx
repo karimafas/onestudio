@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { initialLoad } from "./features/data/dataSlice";
 import { ApiHelper } from "./helpers/ApiHelper";
@@ -40,7 +40,7 @@ function App() {
     return (
       <div className="App">
         {loggedIn ? <Sidebar /> : <></>}
-        <div style={{ width: loggedIn ? "calc(100vw - 6em)" : '100vw' }}>
+        <div style={{ width: loggedIn ? "calc(100vw - 6em)" : "100vw" }}>
           <Routes>
             <Route path="/" element={<></>} />
             <Route path="/login" element={<LoginPage />} />
