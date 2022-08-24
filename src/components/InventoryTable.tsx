@@ -146,8 +146,16 @@ export default function InventoryTable() {
 
   return (
     <Paper sx={{ marginTop: "2em" }}>
-      <TableContainer sx={{ maxHeight: "calc(100vh - 13em)" }}>
-        <Table stickyHeader aria-label="sticky table">
+      <TableContainer
+        sx={{
+          maxHeight: "calc(100vh - 13em)",
+        }}
+      >
+        <Table
+          stickyHeader
+          aria-label="sticky table"
+          sx={{ color: "#E8E8FF" }}
+        >
           <TableHead>
             <TableRow>
               {columns.map((column) => (

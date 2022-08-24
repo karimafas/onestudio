@@ -6,6 +6,7 @@ import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useEffect, useState } from "react";
 import { Logger } from "../services/logger";
 import { useNavigate } from "react-router-dom";
+const logo = require("../assets/images/logo_typed.png");
 
 interface LoginData {
   email: string;
@@ -31,6 +32,12 @@ export function LoginPage() {
 
   return (
     <div className="login-page__wrapper">
+      <img
+        style={{ marginBottom: "2em" }}
+        width={200}
+        src={logo}
+        alt="one-studio-logo"
+      />
       <FormContainer
         onSuccess={async (data: LoginData) => {
           setDisabled(true);
@@ -38,12 +45,18 @@ export function LoginPage() {
           setDisabled(false);
 
           if (result) {
-            window.location.replace("/");
+            const savedUrl = sessionStorage.getItem("url");
+            const url = savedUrl || "/";
+
+            if (savedUrl) sessionStorage.removeItem("url");
+            
+            window.location.replace(url);
           }
         }}
       >
         <div className="login-page__form">
           <TextFieldElement
+            size="small"
             name="email"
             disabled={disabled}
             className="login-page__input mb-1em"
@@ -51,6 +64,7 @@ export function LoginPage() {
             sx={{ marginBottom: "1em" }}
           ></TextFieldElement>
           <TextFieldElement
+            size="small"
             name="password"
             disabled={disabled}
             className="login-page__input"
@@ -58,7 +72,9 @@ export function LoginPage() {
             type="password"
             sx={{ marginBottom: "1em" }}
           ></TextFieldElement>
-          <Button type="submit">Login</Button>
+          <Button size="small" type="submit">
+            Login
+          </Button>
         </div>
       </FormContainer>
     </div>

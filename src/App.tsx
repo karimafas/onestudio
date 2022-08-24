@@ -8,25 +8,44 @@ import { ItemPage } from "./pages/ItemPage";
 import { LoginPage } from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
 import { SettingsPage } from "./pages/SettingsPage";
+import { DashboardPage } from "./pages/DashboardPage";
+import { createTheme, ThemeProvider } from "@mui/material";
 
-function App() {
+export default function App() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.data.loading);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [loadedLogin, setLoadedLogin] = useState<boolean>(false);
+
+  let theme = createTheme({
+    palette: {
+      primary: {
+        main: "#120F9C",
+      },
+      secondary: {
+        main: "#edf2ff",
+      },
+    },
+  });
 
   useEffect(() => {
+    sessionStorage.setItem("url", window.location.href);
+    
     ApiHelper.checkToken().then((value) => {
       setLoggedIn(value);
       if (value) {
         dispatch(initialLoad());
+        setLoadedLogin(true);
       } else {
         ApiHelper.refreshToken().then((result) => {
           setLoggedIn(result);
           if (!result) {
             navigate("/login");
+            setLoadedLogin(true);
           } else {
             dispatch(initialLoad());
+            setLoadedLogin(true);
           }
         });
       }
@@ -34,24 +53,26 @@ function App() {
     return () => {};
   }, []);
 
+  if (!loadedLogin) return <div></div>;
+
   if (loading && loggedIn) {
     return <div></div>;
   } else {
     return (
-      <div className="App">
-        {loggedIn ? <Sidebar /> : <></>}
-        <div style={{ width: loggedIn ? "calc(100vw - 6em)" : "100vw" }}>
-          <Routes>
-            <Route path="/" element={<></>} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/inventory" element={<InventoryPage />} />
-            <Route path="/inventory/:id" element={<ItemPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-          </Routes>
+      <ThemeProvider theme={theme}>
+        <div className="App">
+          {loggedIn ? <Sidebar /> : <></>}
+          <div style={{ width: loggedIn ? "calc(100vw - 6em)" : "100vw" }}>
+            <Routes>
+              <Route path="/" element={<DashboardPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/inventory" element={<InventoryPage />} />
+              <Route path="/inventory/:id" element={<ItemPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+            </Routes>
+          </div>
         </div>
-      </div>
+      </ThemeProvider>
     );
   }
 }
-
-export default App;

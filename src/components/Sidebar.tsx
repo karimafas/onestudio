@@ -7,26 +7,6 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import BentoIcon from "@mui/icons-material/Bento";
 import { useLocation, useNavigate } from "react-router-dom";
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    ></div>
-  );
-}
-
 function getTab(path: string): number {
   if (path.startsWith("dashboard")) {
     return 0;
@@ -82,9 +62,6 @@ export default function VerticalTabs() {
         <Tab icon={<BentoIcon />} />
         <Tab icon={<SettingsIcon />} />
       </Tabs>
-      <TabPanel value={value} index={0}>
-        Dashboard
-      </TabPanel>
     </Box>
   );
 }

@@ -456,4 +456,35 @@ export class ApiHelper {
 
     return success;
   }
+
+  public static async getStats(
+    period: "l7d" | "l30d" | "all",
+    type: "fault" | "fix"
+  ): Promise<{ success: boolean; data: any }> {
+    let success = false;
+    let data;
+
+    try {
+      const body = {
+        type: type,
+        period: period,
+      };
+
+      const resp = await HttpHelper.request(
+        url + `stats`,
+        RequestType.post,
+        body
+      );
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log("Retrieved stats.", resp.data);
+        data = resp.data;
+      }
+    } catch (e) {
+      Logger.log(`Couldn't retrieve stats.`);
+    }
+
+    return { success: success, data: data };
+  }
 }
