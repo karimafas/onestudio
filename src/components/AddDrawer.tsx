@@ -9,8 +9,8 @@ import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import { useAppSelector } from "../app/hooks";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
-import { Owner } from "../objects/Owner";
 import { useState } from "react";
+import { TimelineUser } from "../objects/TimelineUser";
 
 export interface SubmittedData {
   manufacturer: string;
@@ -32,7 +32,9 @@ export function AddDrawer(props: { submit: Function }) {
   const locations: Array<StudioLocation> = useAppSelector(
     (state) => state.data.locations
   );
-  const owners: Array<Owner> = useAppSelector((state) => state.data.owners);
+  const owners: Array<TimelineUser> = useAppSelector((state) =>
+    state.data.studioUsers.filter((u) => u.owner)
+  );
 
   return (
     <div>
@@ -106,7 +108,10 @@ export function AddDrawer(props: { submit: Function }) {
                 label="Owner"
                 name="ownerId"
                 options={owners.map((o) => {
-                  return { id: `${o.id}`, label: o.name };
+                  return {
+                    id: `${o.id}`,
+                    label: `${o.firstName} ${o.lastName} (${o.email})`,
+                  };
                 })}
                 required
               />

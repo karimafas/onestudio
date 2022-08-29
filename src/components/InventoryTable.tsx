@@ -15,9 +15,9 @@ import { selectItem } from "../features/data/dataSlice";
 import { useNavigate } from "react-router-dom";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
-import { Owner } from "../objects/Owner";
+import { TimelineUser } from "../objects/TimelineUser";
 
-interface Column {
+export interface Column {
   id:
     | "chk"
     | "status"
@@ -36,7 +36,7 @@ interface Column {
   format?: (value: number) => string;
 }
 
-const columns: readonly Column[] = [
+export const columns: readonly Column[] = [
   { id: "chk", label: "", minWidth: 30 },
   { id: "status", label: "", minWidth: 5 },
   { id: "manufacturer", label: "Manufacturer", minWidth: 100 },
@@ -69,7 +69,7 @@ function getItemValue(
   item: InventoryItem,
   locations: Array<StudioLocation>,
   categories: Array<Category>,
-  owners: Array<Owner>
+  owners: Array<TimelineUser>
 ): any {
   switch (column) {
     case "status":
@@ -85,7 +85,7 @@ function getItemValue(
     case "category":
       return categories.filter((c) => c.id === item.categoryId)[0].name;
     case "owner":
-      return owners.filter((o) => o.id === item.ownerId)[0].name;
+      return owners.filter((o) => o.id === item.ownerId)[0].email;
     case "mNumber":
       return item.mNumber;
     case "serial":
@@ -118,7 +118,9 @@ export default function InventoryTable() {
   const locations: Array<StudioLocation> = useAppSelector(
     (state) => state.data.locations
   );
-  const owners: Array<Owner> = useAppSelector((state) => state.data.owners);
+  const owners: Array<TimelineUser> = useAppSelector((state) =>
+    state.data.studioUsers.filter((u) => u.owner)
+  );
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -151,11 +153,7 @@ export default function InventoryTable() {
           maxHeight: "calc(100vh - 13em)",
         }}
       >
-        <Table
-          stickyHeader
-          aria-label="sticky table"
-          sx={{ color: "#E8E8FF" }}
-        >
+        <Table stickyHeader aria-label="sticky table" sx={{ color: "#E8E8FF" }}>
           <TableHead>
             <TableRow>
               {columns.map((column) => (

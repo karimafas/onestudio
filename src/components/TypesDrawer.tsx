@@ -1,28 +1,41 @@
 import { Box, Button } from "@mui/material";
 import "./AddDrawer.css";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import {
+  FormContainer,
+  SelectElement,
+  TextFieldElement,
+} from "react-hook-form-mui";
 import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import { useState } from "react";
+import { useAppSelector } from "../app/hooks";
+import { SetOwnerType } from "../helpers/ApiHelper";
 
 export enum TypesDrawerType {
   category,
   location,
+  owner,
 }
 
 export interface TypesSubmittedData {
-  name: string;
+  name: string | undefined;
+  userId: number | undefined;
+  setOwnerType: SetOwnerType;
 }
 
 export function TypesDrawer(props: {
   submit: Function;
   type: TypesDrawerType;
 }) {
+  const users = useAppSelector((state) =>
+    state.data.studioUsers.filter((u) => !u.owner)
+  );
   const [disabled, setDisabled] = useState(false);
 
   return (
     <div>
       <FormContainer
         onSuccess={async (data: TypesSubmittedData) => {
+          data.setOwnerType = SetOwnerType.grant;
           setDisabled(true);
           await props.submit(data);
           setDisabled(false);
@@ -37,17 +50,32 @@ export function TypesDrawer(props: {
                   Add new{" "}
                   {props.type === TypesDrawerType.category
                     ? "category"
-                    : "location"}
+                    : props.type === TypesDrawerType.location
+                    ? "location"
+                    : "owner"}
                 </span>
               </div>
-              <TextFieldElement
-                name="name"
-                disabled={disabled}
-                style={{ marginBottom: "1em" }}
-                size="small"
-                label="Name"
-                required
-              />
+              {props.type === TypesDrawerType.owner ? (
+                <SelectElement
+                  size="small"
+                  style={{ marginBottom: "1em" }}
+                  label="User"
+                  name="userId"
+                  options={users.map((u) => {
+                    return { id: `${u.id}`, label: u.email };
+                  })}
+                  required
+                />
+              ) : (
+                <TextFieldElement
+                  name="name"
+                  disabled={disabled}
+                  style={{ marginBottom: "1em" }}
+                  size="small"
+                  label="Name"
+                  required
+                />
+              )}
             </div>
             <div className="add-drawer__row add-drawer__row--end">
               <Button
@@ -62,7 +90,9 @@ export function TypesDrawer(props: {
                 Add{" "}
                 {props.type === TypesDrawerType.category
                   ? "Category"
-                  : "Location"}
+                  : props.type === TypesDrawerType.location
+                  ? "Location"
+                  : "Owner"}
               </Button>
             </div>
           </div>

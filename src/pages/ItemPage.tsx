@@ -34,7 +34,7 @@ import { StatusCard } from "../components/StatusCard";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
-import { Owner } from "../objects/Owner";
+import { TimelineUser } from "../objects/TimelineUser";
 
 function hasDifferences(
   newItem: SubmittedData,
@@ -82,7 +82,9 @@ export function ItemPage() {
   const locations: Array<StudioLocation> = useAppSelector(
     (state) => state.data.locations
   );
-  const owners: Array<Owner> = useAppSelector((state) => state.data.owners);
+  const owners: Array<TimelineUser> = useAppSelector((state) =>
+    state.data.studioUsers.filter((u) => u.owner)
+  );
 
   useEffect(() => {
     if (item && item.events && item.events.length === 0) {
@@ -335,7 +337,7 @@ export function ItemPage() {
                         label="Owner"
                         name="ownerId"
                         options={owners.map((o) => {
-                          return { id: `${o.id}`, label: o.name };
+                          return { id: `${o.id}`, label: `${o.firstName} ${o.lastName} (${o.email})` };
                         })}
                         required
                       />

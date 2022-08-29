@@ -1,7 +1,6 @@
 import { TypesDrawerType } from "../components/TypesDrawer";
 import { Category } from "../objects/Category";
 import { InventoryItem } from "../objects/InventoryItem";
-import { Owner } from "../objects/Owner";
 import { StudioLocation } from "../objects/StudioLocation";
 import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
 import { TimelineUser } from "../objects/TimelineUser";
@@ -20,6 +19,20 @@ function eventToString(type: TimelineEventType) {
       return "fault";
     case TimelineEventType.fix:
       return "fix";
+  }
+}
+
+export enum SetOwnerType {
+  grant,
+  revoke,
+}
+
+function setOwnerTypeToString(type: SetOwnerType) {
+  switch (type) {
+    case SetOwnerType.grant:
+      return "grant";
+    case SetOwnerType.revoke:
+      return "revoke";
   }
 }
 
@@ -94,28 +107,6 @@ export class ApiHelper {
     }
 
     return categories;
-  }
-
-  public static async getOwners(): Promise<Array<Owner>> {
-    let owners: Array<Owner> = [];
-
-    try {
-      const resp = await HttpHelper.request(url + `/owners`, RequestType.get);
-
-      Logger.log("Loaded owners from API.", resp);
-
-      const _owners = resp.data;
-
-      if (_owners) {
-        for (const owner of _owners) {
-          owners.push(Owner.fromJson(owner));
-        }
-      }
-    } catch (e) {
-      Logger.log(`Couldn't load owners.`);
-    }
-
-    return owners;
   }
 
   public static async getInventoryItem(
@@ -428,6 +419,28 @@ export class ApiHelper {
     return user;
   }
 
+  public static async getStudioUsers(): Promise<Array<TimelineUser>> {
+    let users: Array<TimelineUser> = [];
+
+    try {
+      const resp = await HttpHelper.request(url + `users`, RequestType.get);
+
+      if (resp.status === 200) {
+        Logger.log("Found studio users info.", resp.data);
+
+        if (resp.data) {
+          for (const jsonUser of resp.data) {
+            users.push(TimelineUser.fromJson(jsonUser));
+          }
+        }
+      }
+    } catch (e) {
+      Logger.log(`Couldn't find studio users info.`);
+    }
+
+    return users;
+  }
+
   public static async createType(
     name: string,
     type: TypesDrawerType
@@ -486,5 +499,29 @@ export class ApiHelper {
     }
 
     return { success: success, data: data };
+  }
+
+  public static async setOwner(
+    id: number,
+    type: SetOwnerType
+  ): Promise<boolean> {
+    let success = false;
+
+    try {
+      const body = {
+        id: id,
+        type: setOwnerTypeToString(type),
+      };
+      const resp = await HttpHelper.request(url + `owner`, RequestType.post, body);
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log("Set owner.", resp.data);
+      }
+    } catch (e) {
+      Logger.log(`Couldn't set owner.`);
+    }
+
+    return success;
   }
 }

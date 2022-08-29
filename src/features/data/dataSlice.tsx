@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { ApiHelper } from "../../helpers/ApiHelper";
 import { Category } from "../../objects/Category";
 import { InventoryItem } from "../../objects/InventoryItem";
-import { Owner } from "../../objects/Owner";
 import { StudioLocation } from "../../objects/StudioLocation";
 import { TimelineUser } from "../../objects/TimelineUser";
 
@@ -11,9 +10,9 @@ interface DataState {
   loading: boolean;
   loggedIn: boolean;
   user: TimelineUser | undefined;
+  studioUsers: Array<TimelineUser>;
   items: Array<InventoryItem>;
   categories: Array<Category>;
-  owners: Array<Owner>;
   locations: Array<StudioLocation>;
 }
 
@@ -22,25 +21,25 @@ const initialState: DataState = {
   loading: true,
   loggedIn: false,
   user: undefined,
+  studioUsers: [],
   items: [],
   categories: [],
-  owners: [],
   locations: [],
 };
 
 export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
   const items: Array<InventoryItem> = await ApiHelper.getInventoryItems();
   const categories: Array<Category> = await ApiHelper.getCategories();
-  const owners: Array<Owner> = await ApiHelper.getOwners();
   const locations: Array<StudioLocation> = await ApiHelper.getLocations();
   const user = await ApiHelper.getCurrentUser();
+  const studioUsers: Array<TimelineUser> = await ApiHelper.getStudioUsers();
 
   return {
     items: items,
     categories: categories,
-    owners: owners,
     locations: locations,
     user: user,
+    studioUsers: studioUsers,
   };
 });
 
@@ -64,14 +63,19 @@ export const reloadItem = createAsyncThunk(
   }
 );
 
+export const reloadUsers = createAsyncThunk(
+  "users/reloadUsers",
+  async () => {
+    return await ApiHelper.getStudioUsers();
+  }
+);
+
 export const reloadTypes = createAsyncThunk("users/reloadTypes", async () => {
   const categories: Array<Category> = await ApiHelper.getCategories();
-  const owners: Array<Owner> = await ApiHelper.getOwners();
   const locations: Array<StudioLocation> = await ApiHelper.getLocations();
 
   return {
     categories: categories,
-    owners: owners,
     locations: locations,
   };
 });
@@ -146,8 +150,8 @@ export const counterSlice = createSlice({
       state.items = payload.items;
       state.categories = payload.categories;
       state.locations = payload.locations;
-      state.owners = payload.owners;
       state.user = payload.user;
+      state.studioUsers = payload.studioUsers;
       state.loading = false;
     });
     builder.addCase(reloadItem.fulfilled, (state: DataState, action) => {
@@ -176,7 +180,10 @@ export const counterSlice = createSlice({
       const payload = action.payload;
       Object.assign(state.locations, payload.locations);
       Object.assign(state.categories, payload.categories);
-      Object.assign(state.owners, payload.owners);
+    });
+    builder.addCase(reloadUsers.fulfilled, (state: DataState, action) => {
+      const payload = action.payload;
+      Object.assign(state.studioUsers, payload);
     });
   },
 });
