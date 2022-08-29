@@ -63,12 +63,9 @@ export const reloadItem = createAsyncThunk(
   }
 );
 
-export const reloadUsers = createAsyncThunk(
-  "users/reloadUsers",
-  async () => {
-    return await ApiHelper.getStudioUsers();
-  }
-);
+export const reloadUsers = createAsyncThunk("users/reloadUsers", async () => {
+  return await ApiHelper.getStudioUsers();
+});
 
 export const reloadTypes = createAsyncThunk("users/reloadTypes", async () => {
   const categories: Array<Category> = await ApiHelper.getCategories();
@@ -178,8 +175,12 @@ export const counterSlice = createSlice({
     });
     builder.addCase(reloadTypes.fulfilled, (state: DataState, action) => {
       const payload = action.payload;
-      Object.assign(state.locations, payload.locations);
-      Object.assign(state.categories, payload.categories);
+
+      return {
+        ...state,
+        locations: [...payload.locations],
+        categories: [...payload.categories],
+      };
     });
     builder.addCase(reloadUsers.fulfilled, (state: DataState, action) => {
       const payload = action.payload;

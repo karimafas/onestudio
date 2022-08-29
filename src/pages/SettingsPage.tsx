@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import "./SettingsPage.css";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { ApiHelper } from "../helpers/ApiHelper";
+import { ApiHelper, SetOwnerType } from "../helpers/ApiHelper";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
@@ -22,10 +22,13 @@ import { useState } from "react";
 import {
   TypesDrawer,
   TypesDrawerType,
+  typesDrawerTypeToString,
   TypesSubmittedData,
 } from "../components/TypesDrawer";
 import { reloadTypes, reloadUsers } from "../features/data/dataSlice";
 import { TimelineUser } from "../objects/TimelineUser";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 export function SettingsPage() {
   const [drawer, setDrawer] = useState<boolean>(false);
@@ -42,6 +45,13 @@ export function SettingsPage() {
   const owners: Array<TimelineUser> = useAppSelector((state) =>
     state.data.studioUsers.filter((u) => u.owner)
   );
+  const [deleteOpen, setDeleteOpen] = useState<{
+    open: boolean;
+    data: { type: TypesDrawerType; id: number } | undefined;
+  }>({
+    open: false,
+    data: undefined,
+  });
   const dispatch = useAppDispatch();
 
   function _openDrawer(type: TypesDrawerType) {
@@ -70,8 +80,39 @@ export function SettingsPage() {
     if (success) setDrawer(false);
   }
 
+  async function _delete(
+    id: number | undefined,
+    type: TypesDrawerType | undefined
+  ) {
+    let success = false;
+    if (type === TypesDrawerType.owner) {
+      success = await ApiHelper.setOwner(id!, SetOwnerType.revoke);
+
+      if (success) {
+        await dispatch(reloadUsers());
+      }
+    } else {
+      success = await ApiHelper.deleteType(id!, type!);
+
+      if (success) {
+        await dispatch(reloadTypes());
+      }
+    }
+  }
+
   return (
     <div className="settings__padding">
+      <ConfirmDialog
+        title={`Delete ${typesDrawerTypeToString(deleteOpen.data?.type!)}`}
+        body={`Are you sure you want to delete this ${typesDrawerTypeToString(
+          deleteOpen.data?.type!
+        )}?`}
+        open={deleteOpen.open}
+        setOpen={() =>
+          setDeleteOpen({ open: !deleteOpen, data: deleteOpen.data! })
+        }
+        onConfirm={() => _delete(deleteOpen.data?.id, deleteOpen.data?.type)}
+      />
       <Drawer
         transitionDuration={300}
         anchor="right"
@@ -122,8 +163,28 @@ export function SettingsPage() {
                       "&:last-child td, &:last-child th": { border: 0 },
                     }}
                   >
-                    <TableCell component="th" scope="row">
+                    <TableCell component="th" scope="row" sx={{ width: "90%" }}>
                       {l.name}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      <IconButton
+                        onClick={() =>
+                          setDeleteOpen({
+                            open: true,
+                            data: {
+                              type: TypesDrawerType.location,
+                              id: l.id,
+                            },
+                          })
+                        }
+                        aria-label="delete"
+                        size="small"
+                      >
+                        <DeleteIcon
+                          fontSize="small"
+                          sx={{ alignSelf: "flex-end" }}
+                        />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -153,8 +214,28 @@ export function SettingsPage() {
                       "&:last-child td, &:last-child th": { border: 0 },
                     }}
                   >
-                    <TableCell component="th" scope="row">
+                    <TableCell component="th" scope="row" sx={{ width: "90%" }}>
                       {c.name}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      <IconButton
+                        onClick={() =>
+                          setDeleteOpen({
+                            open: true,
+                            data: {
+                              type: TypesDrawerType.category,
+                              id: c.id,
+                            },
+                          })
+                        }
+                        aria-label="delete"
+                        size="small"
+                      >
+                        <DeleteIcon
+                          fontSize="small"
+                          sx={{ alignSelf: "flex-end" }}
+                        />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -184,8 +265,28 @@ export function SettingsPage() {
                       "&:last-child td, &:last-child th": { border: 0 },
                     }}
                   >
-                    <TableCell component="th" scope="row">
+                    <TableCell component="th" scope="row" sx={{ width: "90%" }}>
                       {o.firstName} {o.lastName} ({o.email})
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      <IconButton
+                        onClick={() =>
+                          setDeleteOpen({
+                            open: true,
+                            data: {
+                              type: TypesDrawerType.owner,
+                              id: o.id,
+                            },
+                          })
+                        }
+                        aria-label="delete"
+                        size="small"
+                      >
+                        <DeleteIcon
+                          fontSize="small"
+                          sx={{ alignSelf: "flex-end" }}
+                        />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}

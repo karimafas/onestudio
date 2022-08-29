@@ -470,6 +470,34 @@ export class ApiHelper {
     return success;
   }
 
+  public static async deleteType(
+    id: number,
+    type: TypesDrawerType
+  ): Promise<boolean> {
+    let success = false;
+
+    console.log('hereinapi')
+
+    try {
+      const resp = await HttpHelper.request(
+        url +
+          `${
+            type === TypesDrawerType.category ? "categories" : "locations"
+          }/${id}`,
+        RequestType.delete
+      );
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log("Deleted type.", resp.data);
+      }
+    } catch (e) {
+      Logger.log(`Couldn't delete type.`);
+    }
+
+    return success;
+  }
+
   public static async getStats(
     period: "l7d" | "l30d" | "all",
     type: "fault" | "fix"
@@ -512,7 +540,11 @@ export class ApiHelper {
         id: id,
         type: setOwnerTypeToString(type),
       };
-      const resp = await HttpHelper.request(url + `owner`, RequestType.post, body);
+      const resp = await HttpHelper.request(
+        url + `owner`,
+        RequestType.post,
+        body
+      );
 
       if (resp.status === 200) {
         success = true;

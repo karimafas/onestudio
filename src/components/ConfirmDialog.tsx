@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent, Typography } from "@mui/material";
+import { Button, Dialog, Typography } from "@mui/material";
 import "./ConfirmDialog.css";
 
 const ConfirmDialog = (props: {

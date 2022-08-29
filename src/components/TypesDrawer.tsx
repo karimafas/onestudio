@@ -16,6 +16,17 @@ export enum TypesDrawerType {
   owner,
 }
 
+export function typesDrawerTypeToString(type: TypesDrawerType) {
+  switch (type) {
+    case TypesDrawerType.category:
+      return "category";
+    case TypesDrawerType.location:
+      return "location";
+    case TypesDrawerType.owner:
+      return "owner";
+  }
+}
+
 export interface TypesSubmittedData {
   name: string | undefined;
   userId: number | undefined;
@@ -47,12 +58,7 @@ export function TypesDrawer(props: {
               <div className="add-drawer__row">
                 <DataSaverOnIcon />
                 <span className="add-drawer__title">
-                  Add new{" "}
-                  {props.type === TypesDrawerType.category
-                    ? "category"
-                    : props.type === TypesDrawerType.location
-                    ? "location"
-                    : "owner"}
+                  Add new {typesDrawerTypeToString(props.type)}
                 </span>
               </div>
               {props.type === TypesDrawerType.owner ? (
@@ -87,12 +93,7 @@ export function TypesDrawer(props: {
                   fontSize="small"
                   sx={{ marginRight: "0.3em" }}
                 />
-                Add{" "}
-                {props.type === TypesDrawerType.category
-                  ? "Category"
-                  : props.type === TypesDrawerType.location
-                  ? "Location"
-                  : "Owner"}
+                Add {typesDrawerTypeToString(props.type)}
               </Button>
             </div>
           </div>
