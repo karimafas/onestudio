@@ -21,7 +21,6 @@ export function Importer() {
   const [tableRows, setTableRows] = useState<Array<string>>([]);
   const [values, setValues] = useState([]);
   const [uploaded, setUploaded] = useState(false);
-  const [columnValues, setColumnValues] = useState<any>({});
 
   const changeHandler = (event: any) => {
     // Passing file data (event.target.files[0]) to parse using Papa.parse
@@ -57,11 +56,7 @@ export function Importer() {
     let missing: Array<string> = [];
     const _columns = columns;
 
-    let columnValues: any = {};
-
     for (const column of _columns) {
-      columnValues.column = "";
-
       if (
         !tableRows
           .map((v) => v.toLowerCase())
@@ -144,26 +139,8 @@ export function Importer() {
                   ? "I have found all required columns."
                   : `The following required columns are missing in your CSV file: ${checkColumns().missing.join(
                       ", "
-                    )}. Please assign the correct pairs below.`}
+                    )}. Please edit your CSV as required and re-upload it.`}
               </Typography>
-              {checkColumns().missing.map((mc) => (
-                <div className="importer__missing-row">
-                  <Typography>{mc}: </Typography>
-                  <Select
-                    /* onChange={(event) => {
-                      const cv = JSON.parse(JSON.stringify(columnValues));
-                      cv.mc = event.target.value;
-                      setColumnValues(cv);
-                    }} */
-                    value={tableRows[0]}
-                    size="small"
-                  >
-                    {tableRows.map((tr) => (
-                      <MenuItem value={tr}>{tr}</MenuItem>
-                    ))}
-                  </Select>
-                </div>
-              ))}
             </div>
           </>
         ) : (

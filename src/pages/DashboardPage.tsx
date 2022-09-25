@@ -54,7 +54,7 @@ export function DashboardPage() {
         </div>
       </div>
       <Divider sx={{ width: "100%", marginTop: "4em", marginBottom: "4em" }} />
-      <Analytics />
+      {/* <Analytics /> */}
     </div>
   );
 }

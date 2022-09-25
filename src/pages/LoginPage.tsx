@@ -1,11 +1,11 @@
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import "./LoginPage.css";
 import "../App.css";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useEffect, useState } from "react";
 import { Logger } from "../services/logger";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 const logo = require("../assets/images/logo_typed.png");
 
 interface LoginData {
@@ -14,10 +14,14 @@ interface LoginData {
 }
 
 export function LoginPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [disabled, setDisabled] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [error, setError] = useState<boolean>(false);
+  const reset = searchParams.get("reset") === "true";
 
   useEffect(() => {
+    
     ApiHelper.checkToken().then((value) => {
       if (value) navigate("/");
     });
@@ -25,7 +29,6 @@ export function LoginPage() {
   }, []);
 
   async function _login(data: LoginData) {
-    Logger.log(`logging in user with data`, data);
     const res = await ApiHelper.login(data.email, data.password);
     return res;
   }
@@ -49,19 +52,28 @@ export function LoginPage() {
             const url = savedUrl || "/";
 
             if (savedUrl) sessionStorage.removeItem("url");
-            
+
             window.location.replace(url);
           }
+
+          setError(!result);
         }}
       >
         <div className="login-page__form">
+          {reset ? (
+            <Alert severity="success" sx={{ marginBottom: "1.5em" }}>
+              Your password was reset successfully.
+            </Alert>
+          ) : (
+            <></>
+          )}
           <TextFieldElement
             size="small"
             name="email"
             disabled={disabled}
             className="login-page__input mb-1em"
             label="Email"
-            sx={{ marginBottom: "1em" }}
+            sx={{ marginBottom: "1em", width: "20em" }}
           ></TextFieldElement>
           <TextFieldElement
             size="small"
@@ -70,11 +82,25 @@ export function LoginPage() {
             className="login-page__input"
             label="Password"
             type="password"
-            sx={{ marginBottom: "1em" }}
+            sx={{ marginBottom: "1em", width: "20em" }}
           ></TextFieldElement>
-          <Button size="small" type="submit">
+          {error ? (
+            <Alert severity="error" sx={{ marginBottom: "1.5em" }}>
+              You have entered an invalid username or password.
+            </Alert>
+          ) : (
+            <></>
+          )}
+          <Button
+            sx={{ width: "8em", marginBottom: "1em" }}
+            variant="outlined"
+            type="submit"
+          >
             Login
           </Button>
+          <a className="login__reset-txt" href="/reset-password">
+            Forgot your password?
+          </a>
         </div>
       </FormContainer>
     </div>

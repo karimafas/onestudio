@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { initialLoad } from "./features/data/dataSlice";
 import { ApiHelper } from "./helpers/ApiHelper";
@@ -11,8 +11,11 @@ import { SettingsPage } from "./pages/SettingsPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { Importer } from "./pages/Importer";
+import { ResetPassword } from "./pages/ResetPassword";
+import { Constants } from "./utils/Constants";
 
 export default function App() {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.data.loading);
@@ -31,8 +34,10 @@ export default function App() {
   });
 
   useEffect(() => {
+    const baseUrl = location.pathname.replaceAll("/", "");
+    console.log("baseurl", baseUrl);
     sessionStorage.setItem("url", window.location.href);
-    
+
     ApiHelper.checkToken().then((value) => {
       setLoggedIn(value);
       if (value) {
@@ -41,7 +46,7 @@ export default function App() {
       } else {
         ApiHelper.refreshToken().then((result) => {
           setLoggedIn(result);
-          if (!result) {
+          if (!result && !Constants.allowedRoutes.includes(baseUrl)) {
             navigate("/login");
             setLoadedLogin(true);
           } else {
@@ -67,6 +72,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/inventory" element={<InventoryPage />} />
               <Route path="/inventory/:id" element={<ItemPage />} />
               <Route path="/settings" element={<SettingsPage />} />

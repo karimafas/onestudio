@@ -1,7 +1,5 @@
 .confirm-dialog__row {
   display: flex;
   flex-direction: row;
-  margin: 1em;
   justify-content: flex-end;
-
 }

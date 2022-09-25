@@ -351,6 +351,30 @@ export class ApiHelper {
     return success;
   }
 
+  public static async checkResetToken(token: string): Promise<boolean> {
+    let success: boolean = false;
+
+    try {
+      const body = { token: token };
+
+      const resp = await HttpHelper.request(
+        url + `reset-token-chk`,
+        RequestType.post,
+        body,
+        false
+      );
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log("Found valid token.", resp.data);
+      }
+    } catch (e) {
+      Logger.log(`Couldn't find valid token.`);
+    }
+
+    return success;
+  }
+
   public static async refreshToken(): Promise<boolean> {
     let success: boolean = false;
 
@@ -476,7 +500,7 @@ export class ApiHelper {
   ): Promise<boolean> {
     let success = false;
 
-    console.log('hereinapi')
+    console.log("hereinapi");
 
     try {
       const resp = await HttpHelper.request(
@@ -552,6 +576,58 @@ export class ApiHelper {
       }
     } catch (e) {
       Logger.log(`Couldn't set owner.`);
+    }
+
+    return success;
+  }
+
+  public static async resetToken(email: string): Promise<boolean> {
+    let success = false;
+
+    try {
+      const body = {
+        email: email,
+      };
+      const resp = await HttpHelper.request(
+        url + `reset-token`,
+        RequestType.post,
+        body
+      );
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log(`Reset email sent.`);
+      }
+    } catch (e) {
+      Logger.log(`Couldn't send reset email.`);
+    }
+
+    return success;
+  }
+
+  public static async resetPassword(
+    token: string,
+    password: string
+  ): Promise<boolean> {
+    let success = false;
+
+    try {
+      const body = {
+        token: token,
+        password: password,
+      };
+      const resp = await HttpHelper.request(
+        url + `reset-password`,
+        RequestType.post,
+        body
+      );
+
+      if (resp.status === 200) {
+        success = true;
+        Logger.log(`Password reset.`);
+      }
+    } catch (e) {
+      Logger.log(`Couldn't reset password.`);
     }
 
     return success;
