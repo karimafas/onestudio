@@ -2,6 +2,8 @@ import { Logger } from "../services/logger";
 import { ApiHelper } from "./ApiHelper";
 const axios = require("axios");
 
+const baseUrl = "http://localhost:3000/";
+
 export enum RequestType {
   get,
   post,
@@ -44,26 +46,34 @@ export class HttpHelper {
     let attempts = 0;
     let response;
 
-    while (attempts < 2) {
+    while (attempts < 1) {
       Logger.log(
-        `Attempting ${getRequestString(
-          type
-        )} request for ${url}. Attempt no: ${attempts}.`
+        `Attempting ${getRequestString(type)} request for ${
+          baseUrl + url
+        }. Attempt no: ${attempts}.`
       );
-      
+
       try {
         switch (type) {
           case RequestType.get:
-            response = await axios.get(url);
+            response = await axios.get(baseUrl + url, {
+              withCredentials: true,
+            });
             break;
           case RequestType.post:
-            response = await axios.post(url, body);
+            response = await axios.post(baseUrl + url, body, {
+              withCredentials: true,
+            });
             break;
           case RequestType.put:
-            response = await axios.put(url, body);
+            response = await axios.put(baseUrl + url, body, {
+              withCredentials: true,
+            });
             break;
           case RequestType.delete:
-            response = await axios.delete(url, body);
+            response = await axios.delete(baseUrl + url, body, {
+              withCredentials: true,
+            });
             break;
         }
 

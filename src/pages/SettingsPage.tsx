@@ -100,6 +100,10 @@ export function SettingsPage() {
     }
   }
 
+  function _logout() {
+    ApiHelper.logout();
+  }
+
   return (
     <div className="settings__padding">
       <ConfirmDialog
@@ -132,11 +136,7 @@ export function SettingsPage() {
       <Typography color="#666666" mb={5}>
         One Studio Inc.
       </Typography>
-      <Button
-        color="error"
-        variant="outlined"
-        onClick={() => ApiHelper.logout()}
-      >
+      <Button color="error" variant="outlined" onClick={_logout}>
         <LogoutIcon fontSize="small" sx={{ marginRight: "0.3em" }} />
         Log Out
       </Button>

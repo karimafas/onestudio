@@ -4,7 +4,6 @@ import "../App.css";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useEffect, useState } from "react";
-import { Logger } from "../services/logger";
 import { useNavigate, useSearchParams } from "react-router-dom";
 const logo = require("../assets/images/logo_typed.png");
 
@@ -19,14 +18,6 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [error, setError] = useState<boolean>(false);
   const reset = searchParams.get("reset") === "true";
-
-  useEffect(() => {
-    
-    ApiHelper.checkToken().then((value) => {
-      if (value) navigate("/");
-    });
-    return () => {};
-  }, []);
 
   async function _login(data: LoginData) {
     const res = await ApiHelper.login(data.email, data.password);

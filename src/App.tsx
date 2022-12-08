@@ -12,7 +12,6 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { Importer } from "./pages/Importer";
 import { ResetPassword } from "./pages/ResetPassword";
-import { Constants } from "./utils/Constants";
 
 export default function App() {
   const location = useLocation();
@@ -33,29 +32,34 @@ export default function App() {
     },
   });
 
-  useEffect(() => {
-    const baseUrl = location.pathname.replaceAll("/", "");
-    console.log("baseurl", baseUrl);
-    sessionStorage.setItem("url", window.location.href);
+  function logout() {
+    setLoggedIn(false);
+    navigate("/login");
+    setLoadedLogin(true);
+  }
 
-    ApiHelper.checkToken().then((value) => {
-      setLoggedIn(value);
-      if (value) {
-        dispatch(initialLoad());
-        setLoadedLogin(true);
-      } else {
-        ApiHelper.refreshToken().then((result) => {
-          setLoggedIn(result);
-          if (!result && !Constants.allowedRoutes.includes(baseUrl)) {
-            navigate("/login");
-            setLoadedLogin(true);
-          } else {
-            dispatch(initialLoad());
-            setLoadedLogin(true);
-          }
-        });
-      }
-    });
+  function login() {
+    setLoadedLogin(true);
+    setLoggedIn(true);
+    dispatch(initialLoad());
+  }
+
+  useEffect(() => {
+    sessionStorage.setItem("url", window.location.href);
+    const refreshToken = true
+
+    if (refreshToken) {
+      ApiHelper.refreshToken().then((success) => {
+        if (success) {
+          login();
+        } else {
+          logout();
+        }
+      });
+    } else {
+      logout();
+    }
+
     return () => {};
   }, []);
 

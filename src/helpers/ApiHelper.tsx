@@ -7,8 +7,6 @@ import { TimelineUser } from "../objects/TimelineUser";
 import { Logger } from "../services/logger";
 import { HttpHelper, RequestType } from "./HttpHelper";
 
-const url = "/api/";
-
 function eventToString(type: TimelineEventType) {
   switch (type) {
     case TimelineEventType.created:
@@ -41,7 +39,7 @@ export class ApiHelper {
     let items: Array<InventoryItem> = [];
 
     try {
-      const resp = await HttpHelper.request(url + `/items`, RequestType.get);
+      const resp = await HttpHelper.request(`/items`, RequestType.get);
 
       Logger.log("Loaded inventory items from API.", resp);
 
@@ -63,10 +61,7 @@ export class ApiHelper {
     let locations: Array<StudioLocation> = [];
 
     try {
-      const resp = await HttpHelper.request(
-        url + `/locations`,
-        RequestType.get
-      );
+      const resp = await HttpHelper.request(`/locations`, RequestType.get);
 
       Logger.log("Loaded locations from API.", resp);
 
@@ -88,10 +83,7 @@ export class ApiHelper {
     let categories: Array<Category> = [];
 
     try {
-      const resp = await HttpHelper.request(
-        url + `/categories`,
-        RequestType.get
-      );
+      const resp = await HttpHelper.request(`/categories`, RequestType.get);
 
       Logger.log("Loaded categories from API.", resp);
 
@@ -115,10 +107,7 @@ export class ApiHelper {
     let item;
 
     try {
-      const resp = await HttpHelper.request(
-        url + `/items/${id}`,
-        RequestType.get
-      );
+      const resp = await HttpHelper.request(`/items/${id}`, RequestType.get);
 
       Logger.log(`Loaded inventory item with id ${id} from API.`, resp);
 
@@ -153,11 +142,7 @@ export class ApiHelper {
 
       Logger.log(`adding item with body`, body);
 
-      const resp = await HttpHelper.request(
-        url + "items",
-        RequestType.post,
-        body
-      );
+      const resp = await HttpHelper.request("items", RequestType.post, body);
 
       if (resp.status === 200) {
         success = true;
@@ -189,7 +174,7 @@ export class ApiHelper {
       };
 
       const resp = await HttpHelper.request(
-        url + `items/${i.id}`,
+        `items/${i.id}`,
         RequestType.put,
         body
       );
@@ -211,7 +196,7 @@ export class ApiHelper {
       const params = `?ids=${ids.join(",")}`;
 
       const resp = await HttpHelper.request(
-        url + `items${params}`,
+        `items${params}`,
         RequestType.delete
       );
 
@@ -233,7 +218,7 @@ export class ApiHelper {
 
     try {
       const resp = await HttpHelper.request(
-        url + `/events/${itemId}`,
+        `/events/${itemId}`,
         RequestType.get
       );
 
@@ -267,11 +252,7 @@ export class ApiHelper {
         type: eventToString(eventType),
       };
 
-      const resp = await HttpHelper.request(
-        url + `events`,
-        RequestType.post,
-        body
-      );
+      const resp = await HttpHelper.request(`events`, RequestType.post, body);
 
       if (resp.status === 200) {
         success = true;
@@ -294,13 +275,13 @@ export class ApiHelper {
       };
 
       const resp = await HttpHelper.request(
-        url + `login`,
+        `auth/login`,
         RequestType.post,
         body,
         false
       );
 
-      if (resp.status === 200) {
+      if (resp.status === 201) {
         success = true;
         Logger.log("Logged in user.", resp.data);
       }
@@ -315,9 +296,9 @@ export class ApiHelper {
     let success: boolean = false;
 
     try {
-      const resp = await HttpHelper.request(url + `logout`, RequestType.post);
+      const resp = await HttpHelper.request(`auth/logout`, RequestType.post);
 
-      if (resp.status === 200) {
+      if (resp.status === 201) {
         success = true;
         Logger.log("Logged out.", resp.data);
         window.location.reload();
@@ -334,7 +315,7 @@ export class ApiHelper {
 
     try {
       const resp = await HttpHelper.request(
-        url + `jwt-token-chk`,
+        `jwt-token-chk`,
         RequestType.get,
         undefined,
         false
@@ -358,7 +339,7 @@ export class ApiHelper {
       const body = { token: token };
 
       const resp = await HttpHelper.request(
-        url + `reset-token-chk`,
+        `reset-token-chk`,
         RequestType.post,
         body,
         false
@@ -380,13 +361,13 @@ export class ApiHelper {
 
     try {
       const resp = await HttpHelper.request(
-        url + `refresh-token`,
+        `auth/refreshToken`,
         RequestType.post,
-        undefined,
+        {},
         false
       );
 
-      if (resp.status === 200) {
+      if (resp.status === 201) {
         success = true;
         Logger.log("Token refreshed successfully.", resp.data);
       }
@@ -401,10 +382,7 @@ export class ApiHelper {
     let user: TimelineUser | undefined;
 
     try {
-      const resp = await HttpHelper.request(
-        url + `user?id=${id}`,
-        RequestType.get
-      );
+      const resp = await HttpHelper.request(`user?id=${id}`, RequestType.get);
 
       if (resp.status === 200) {
         Logger.log("Found user info.", resp.data);
@@ -424,10 +402,7 @@ export class ApiHelper {
     let user: TimelineUser | undefined;
 
     try {
-      const resp = await HttpHelper.request(
-        url + `current-user`,
-        RequestType.get
-      );
+      const resp = await HttpHelper.request(`current-user`, RequestType.get);
 
       if (resp.status === 200) {
         Logger.log("Found current user info.", resp.data);
@@ -447,7 +422,7 @@ export class ApiHelper {
     let users: Array<TimelineUser> = [];
 
     try {
-      const resp = await HttpHelper.request(url + `users`, RequestType.get);
+      const resp = await HttpHelper.request(`users`, RequestType.get);
 
       if (resp.status === 200) {
         Logger.log("Found studio users info.", resp.data);
@@ -477,8 +452,7 @@ export class ApiHelper {
       };
 
       const resp = await HttpHelper.request(
-        url +
-          `${type === TypesDrawerType.category ? "categories" : "locations"}`,
+        `${type === TypesDrawerType.category ? "categories" : "locations"}`,
         RequestType.post,
         body
       );
@@ -504,10 +478,9 @@ export class ApiHelper {
 
     try {
       const resp = await HttpHelper.request(
-        url +
-          `${
-            type === TypesDrawerType.category ? "categories" : "locations"
-          }/${id}`,
+        `${
+          type === TypesDrawerType.category ? "categories" : "locations"
+        }/${id}`,
         RequestType.delete
       );
 
@@ -535,11 +508,7 @@ export class ApiHelper {
         period: period,
       };
 
-      const resp = await HttpHelper.request(
-        url + `stats`,
-        RequestType.post,
-        body
-      );
+      const resp = await HttpHelper.request(`stats`, RequestType.post, body);
 
       if (resp.status === 200) {
         success = true;
@@ -564,11 +533,7 @@ export class ApiHelper {
         id: id,
         type: setOwnerTypeToString(type),
       };
-      const resp = await HttpHelper.request(
-        url + `owner`,
-        RequestType.post,
-        body
-      );
+      const resp = await HttpHelper.request(`owner`, RequestType.post, body);
 
       if (resp.status === 200) {
         success = true;
@@ -589,7 +554,7 @@ export class ApiHelper {
         email: email,
       };
       const resp = await HttpHelper.request(
-        url + `reset-token`,
+        `reset-token`,
         RequestType.post,
         body
       );
@@ -617,7 +582,7 @@ export class ApiHelper {
         password: password,
       };
       const resp = await HttpHelper.request(
-        url + `reset-password`,
+        `reset-password`,
         RequestType.post,
         body
       );
