@@ -1,5 +1,5 @@
 import cookie from "react-cookies";
-import { Logger } from "../services/Logger";
+import { Logger } from "../services/logger";
 
 export class AuthorizationHelper {
   public static check(): boolean {

@@ -4,7 +4,7 @@ import { InventoryItem } from "../objects/InventoryItem";
 import { StudioLocation } from "../objects/StudioLocation";
 import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
 import { StudioUser } from "../objects/StudioUser";
-import { Logger } from "../services/Logger";
+import { Logger } from "../services/logger";
 import { HttpHelper, RequestType } from "./HttpHelper";
 
 const sleep = (s: number) => new Promise((p) => setTimeout(p, (s * 1000) | 0));

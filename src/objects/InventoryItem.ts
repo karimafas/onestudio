@@ -1,6 +1,6 @@
 import moment from "moment";
 import { ApiHelper } from "../helpers/ApiHelper";
-import { Logger } from "../services/Logger";
+import { Logger } from "../services/logger";
 import { Constants } from "../utils/Constants";
 import { TimelineEvent } from "./TimelineEvent";
 import { StudioUser } from "./StudioUser";
