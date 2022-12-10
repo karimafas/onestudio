@@ -1,4 +1,4 @@
-import { Logger } from "../services/logger";
+import { Logger } from "../services/Logger";
 import { ApiHelper } from "./ApiHelper";
 const axios = require("axios");
 

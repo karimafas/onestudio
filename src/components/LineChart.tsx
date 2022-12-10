@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { ApiHelper } from "../helpers/ApiHelper";
 import moment from "moment";
-import { Logger } from "../services/logger";
+import { Logger } from "../services/Logger";
 
 ChartJS.register(...registerables);
 
