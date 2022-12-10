@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import "./ItemDrawer.css";
 import {
   FormContainer,
@@ -35,13 +35,26 @@ export function ItemDrawer(props: { submit: Function }) {
   const owners: Array<StudioUser> = useAppSelector((state) =>
     state.data.studioUsers.filter((u) => u.owner)
   );
+  const [priceError, setPriceError] = useState("");
+
+  function validate(data: SubmittedData): boolean {
+    if (/^\d{1,10}(\.\d{1,4})?$/.test(data.price)) {
+      setPriceError("");
+      return true;
+    } else {
+      setPriceError("Price must be a number.");
+      return false;
+    }
+  }
 
   return (
     <div>
       <FormContainer
         onSuccess={async (data: SubmittedData) => {
           setDisabled(true);
-          await props.submit(data);
+          if (validate(data)) {
+            await props.submit(data);
+          }
           setDisabled(false);
         }}
       >
@@ -85,6 +98,8 @@ export function ItemDrawer(props: { submit: Function }) {
                 size="small"
                 label="Price"
                 required
+                error={true}
+                helperText={priceError}
               />
               <TextFieldElement
                 name="serial"

@@ -85,6 +85,17 @@ export function ItemPage() {
   const owners: Array<StudioUser> = useAppSelector((state) =>
     state.data.studioUsers.filter((u) => u.owner)
   );
+  const [priceError, setPriceError] = useState("");
+
+  function validate(data: SubmittedData): boolean {
+    if (/^\d{1,10}(\.\d{1,4})?$/.test(data.price)) {
+      setPriceError("");
+      return true;
+    } else {
+      setPriceError("Price must be a number.");
+      return false;
+    }
+  }
 
   async function init() {
     if (item && item.events && item.events.length === 0) {
@@ -190,7 +201,9 @@ export function ItemPage() {
           key="update-item-form"
           defaultValues={initialValues}
           onSuccess={(data: SubmittedData) => {
-            _updateItem(data);
+            if (validate(data)) {
+              _updateItem(data);
+            }
           }}
         >
           <ConfirmDialog
@@ -309,6 +322,8 @@ export function ItemPage() {
                         InputProps={{
                           endAdornment: "£",
                         }}
+                        error={priceError !== ""}
+                        helperText={priceError}
                       />
                     </div>
                     <div className="item-page__row">
