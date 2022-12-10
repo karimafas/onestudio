@@ -15,7 +15,7 @@ import {
 } from "react-hook-form-mui";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { SubmittedData } from "../components/AddDrawer";
+import { SubmittedData } from "../components/ItemDrawer";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { deleteDataItem, reloadItem } from "../features/data/dataSlice";
 import { deleteItems, updateItem } from "../features/data/inventorySlice";
@@ -34,7 +34,7 @@ import { StatusCard } from "../components/StatusCard";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
-import { TimelineUser } from "../objects/TimelineUser";
+import { StudioUser } from "../objects/StudioUser";
 
 function hasDifferences(
   newItem: SubmittedData,
@@ -82,24 +82,26 @@ export function ItemPage() {
   const locations: Array<StudioLocation> = useAppSelector(
     (state) => state.data.locations
   );
-  const owners: Array<TimelineUser> = useAppSelector((state) =>
+  const owners: Array<StudioUser> = useAppSelector((state) =>
     state.data.studioUsers.filter((u) => u.owner)
   );
 
-  useEffect(() => {
+  async function init() {
     if (item && item.events && item.events.length === 0) {
-      item.initEvents().then((_) => {
-        setLoadingTimeline(false);
-      });
+      await item.initEvents();
+      setLoadingTimeline(false);
     } else {
       setLoadingTimeline(false);
     }
 
     if (item && item.createdBy) {
-      item.loadUser().then((_) => {
-        setLoadingUser(false);
-      });
+      await item.loadUser();
+      setLoadingUser(false);
     }
+  }
+
+  useEffect(() => {
+    init();
   }, []);
 
   async function _createEvent(data: EventSubmittedData) {
@@ -337,7 +339,10 @@ export function ItemPage() {
                         label="Owner"
                         name="ownerId"
                         options={owners.map((o) => {
-                          return { id: `${o.id}`, label: `${o.firstName} ${o.lastName} (${o.email})` };
+                          return {
+                            id: `${o.id}`,
+                            label: `${o.firstName} ${o.lastName} (${o.email})`,
+                          };
                         })}
                         required
                       />

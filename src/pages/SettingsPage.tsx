@@ -26,7 +26,7 @@ import {
   TypesSubmittedData,
 } from "../components/TypesDrawer";
 import { reloadTypes, reloadUsers } from "../features/data/dataSlice";
-import { TimelineUser } from "../objects/TimelineUser";
+import { StudioUser } from "../objects/StudioUser";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ConfirmDialog from "../components/ConfirmDialog";
 
@@ -42,7 +42,7 @@ export function SettingsPage() {
   const locations: Array<StudioLocation> = useAppSelector(
     (state) => state.data.locations
   );
-  const owners: Array<TimelineUser> = useAppSelector((state) =>
+  const owners: Array<StudioUser> = useAppSelector((state) =>
     state.data.studioUsers.filter((u) => u.owner)
   );
   const [deleteOpen, setDeleteOpen] = useState<{
@@ -247,18 +247,11 @@ export function SettingsPage() {
         <div className="settings__col">
           <Typography mb={2} fontSize={18} fontWeight="bold">
             Owners
-            <IconButton
-              onClick={() => _openDrawer(TypesDrawerType.owner)}
-              component="label"
-              sx={{ marginLeft: "0.25em" }}
-            >
-              <AddIcon fontSize="small" />
-            </IconButton>
           </Typography>
           <TableContainer component={Paper} sx={{ height: "15em" }}>
             <Table size="small" aria-label="settings categories">
               <TableBody>
-                {owners.map((o: TimelineUser) => (
+                {owners.map((o: StudioUser) => (
                   <TableRow
                     key={`own-${o.id}-${o.email}`}
                     sx={{

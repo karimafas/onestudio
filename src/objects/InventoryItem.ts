@@ -3,7 +3,7 @@ import { ApiHelper } from "../helpers/ApiHelper";
 import { Logger } from "../services/logger";
 import { Constants } from "../utils/Constants";
 import { TimelineEvent } from "./TimelineEvent";
-import { TimelineUser } from "./TimelineUser";
+import { StudioUser } from "./StudioUser";
 
 export enum ItemStatus {
   working,
@@ -34,7 +34,7 @@ export class InventoryItem {
   updatedAt: Date;
   createdBy: number;
 
-  user?: TimelineUser;
+  user?: StudioUser;
 
   status: ItemStatus;
 

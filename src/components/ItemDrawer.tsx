@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import "./AddDrawer.css";
+import "./ItemDrawer.css";
 import {
   FormContainer,
   SelectElement,
@@ -10,7 +10,7 @@ import { useAppSelector } from "../app/hooks";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
 import { useState } from "react";
-import { TimelineUser } from "../objects/TimelineUser";
+import { StudioUser } from "../objects/StudioUser";
 
 export interface SubmittedData {
   manufacturer: string;
@@ -24,7 +24,7 @@ export interface SubmittedData {
   notes: string;
 }
 
-export function AddDrawer(props: { submit: Function }) {
+export function ItemDrawer(props: { submit: Function }) {
   const [disabled, setDisabled] = useState(false);
   const categories: Array<Category> = useAppSelector(
     (state) => state.data.categories
@@ -32,7 +32,7 @@ export function AddDrawer(props: { submit: Function }) {
   const locations: Array<StudioLocation> = useAppSelector(
     (state) => state.data.locations
   );
-  const owners: Array<TimelineUser> = useAppSelector((state) =>
+  const owners: Array<StudioUser> = useAppSelector((state) =>
     state.data.studioUsers.filter((u) => u.owner)
   );
 

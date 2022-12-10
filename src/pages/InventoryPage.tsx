@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { createItem, search, setDrawer } from "../features/data/inventorySlice";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { useEffect, useState } from "react";
-import { AddDrawer, SubmittedData } from "../components/AddDrawer";
+import { ItemDrawer, SubmittedData } from "../components/ItemDrawer";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteItems } from "../features/data/inventorySlice";
 import { deleteDataItem, initialLoad } from "../features/data/dataSlice";
@@ -109,7 +109,7 @@ export function InventoryPage() {
             open={drawer}
             onClose={() => dispatch(setDrawer(false))}
           >
-            <AddDrawer submit={(data: SubmittedData) => _create(data)} />
+            <ItemDrawer submit={(data: SubmittedData) => _create(data)} />
           </Drawer>
         </React.Fragment>
         <div className="inventory-page__row">

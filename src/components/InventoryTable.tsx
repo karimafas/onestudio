@@ -15,7 +15,7 @@ import { selectItem } from "../features/data/dataSlice";
 import { useNavigate } from "react-router-dom";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
-import { TimelineUser } from "../objects/TimelineUser";
+import { StudioUser } from "../objects/StudioUser";
 
 export interface Column {
   id:
@@ -69,7 +69,7 @@ function getItemValue(
   item: InventoryItem,
   locations: Array<StudioLocation>,
   categories: Array<Category>,
-  owners: Array<TimelineUser>
+  owners: Array<StudioUser>
 ): any {
   switch (column) {
     case "status":
@@ -118,7 +118,7 @@ export default function InventoryTable() {
   const locations: Array<StudioLocation> = useAppSelector(
     (state) => state.data.locations
   );
-  const owners: Array<TimelineUser> = useAppSelector((state) =>
+  const owners: Array<StudioUser> = useAppSelector((state) =>
     state.data.studioUsers.filter((u) => u.owner)
   );
 

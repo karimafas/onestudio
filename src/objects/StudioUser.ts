@@ -1,4 +1,4 @@
-export class TimelineUser {
+export class StudioUser {
   id: number;
   firstName: string;
   lastName: string;
@@ -20,7 +20,7 @@ export class TimelineUser {
   }
 
   static fromJson(json: { [key: string]: any }) {
-    return new TimelineUser(
+    return new StudioUser(
       json["id"],
       json["first_name"],
       json["last_name"],

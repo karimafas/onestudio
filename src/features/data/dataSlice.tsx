@@ -3,14 +3,14 @@ import { ApiHelper } from "../../helpers/ApiHelper";
 import { Category } from "../../objects/Category";
 import { InventoryItem } from "../../objects/InventoryItem";
 import { StudioLocation } from "../../objects/StudioLocation";
-import { TimelineUser } from "../../objects/TimelineUser";
+import { StudioUser } from "../../objects/StudioUser";
 
 // Define a type for the slice state
 interface DataState {
   loading: boolean;
   loggedIn: boolean;
-  user: TimelineUser | undefined;
-  studioUsers: Array<TimelineUser>;
+  user: StudioUser | undefined;
+  studioUsers: Array<StudioUser>;
   items: Array<InventoryItem>;
   categories: Array<Category>;
   locations: Array<StudioLocation>;
@@ -31,8 +31,8 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
   const items: Array<InventoryItem> = await ApiHelper.getInventoryItems();
   const categories: Array<Category> = await ApiHelper.getCategories();
   const locations: Array<StudioLocation> = await ApiHelper.getLocations();
+  const studioUsers: Array<StudioUser> = await ApiHelper.getStudioUsers();
   const user = await ApiHelper.getCurrentUser();
-  const studioUsers: Array<TimelineUser> = await ApiHelper.getStudioUsers();
 
   return {
     items: items,

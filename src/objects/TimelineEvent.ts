@@ -1,12 +1,12 @@
 import moment from "moment";
 import { ApiHelper } from "../helpers/ApiHelper";
-import { TimelineUser } from "./TimelineUser";
+import { StudioUser } from "./StudioUser";
 
 export enum TimelineEventType {
-  created,
-  edited,
-  fault,
-  fix,
+  created = "created",
+  edited = "edited",
+  fault = "fault",
+  fix = "fix",
 }
 
 function stringToType(type: string): TimelineEventType {
@@ -31,7 +31,7 @@ export class TimelineEvent {
   type: TimelineEventType;
   notes: string;
 
-  user?: TimelineUser | undefined;
+  user?: StudioUser | undefined;
 
   public async initialise() {
     this.user = await ApiHelper.getUser(this.userId);
