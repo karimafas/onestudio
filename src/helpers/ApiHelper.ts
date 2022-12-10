@@ -102,7 +102,6 @@ export class ApiHelper {
       if (resp.data) {
         try {
           item = InventoryItem.fromJson(resp.data);
-          debugger;
         } catch (e) {
           console.log(e);
         }
@@ -167,7 +166,7 @@ export class ApiHelper {
       };
 
       const resp = await HttpHelper.request(
-        `items/${i.id}`,
+        `item/${i.id}`,
         RequestType.put,
         body
       );
