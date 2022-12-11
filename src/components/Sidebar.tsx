@@ -1,67 +1,72 @@
 import * as React from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import HomeIcon from "@mui/icons-material/Home";
-import SettingsIcon from "@mui/icons-material/Settings";
-import BentoIcon from "@mui/icons-material/Bento";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { SidebarTab, SidebarTabs } from "./SidebarTab";
 
-function getTab(path: string): number {
-  if (path.startsWith("dashboard")) {
-    return 0;
-  } else if (path.startsWith("inventory")) {
-    return 1;
-  } else if (path.startsWith("settings")) {
-    return 2;
-  }
-
-  return 0;
-}
-
-export default function VerticalTabs() {
-  const [value, setValue] = React.useState(0);
+export default function Sidebar() {
+  const [tab, setTab] = React.useState<SidebarTabs>(SidebarTabs.dashboard);
   const navigate = useNavigate();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+  const handleChange = (tab: SidebarTabs) => {
+    setTab(tab);
 
-    switch (newValue) {
-      case 0:
+    switch (tab) {
+      case SidebarTabs.dashboard:
         navigate("/");
         break;
-      case 1:
+      case SidebarTabs.inventory:
         navigate("/inventory");
         break;
-      case 2:
+      case SidebarTabs.settings:
         navigate("/settings");
         break;
     }
   };
 
-  const pathLocation = useLocation();
+  function getMarginTop(): string {
+    switch (tab) {
+      case SidebarTabs.dashboard:
+        return "mt-[-9rem]";
+      case SidebarTabs.inventory:
+        return "mt-[-6rem]";
+      case SidebarTabs.settings:
+        return "mt-[-3rem]";
+    }
+  }
 
   return (
     <Box
+      className="flex h-screen flex flex-col"
       sx={{
-        flexGrow: 1,
-        display: "flex",
-        height: "100vh",
-        width: "6em",
+        width: "15em",
       }}
     >
-      <Tabs
-        orientation="vertical"
-        variant="scrollable"
-        value={getTab(pathLocation.pathname.replace("/", ""))}
-        onChange={handleChange}
-        aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: "divider" }}
-      >
-        <Tab icon={<HomeIcon />} />
-        <Tab icon={<BentoIcon />} />
-        <Tab icon={<SettingsIcon />} />
-      </Tabs>
+      <div className="px-14 pt-8">
+        <img src={require("../assets/images/logo_typed.png")} />
+      </div>
+      <div className="flex-col align-center pt-8 w-full">
+        <SidebarTab
+          onClick={handleChange}
+          tab={SidebarTabs.dashboard}
+          selectedTab={tab}
+        />
+        <SidebarTab
+          onClick={handleChange}
+          tab={SidebarTabs.inventory}
+          selectedTab={tab}
+        />
+        <SidebarTab
+          onClick={handleChange}
+          tab={SidebarTabs.settings}
+          selectedTab={tab}
+        />
+        <div
+          className={`flex flex-row items-center h-12 mb-3 z-[-100] ${getMarginTop()} relative cursor-pointer transition-all duration-300 pr-5`}
+        >
+          <div className="w-2 h-10 bg-blue1 mr-3 rounded-tr rounded-br"></div>
+          <div className="bg-white rounded drop-shadow-xl h-full w-full"></div>
+        </div>
+      </div>
     </Box>
   );
 }

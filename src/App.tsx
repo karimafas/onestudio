@@ -72,7 +72,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <div className="App">
           {loggedIn ? <Sidebar /> : <></>}
-          <div style={{ width: loggedIn ? "calc(100vw - 6em)" : "100vw" }}>
+          <div style={{ width: loggedIn ? "calc(100vw - 15em)" : "100vw" }}>
             <Routes>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/login" element={<LoginPage />} />
