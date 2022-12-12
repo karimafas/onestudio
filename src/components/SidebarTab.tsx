@@ -11,7 +11,7 @@ export function SidebarTab(props: {
 }) {
   const selected = props.selectedTab === props.tab;
   const focus = selected ? "focused" : "unfocused";
-  const textColor = selected ? "text-blue1" : "text-grey";
+  const textColor = selected ? "text-blue" : "text-grey";
 
   function getImage() {
     switch (props.tab) {

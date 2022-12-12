@@ -12,6 +12,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { Importer } from "./pages/Importer";
 import { ResetPassword } from "./pages/ResetPassword";
+import { AppBackground } from "./components/AppBackground";
 
 export default function App() {
   const location = useLocation();
@@ -46,7 +47,7 @@ export default function App() {
 
   useEffect(() => {
     sessionStorage.setItem("url", window.location.href);
-    const refreshToken = true
+    const refreshToken = true;
 
     if (refreshToken) {
       ApiHelper.refreshToken().then((success) => {
@@ -70,18 +71,25 @@ export default function App() {
   } else {
     return (
       <ThemeProvider theme={theme}>
-        <div className="App">
-          {loggedIn ? <Sidebar /> : <></>}
-          <div style={{ width: loggedIn ? "calc(100vw - 15em)" : "100vw" }}>
-            <Routes>
-              <Route path="/" element={<DashboardPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/inventory" element={<InventoryPage />} />
-              <Route path="/inventory/:id" element={<ItemPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/inventory/import" element={<Importer />} />
-            </Routes>
+        <div>
+          <AppBackground />
+          <div className="relative mt-[-100vh] flex flex-row">
+            <div>{loggedIn ? <Sidebar /> : <></>}</div>
+            <div
+              style={{
+                width: loggedIn ? "calc(100vw - 15em)" : "100vw",
+              }}
+            >
+              <Routes>
+                <Route path="/" element={<DashboardPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/inventory" element={<InventoryPage />} />
+                <Route path="/inventory/:id" element={<ItemPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/inventory/import" element={<Importer />} />
+              </Routes>
+            </div>
           </div>
         </div>
       </ThemeProvider>

@@ -41,31 +41,36 @@ export default function Sidebar() {
         width: "15em",
       }}
     >
-      <div className="px-14 pt-8">
-        <img src={require("../assets/images/logo_typed.png")} />
-      </div>
-      <div className="flex-col align-center pt-8 w-full">
-        <SidebarTab
-          onClick={handleChange}
-          tab={SidebarTabs.dashboard}
-          selectedTab={tab}
-        />
-        <SidebarTab
-          onClick={handleChange}
-          tab={SidebarTabs.inventory}
-          selectedTab={tab}
-        />
-        <SidebarTab
-          onClick={handleChange}
-          tab={SidebarTabs.settings}
-          selectedTab={tab}
-        />
-        <div
-          className={`flex flex-row items-center h-12 mb-3 z-[-100] ${getMarginTop()} relative cursor-pointer transition-all duration-300 pr-5`}
-        >
-          <div className="w-2 h-10 bg-blue1 mr-3 rounded-tr rounded-br"></div>
-          <div className="bg-white rounded drop-shadow-xl h-full w-full"></div>
+      <div className="h-full w-full flex flex-row">
+        <div>
+          <div className="px-14 pt-8">
+            <img src={require("../assets/images/logo_typed.png")} />
+          </div>
+          <div className="flex-col align-center pt-8 w-full">
+            <SidebarTab
+              onClick={handleChange}
+              tab={SidebarTabs.dashboard}
+              selectedTab={tab}
+            />
+            <SidebarTab
+              onClick={handleChange}
+              tab={SidebarTabs.inventory}
+              selectedTab={tab}
+            />
+            <SidebarTab
+              onClick={handleChange}
+              tab={SidebarTabs.settings}
+              selectedTab={tab}
+            />
+            <div
+              className={`flex flex-row items-center h-12 mb-3 z-[-100] ${getMarginTop()} relative cursor-pointer transition-all duration-300 pr-5`}
+            >
+              <div className="w-2 h-10 bg-blue mr-3 rounded-tr rounded-br"></div>
+              <div className="bg-white rounded drop-shadow-xl h-full w-full"></div>
+            </div>
+          </div>
         </div>
+        <div className="w-1 h-full bg-light_grey"></div>
       </div>
     </Box>
   );
