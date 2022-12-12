@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { ItemStatus } from "../objects/InventoryItem";
 
 export function InventoryInfoCard() {
+  const navigate = useNavigate();
   const items = useAppSelector((state) => state.data.items);
   let price = 0;
 
@@ -13,7 +15,10 @@ export function InventoryInfoCard() {
   const working = items.filter((i) => i.status === ItemStatus.working).length;
 
   return (
-    <div className="cursor-pointer hover:translate-y-[-0.5rem] transition-all duration-500">
+    <div
+      className="cursor-pointer hover:translate-y-[-0.5rem] transition-all duration-500"
+      onClick={() => navigate("inventory")}
+    >
       <div className="h-50 w-72 ml-12 bg-blue shadow-blue_50 shadow-2xl rounded-2xl mt-8 flex flex-col p-8">
         <div className="flex flex-row">
           <div className="border-dashed border-light_blue border-2 h-12 w-12 rounded-xl flex flex-row items-center justify-center">

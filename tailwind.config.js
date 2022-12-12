@@ -15,7 +15,17 @@ module.exports = {
         lightest_purple: "#D6D6FF",
         grey: "#959595",
         light_grey: "#F6F6F6",
+        red: "#FF6969",
       },
+      animation: {
+        fade: "fadeOut 400ms ease-in-out",
+      },
+      keyframes: (theme) => ({
+        fadeOut: {
+          "0%": { opacity: 0, marginTop: "-20px" },
+          "100%": { opacity: 1, marginTop: 0 },
+        },
+      }),
     },
   },
   plugins: [],

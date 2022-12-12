@@ -1,6 +1,6 @@
 import { useAppSelector } from "../app/hooks";
 
-export function StudioInfoCard() {
+export function StudioInfoCard(props: { collapsed: boolean }) {
   const users = useAppSelector((state) => state.data.studioUsers);
   const categories = useAppSelector((state) => state.data.categories);
   const locations = useAppSelector((state) => state.data.locations);
@@ -23,17 +23,22 @@ export function StudioInfoCard() {
           </span>
         </div>
       </div>
-      <div className="flex flex-col mt-4 text-sm">
-        <span className="text-light_purple">
-          <span className="font-semibold">{users.length}</span> studio users
-        </span>
-        <span className="text-light_purple">
-          <span className="font-semibold">{categories.length}</span> categories
-        </span>
-        <span className="text-light_purple">
-          <span className="font-semibold">{locations.length}</span> locations
-        </span>
-      </div>
+      {props.collapsed ? (
+        <></>
+      ) : (
+        <div className="flex flex-col mt-4 text-sm">
+          <span className="text-light_purple">
+            <span className="font-semibold">{users.length}</span> studio users
+          </span>
+          <span className="text-light_purple">
+            <span className="font-semibold">{categories.length}</span>{" "}
+            categories
+          </span>
+          <span className="text-light_purple">
+            <span className="font-semibold">{locations.length}</span> locations
+          </span>
+        </div>
+      )}
     </div>
   );
 }
