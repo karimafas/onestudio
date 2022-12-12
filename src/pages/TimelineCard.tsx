@@ -71,8 +71,7 @@ export function TimelineCard(props: { event: TimelineEvent }) {
           />
           <span className="timeline-card__datetime">
             {moment(props.event.createdAt).format(Constants.dateTimeFormat)} by
-            {` ${props.event.user?.firstName}` ?? ""}{" "}
-            {props.event.user?.lastName ?? ""}
+            {` ${props.event.userName}` ?? ""}{" "}
           </span>
         </div>
         <div className="timeline-card__row time-card__mt1">

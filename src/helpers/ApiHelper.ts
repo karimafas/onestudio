@@ -189,7 +189,11 @@ export class ApiHelper {
         ids: ids,
       };
 
-      const resp = await HttpHelper.request('item/removeMany', RequestType.post, body);
+      const resp = await HttpHelper.request(
+        "item/removeMany",
+        RequestType.post,
+        body
+      );
 
       if (resp.status === 201) {
         success = true;
@@ -218,7 +222,27 @@ export class ApiHelper {
       if (_events) {
         for (const event of _events) {
           const e = TimelineEvent.fromJson(event);
-          await e.initialise();
+          events.push(e);
+        }
+      }
+    } catch (e) {
+      Logger.log(`Couldn't load items.`);
+    }
+
+    return events;
+  }
+
+  public static async getStudioEvents(): Promise<Array<TimelineEvent>> {
+    let events: Array<TimelineEvent> = [];
+
+    try {
+      const resp = await HttpHelper.request(`event`, RequestType.get);
+
+      const _events = resp.data;
+
+      if (_events) {
+        for (const event of _events) {
+          const e = TimelineEvent.fromJson(event);
           events.push(e);
         }
       }

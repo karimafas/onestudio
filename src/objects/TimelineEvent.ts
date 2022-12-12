@@ -1,5 +1,4 @@
 import moment from "moment";
-import { ApiHelper } from "../helpers/ApiHelper";
 import { StudioUser } from "./StudioUser";
 
 export enum TimelineEventType {
@@ -27,25 +26,22 @@ function stringToType(type: string): TimelineEventType {
 export class TimelineEvent {
   id: number;
   userId: number;
+  userName: string;
   createdAt: Date;
   type: TimelineEventType;
   notes: string;
 
-  user?: StudioUser | undefined;
-
-  public async initialise() {
-    this.user = await ApiHelper.getUser(this.userId);
-  }
-
   constructor(
     id: number,
     userId: number,
+    userName: string,
     createdAt: Date,
     type: TimelineEventType,
     notes: string
   ) {
     this.id = id;
     this.userId = userId;
+    this.userName = userName;
     this.createdAt = createdAt;
     this.type = type;
     this.notes = notes;
@@ -55,6 +51,7 @@ export class TimelineEvent {
     return new TimelineEvent(
       json["id"],
       json["user_id"],
+      json["user_name"],
       moment(json["created_at"]).toDate(),
       stringToType(json["type"]),
       json["notes"] ?? ""

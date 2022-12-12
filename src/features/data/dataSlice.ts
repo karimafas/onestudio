@@ -4,6 +4,7 @@ import { Category } from "../../objects/Category";
 import { InventoryItem } from "../../objects/InventoryItem";
 import { StudioLocation } from "../../objects/StudioLocation";
 import { StudioUser } from "../../objects/StudioUser";
+import { TimelineEvent } from "../../objects/TimelineEvent";
 
 // Define a type for the slice state
 interface DataState {
@@ -14,6 +15,7 @@ interface DataState {
   items: Array<InventoryItem>;
   categories: Array<Category>;
   locations: Array<StudioLocation>;
+  events: Array<TimelineEvent>;
 }
 
 // Define the initial state using that type
@@ -25,6 +27,7 @@ const initialState: DataState = {
   items: [],
   categories: [],
   locations: [],
+  events: [],
 };
 
 export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
@@ -33,6 +36,7 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
   const locations: Array<StudioLocation> = await ApiHelper.getLocations();
   const studioUsers: Array<StudioUser> = await ApiHelper.getStudioUsers();
   const user = await ApiHelper.getCurrentUser();
+  const events = await ApiHelper.getStudioEvents();
 
   return {
     items: items,
@@ -40,13 +44,13 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
     locations: locations,
     user: user,
     studioUsers: studioUsers,
+    events: events,
   };
 });
 
 export const loadItemEvents = createAsyncThunk(
   "users/loadItemEvents",
   async (item: InventoryItem) => {
-    await item.initEvents();
     return item;
   }
 );
@@ -56,7 +60,6 @@ export const reloadItem = createAsyncThunk(
   async (itemId: number) => {
     const item = await ApiHelper.getInventoryItem(itemId);
     if (item) {
-      await item!.initEvents();
       await item!.loadUser();
     }
     return item;
@@ -149,6 +152,7 @@ export const counterSlice = createSlice({
       state.locations = payload.locations;
       state.user = payload.user;
       state.studioUsers = payload.studioUsers;
+      state.events = payload.events;
       state.loading = false;
     });
     builder.addCase(reloadItem.fulfilled, (state: DataState, action) => {

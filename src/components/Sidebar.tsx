@@ -1,11 +1,34 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SidebarTab, SidebarTabs } from "./SidebarTab";
 
+function getTab(location: any): SidebarTabs {
+  const path = location.pathname.replace("/", "");
+
+  if (path.startsWith("dashboard")) {
+    return SidebarTabs.dashboard;
+  } else if (path.startsWith("inventory")) {
+    return SidebarTabs.inventory;
+  } else if (path.startsWith("settings")) {
+    return SidebarTabs.settings;
+  }
+
+  return SidebarTabs.dashboard;
+}
+
 export default function Sidebar() {
-  const [tab, setTab] = React.useState<SidebarTabs>(SidebarTabs.dashboard);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [tab, setTab] = React.useState<SidebarTabs>(getTab(location));
+
+  React.useEffect(() => {
+    callback(location);
+  }, [location, callback]);
+
+  function callback(location: any) {
+    setTab(getTab(location));
+  }
 
   const handleChange = (tab: SidebarTabs) => {
     setTab(tab);
