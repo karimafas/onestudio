@@ -116,7 +116,7 @@ export function SettingsPage() {
         <div className="h-8"></div>
         <span className="font-bold text-2xl text-dark_blue">Settings</span>
         <StudioInfoCard collapsed />
-        <div className="flex flex-row mt-14 items-center">
+        <div className="flex flex-row mt-14 items-start">
           <div className="flex flex-col w-72">
             <div className="flex flex-row items-center justify-between w-full mb-8">
               <span className="text-dark_blue font-bold text-xl">

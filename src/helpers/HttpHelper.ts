@@ -46,7 +46,7 @@ export class HttpHelper {
     let attempts = 0;
     let response;
 
-    while (attempts < 1) {
+    while (attempts < 2) {
       Logger.log(
         `Attempting ${getRequestString(type)} request for ${
           baseUrl + url

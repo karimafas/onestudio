@@ -16,7 +16,7 @@ export function DashboardPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="py-3 px-10 w-full h-15">
+    <div className="py-3 px-10 w-full h-[85vh]">
       <Header />
       <div className="flex flex-row w-full h-full animate-fade">
         <div className="flex flex-col w-3/5 justify">
