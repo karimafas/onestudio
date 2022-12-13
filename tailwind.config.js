@@ -12,6 +12,7 @@ module.exports = {
         medium_blue: "#6562FF",
         light_blue: "#A4A3FF",
         light_purple: "#6562FF",
+        light_purple2: "#E3E2FF",
         lightest_purple: "#D6D6FF",
         grey: "#959595",
         light_grey: "#F6F6F6",

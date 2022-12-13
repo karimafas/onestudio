@@ -1,19 +1,18 @@
-import InventoryTable from "../components/InventoryTable";
-import "./InventoryPage.css";
-import BentoIcon from "@mui/icons-material/Bento";
-import { Button, Drawer, IconButton, Snackbar, TextField } from "@mui/material";
+import { Button, Drawer, Snackbar } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { createItem, search, setDrawer } from "../features/data/inventorySlice";
-import CloseIcon from "@mui/icons-material/Close";
+import { createItem, setDrawer } from "../features/data/inventorySlice";
 import React, { useEffect, useState } from "react";
 import { ItemDrawer, SubmittedData } from "../components/ItemDrawer";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteItems } from "../features/data/inventorySlice";
 import { deleteDataItem, initialLoad } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { InventoryItem, ItemStatus } from "../objects/InventoryItem";
 import { useNavigate } from "react-router-dom";
-import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
+import { Header } from "../components/Header";
+import { SearchBar } from "../components/SearchBar";
+import { PrimaryButton } from "../components/PrimaryButton";
+import { InventoryTable } from "../components/InventoryTable";
+import { SquareButton } from "../components/SquareButton";
 
 export function InventoryPage() {
   const navigate = useNavigate();
@@ -21,12 +20,11 @@ export function InventoryPage() {
   const searchValue = useAppSelector((state) => state.inventory.search);
   const dispatch = useAppDispatch();
   const [isDesktop, setDesktop] = useState(window.innerWidth > 700);
-  const selectedItems = useAppSelector((state) =>
-    state.data.items.filter((i) => i.selected)
-  );
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [snackOpen, setSnackOpen] = useState<boolean>(false);
   const [snackId, setSnackId] = useState<any>(null);
+  const [search, setSearch] = useState<string>("");
+  const [selected, setSelected] = useState<number[]>([]);
 
   const updateMedia = () => {
     setDesktop(window.innerWidth > 700);
@@ -44,6 +42,8 @@ export function InventoryPage() {
       for (const id of ids) {
         dispatch(deleteDataItem(id));
       }
+
+      setSelected([]);
     }
   }
 
@@ -76,97 +76,63 @@ export function InventoryPage() {
   }
 
   return (
-    <div className="inventory-page__wrapper">
-      <div className="inventory-page__padding">
-        <Snackbar
-          open={snackOpen}
-          autoHideDuration={6000}
-          message="Item created successfully."
-          action={
-            <Button
-              color="inherit"
-              size="small"
-              onClick={() => navigate(`/inventory/${snackId}`)}
-            >
-              View
-            </Button>
-          }
-          sx={{ bottom: { xs: 90, sm: 0 }, marginBottom: "1em" }}
-        />
-        <ConfirmDialog
-          title="Delete Item"
-          body={`Are you sure you want to delete ${selectedItems.length} item${
-            selectedItems.length > 1 ? "s" : ""
-          }?`}
-          open={deleteOpen}
-          setOpen={() => setDeleteOpen(!deleteOpen)}
-          onConfirm={() => _delete(selectedItems.map((i) => i.id))}
-        />
-        <React.Fragment key="right">
-          <Drawer
-            transitionDuration={300}
-            anchor="right"
-            open={drawer}
-            onClose={() => dispatch(setDrawer(false))}
+    <div className="py-3 px-10 w-full h-[100vh] flex flex-col">
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={6000}
+        message="Item created successfully."
+        action={
+          <Button
+            color="inherit"
+            size="small"
+            onClick={() => navigate(`/inventory/${snackId}`)}
           >
-            <ItemDrawer submit={(data: SubmittedData) => _create(data)} />
-          </Drawer>
-        </React.Fragment>
-        <div className="inventory-page__row">
-          <div className="inventory-page__title-row">
-            <BentoIcon fontSize="medium" />
-            <span className="inventory-page__title">Inventory</span>
-          </div>
-          <div className="inventory-page__title-row">
-            {isDesktop ? (
-              <TextField
-                value={searchValue}
-                label="Search..."
-                size="small"
-                className="inventory-page__input"
-                onChange={(event) => dispatch(search(event.target.value))}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      aria-label="delete"
-                      size="small"
-                      onClick={() => dispatch(search(""))}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  ),
-                }}
+            View
+          </Button>
+        }
+        sx={{ bottom: { xs: 90, sm: 0 }, marginBottom: "1em" }}
+      />
+      <ConfirmDialog
+        title="Delete Item"
+        body={`Are you sure you want to delete ${selected.length} item${
+          selected.length > 1 ? "s" : ""
+        }?`}
+        open={deleteOpen}
+        setOpen={() => setDeleteOpen(!deleteOpen)}
+        onConfirm={() => _delete(selected)}
+      />
+      <React.Fragment key="right">
+        <Drawer
+          transitionDuration={300}
+          anchor="right"
+          open={drawer}
+          onClose={() => dispatch(setDrawer(false))}
+        >
+          <ItemDrawer submit={(data: SubmittedData) => _create(data)} />
+        </Drawer>
+      </React.Fragment>
+      <Header />
+      <div className="animate-fade grow flex flex-col">
+        <div className="w-full h-15 flex flex-row justify-between mt-6">
+          <SearchBar onChange={(v: string) => setSearch(v)} />
+          <div className="flex flex-row">
+            {selected.length === 0 ? (
+              <></>
+            ) : (
+              <SquareButton
+                icon={require("../assets/images/delete.png")}
+                onClick={() => setDeleteOpen(true)}
               />
-            ) : (
-              <div></div>
             )}
-          </div>
-          <div className="inventory-page__title-row inventory-page__title-row--end">
-            {selectedItems.length > 0 ? (
-              <div>
-                <IconButton
-                  aria-label="delete"
-                  size="medium"
-                  sx={{ marginRight: "1em" }}
-                  color="error"
-                  onClick={() => setDeleteOpen(true)}
-                >
-                  <DeleteIcon fontSize="inherit" />
-                </IconButton>
-              </div>
-            ) : (
-              <div></div>
-            )}
-            <Button
-              variant="contained"
-              onClick={() => dispatch(setDrawer(true))}
-            >
-              <DataSaverOnIcon fontSize="small" sx={{ marginRight: "0.3em" }} />
-              Add new item
-            </Button>
+            <div className="w-3"></div>
+            <PrimaryButton onClick={() => dispatch(setDrawer(true))} />
           </div>
         </div>
-        <InventoryTable />
+        <InventoryTable
+          selected={selected}
+          setSelected={setSelected}
+          searchQuery={search}
+        />
       </div>
     </div>
   );

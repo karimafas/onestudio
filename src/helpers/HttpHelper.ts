@@ -46,11 +46,11 @@ export class HttpHelper {
     let attempts = 0;
     let response;
 
-    while (attempts < 2) {
+    while (attempts < 1) {
       Logger.log(
         `Attempting ${getRequestString(type)} request for ${
           baseUrl + url
-        }. Attempt no: ${attempts}.`
+        }. Attempt no: ${attempts + 1}.`
       );
 
       try {
@@ -71,17 +71,17 @@ export class HttpHelper {
             });
             break;
           case RequestType.delete:
-            response = await axios.delete(baseUrl + url, body, {
+            response = await axios.delete(baseUrl + url, {
               withCredentials: true,
             });
             break;
         }
 
-        attempts = 2;
+        attempts++;
       } catch (e: any) {
         attempts++;
         // If access token has expired, request a new one.
-        if (requiresAuthentication && e.response.status === 401) {
+        if (requiresAuthentication && e.response.status === 403) {
           Logger.log(`Access token has expired. Trying to refresh...`);
           await HttpHelper.checkAndRefresh();
         }

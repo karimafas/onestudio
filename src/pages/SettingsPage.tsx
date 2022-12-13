@@ -1,5 +1,4 @@
 import { Drawer } from "@mui/material";
-import "./SettingsPage.css";
 import { ApiHelper, SetOwnerType } from "../helpers/ApiHelper";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Category } from "../objects/Category";
@@ -156,7 +155,7 @@ export function SettingsPage() {
               <img
                 className="w-6 h-6 cursor-pointer"
                 src={require("../assets/images/add-blue.png")}
-                onClick={() => _openDrawer(TypesDrawerType.category)}
+                onClick={() => _openDrawer(TypesDrawerType.location)}
               />
             </div>
             {locations.map((l) => (
@@ -167,7 +166,7 @@ export function SettingsPage() {
                   onClick={() =>
                     setDeleteOpen({
                       open: true,
-                      data: { type: TypesDrawerType.category, id: l.id },
+                      data: { type: TypesDrawerType.location, id: l.id },
                     })
                   }
                 />

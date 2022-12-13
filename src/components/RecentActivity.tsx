@@ -1,4 +1,5 @@
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
 
@@ -33,6 +34,7 @@ function eventData(e: TimelineEvent): DashboardEventData {
 }
 
 export function RecentActivity() {
+  const navigate = useNavigate();
   const events = useAppSelector((state) => state.data.events);
 
   return (
@@ -42,7 +44,10 @@ export function RecentActivity() {
           Recent activity
         </span>
         {events.map((e) => (
-          <div className="flex flex-row w-full mb-4">
+          <div
+            onClick={() => navigate(`inventory/${e.itemId}`)}
+            className="flex flex-row w-full mb-4 cursor-pointer"
+          >
             <div className="h-11 w-11 bg-light_blue rounded-lg flex flex-col justify-center items-center">
               <img className="w-5" src={eventData(e).image} />
             </div>

@@ -14,7 +14,6 @@ import {
 import { useState } from "react";
 import "./Importer.css";
 import Papa from "papaparse";
-import { columns } from "../components/InventoryTable";
 
 export function Importer() {
   const [parsedData, setParsedData] = useState([]);
@@ -54,21 +53,21 @@ export function Importer() {
   function checkColumns(): { success: boolean; missing: Array<string> } {
     let check: boolean = true;
     let missing: Array<string> = [];
-    const _columns = columns;
+    // const _columns = columns;
 
-    for (const column of _columns) {
-      if (
-        !tableRows
-          .map((v) => v.toLowerCase())
-          .includes(column.label.toLowerCase()) &&
-        column.id !== "notes" &&
-        column.id !== "chk" &&
-        column.id !== "status"
-      ) {
-        missing.push(column.label);
-        check = false;
-      }
-    }
+    // for (const column of _columns) {
+    //   if (
+    //     !tableRows
+    //       .map((v) => v.toLowerCase())
+    //       .includes(column.label.toLowerCase()) &&
+    //     column.id !== "notes" &&
+    //     column.id !== "chk" &&
+    //     column.id !== "status"
+    //   ) {
+    //     missing.push(column.label);
+    //     check = false;
+    //   }
+    // }
 
     return { success: check, missing: missing };
   }

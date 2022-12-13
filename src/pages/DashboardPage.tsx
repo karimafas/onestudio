@@ -9,7 +9,6 @@ import { InventoryInfoCard } from "../components/InventoryInfoCard";
 import { RecentActivity } from "../components/RecentActivity";
 import { StudioInfoCard } from "../components/StudioInfoCard";
 import { DateHelper } from "../helpers/DateHelper";
-import "./DashboardPage.css";
 
 export function DashboardPage() {
   const user = useAppSelector((state) => state.data.user);
