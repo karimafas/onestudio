@@ -4,6 +4,8 @@ export function HeaderCheckBox(props: {
   selectAll: Function;
   deselectAll: Function;
 }) {
+  if (props.totalCount === 0) return <></>;
+
   return (
     <div
       onClick={() => {

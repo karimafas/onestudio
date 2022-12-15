@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { InventoryItem } from "../objects/InventoryItem";
 import { CheckBox } from "./CheckBox";
@@ -26,7 +27,7 @@ class TableColumn {
 const columns = [
   new TableColumn("select", "", true, 5),
   new TableColumn("details", "Details", true, 10),
-  new TableColumn("price", "Price", true, 5),
+  new TableColumn("price", "Price", true, 10),
   new TableColumn("location", "Location", true, 10),
   new TableColumn("category", "Category", true, 10),
   new TableColumn("owner", "Owner", true, 10),
@@ -39,14 +40,15 @@ export function InventoryTable(props: {
   searchQuery: string;
   selected: number[];
   setSelected: Function;
+  itemsPerPage: number;
 }) {
+  const navigate = useNavigate();
   const [page, setPage] = useState<number>(0);
   const items = useAppSelector((state) => state.data.items);
   const locations = useAppSelector((state) => state.data.locations);
   const categories = useAppSelector((state) => state.data.categories);
   const owners = useAppSelector((state) => state.data.studioUsers);
-  const itemsPerPage = 4;
-  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const totalPages = Math.ceil(items.length / props.itemsPerPage);
   const filteredItems = items
     .filter(
       (i) =>
@@ -62,14 +64,14 @@ export function InventoryTable(props: {
         i.serial.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
         i.notes.toLowerCase().includes(props.searchQuery.toLowerCase())
     )
-    .slice(page * itemsPerPage, itemsPerPage * (page + 1));
+    .slice(page * props.itemsPerPage, props.itemsPerPage * (page + 1));
 
   function columnToItemText(c: TableColumn, i: InventoryItem): string {
     switch (c.id) {
       case "price":
-        return i.price + "";
+        return `£${i.price + ""}`;
       case "location":
-        return locations.filter((l) => l.id == i.categoryId)[0].name;
+        return locations.filter((l) => l.id == i.locationId)[0].name;
       case "category":
         return categories.filter((c) => c.id == i.categoryId)[0].name;
       case "owner":
@@ -89,12 +91,16 @@ export function InventoryTable(props: {
   function getRowContent(c: TableColumn, i: InventoryItem) {
     const style = {
       width: `${c.widthPercent}%`,
-      marginRight: 30,
+      paddingRight: 30,
     };
     switch (c.id) {
       case "details":
         return (
-          <div className="flex flex-col" style={style}>
+          <div
+            onClick={() => navigate(`${i.id}`)}
+            className="flex flex-col justify-center h-full"
+            style={style}
+          >
             <span className="font-bold text-[15px] mb-1">{i.manufacturer}</span>
             <span>{i.model}</span>
           </div>
@@ -107,7 +113,9 @@ export function InventoryTable(props: {
               onClick={() => {
                 if (props.selected.includes(i.id)) {
                   const index: number = props.selected.indexOf(i.id);
-                  props.setSelected(props.selected.filter((id, i) => i !== index));
+                  props.setSelected(
+                    props.selected.filter((id, i) => i !== index)
+                  );
                 } else {
                   props.setSelected([...props.selected, i.id]);
                 }
@@ -116,14 +124,22 @@ export function InventoryTable(props: {
           </div>
         );
       default:
-        return <span style={style}>{columnToItemText(c, i)}</span>;
+        return (
+          <span
+            className="h-full flex flex-col justify-center"
+            onClick={() => navigate(`${i.id}`)}
+            style={style}
+          >
+            {columnToItemText(c, i)}
+          </span>
+        );
     }
   }
 
   function getHeaderContent(c: TableColumn) {
     const style = {
       width: `${c.widthPercent}%`,
-      marginRight: 30,
+      paddingRight: 30,
     };
     switch (c.id) {
       case "select":
@@ -131,7 +147,7 @@ export function InventoryTable(props: {
           <div style={style} className="flex flex-row justify-center">
             <HeaderCheckBox
               selectedCount={props.selected.length}
-              totalCount={items.length}
+              totalCount={filteredItems.length}
               deselectAll={() => props.setSelected([])}
               selectAll={() => props.setSelected(items.map((i) => i.id))}
             />
@@ -156,7 +172,9 @@ export function InventoryTable(props: {
       </div>
       <div className="flex flex-row justify-center mb-6">
         <div
-          className="flex flex-col items-center justify-center w-8 h-8 bg-light_purple2 rounded-lg cursor-pointer"
+          className={`${
+            page === 0 ? "opacity-30" : "cursor-pointer"
+          } flex flex-col items-center justify-center w-8 h-8 bg-light_purple2 rounded-lg`}
           onClick={() => {
             if (page === 0) return;
             setPage(page - 1);
@@ -171,7 +189,9 @@ export function InventoryTable(props: {
           {page + 1} / {totalPages}
         </div>
         <div
-          className="flex flex-col items-center justify-center w-8 h-8 bg-light_purple2 rounded-lg cursor-pointer"
+          className={`${
+            page === totalPages - 1 ? "opacity-30" : "cursor-pointer"
+          } flex flex-col items-center justify-center w-8 h-8 bg-light_purple2 rounded-lg`}
           onClick={() => {
             if (page === totalPages - 1) return;
             setPage(page + 1);

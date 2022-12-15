@@ -17,9 +17,8 @@ import { SquareButton } from "../components/SquareButton";
 export function InventoryPage() {
   const navigate = useNavigate();
   const drawer = useAppSelector((state) => state.inventory.drawer);
-  const searchValue = useAppSelector((state) => state.inventory.search);
   const dispatch = useAppDispatch();
-  const [isDesktop, setDesktop] = useState(window.innerWidth > 700);
+  const [height, setHeight] = useState(window.innerHeight);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [snackOpen, setSnackOpen] = useState<boolean>(false);
   const [snackId, setSnackId] = useState<any>(null);
@@ -27,7 +26,7 @@ export function InventoryPage() {
   const [selected, setSelected] = useState<number[]>([]);
 
   const updateMedia = () => {
-    setDesktop(window.innerWidth > 700);
+    setHeight(window.innerHeight);
   };
 
   useEffect(() => {
@@ -113,7 +112,7 @@ export function InventoryPage() {
       </React.Fragment>
       <Header />
       <div className="animate-fade grow flex flex-col">
-        <div className="w-full h-15 flex flex-row justify-between mt-6">
+        <div className="w-full h-15 flex flex-row justify-between mt-10">
           <SearchBar onChange={(v: string) => setSearch(v)} />
           <div className="flex flex-row">
             {selected.length === 0 ? (
@@ -129,6 +128,7 @@ export function InventoryPage() {
           </div>
         </div>
         <InventoryTable
+          itemsPerPage={Math.round(height / 175)}
           selected={selected}
           setSelected={setSelected}
           searchQuery={search}
