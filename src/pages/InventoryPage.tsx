@@ -2,11 +2,11 @@ import { Button, Drawer, Snackbar } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { createItem, setDrawer } from "../features/data/inventorySlice";
 import React, { useEffect, useState } from "react";
-import { ItemDrawer, SubmittedData } from "../components/ItemDrawer";
+import { ItemDrawer } from "../components/ItemDrawer";
 import { deleteItems } from "../features/data/inventorySlice";
 import { deleteDataItem, initialLoad } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
-import { InventoryItem, ItemStatus } from "../objects/InventoryItem";
+import { InventoryItem, ItemDfo, ItemStatus } from "../objects/InventoryItem";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
 import { SearchBar } from "../components/SearchBar";
@@ -46,17 +46,17 @@ export function InventoryPage() {
     }
   }
 
-  async function _create(data: SubmittedData) {
+  async function _create(data: ItemDfo) {
     const item: InventoryItem = new InventoryItem(
       0,
       data.manufacturer,
       data.model,
-      parseInt(data.locationId),
+      parseInt(data.location_id),
       data.serial,
-      data.mNumber,
+      data.m_number,
       parseFloat(data.price),
-      parseInt(data.categoryId),
-      parseInt(data.ownerId),
+      parseInt(data.category_id),
+      parseInt(data.owner_id),
       data.notes,
       new Date(),
       new Date(),
@@ -107,7 +107,7 @@ export function InventoryPage() {
           open={drawer}
           onClose={() => dispatch(setDrawer(false))}
         >
-          <ItemDrawer submit={(data: SubmittedData) => _create(data)} />
+          <ItemDrawer submit={(data: ItemDfo) => _create(data)} />
         </Drawer>
       </React.Fragment>
       <Header />
@@ -124,7 +124,11 @@ export function InventoryPage() {
               />
             )}
             <div className="w-3"></div>
-            <PrimaryButton onClick={() => dispatch(setDrawer(true))} />
+            <PrimaryButton
+              icon={require("../assets/images/add-purple.png")}
+              text="Add an item"
+              onClick={() => dispatch(setDrawer(true))}
+            />
           </div>
         </div>
         <InventoryTable

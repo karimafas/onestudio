@@ -1,6 +1,10 @@
 import { TypesDrawerType } from "../components/TypesDrawer";
 import { Category } from "../objects/Category";
-import { InventoryItem } from "../objects/InventoryItem";
+import {
+  InventoryItem,
+  ItemDfo,
+  ItemUpdateDto,
+} from "../objects/InventoryItem";
 import { StudioLocation } from "../objects/StudioLocation";
 import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
 import { StudioUser } from "../objects/StudioUser";
@@ -150,25 +154,15 @@ export class ApiHelper {
     return { success: success, id: id };
   }
 
-  public static async updateItem(i: InventoryItem): Promise<boolean> {
+  public static async updateItem(i: ItemDfo): Promise<boolean> {
     let success: boolean = false;
     try {
-      const body = {
-        m_number: i.mNumber,
-        manufacturer: i.manufacturer,
-        model: i.model,
-        notes: i.notes,
-        serial: i.serial,
-        location_id: i.locationId,
-        category_id: i.categoryId,
-        owner_id: i.ownerId,
-        price: i.price,
-      };
+      const item: ItemUpdateDto = InventoryItem.fromDfo(i);
 
       const resp = await HttpHelper.request(
         `item/${i.id}`,
         RequestType.put,
-        body
+        item
       );
 
       if (resp.status === 200) {

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { ApiHelper } from "../../helpers/ApiHelper";
-import { InventoryItem } from "../../objects/InventoryItem";
+import { InventoryItem, ItemDfo } from "../../objects/InventoryItem";
 
 // Define a type for the slice state
 interface InventoryState {
@@ -26,8 +26,8 @@ export const createItem = createAsyncThunk(
 
 export const updateItem = createAsyncThunk(
   "inventory/updateItem",
-  async (item: InventoryItem) => {
-    return await ApiHelper.updateItem(item);
+  async (data: ItemDfo) => {
+    return await ApiHelper.updateItem(data);
   }
 );
 

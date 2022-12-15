@@ -146,7 +146,11 @@ export function InventoryTable(props: {
         return (
           <div style={style} className="flex flex-row justify-center">
             <HeaderCheckBox
-              selectedCount={props.selected.length}
+              selectedCount={
+                props.selected.filter((i) =>
+                  filteredItems.map((fi) => fi.id).includes(i)
+                ).length
+              }
               totalCount={filteredItems.length}
               deselectAll={() => props.setSelected([])}
               selectAll={() => props.setSelected(items.map((i) => i.id))}

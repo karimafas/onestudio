@@ -6,8 +6,8 @@ import { TimelineEvent } from "./TimelineEvent";
 import { StudioUser } from "./StudioUser";
 
 export enum ItemStatus {
-  working,
-  faulty,
+  working = "working",
+  faulty = "faulty",
 }
 
 function stringToStatus(status: "faulty" | "working"): ItemStatus {
@@ -112,4 +112,50 @@ export class InventoryItem {
     this.status = status;
     this.createdBy = createdBy;
   }
+
+  static fromDfo(i: ItemDfo): ItemUpdateDto {
+    return {
+      manufacturer: i.manufacturer,
+      model: i.model,
+      location_id: parseInt(i.location_id),
+      serial: i.serial,
+      m_number: i.m_number,
+      price: parseFloat(i.price),
+      category_id: parseInt(i.category_id),
+      owner_id: parseInt(i.owner_id),
+      notes: i.notes,
+      updated_at: new Date(),
+    };
+  }
+}
+
+export interface ItemDfo {
+  id: number;
+  manufacturer: string;
+  model: string;
+  location_id: string;
+  serial: string;
+  m_number: string;
+  price: string;
+  category_id: string;
+  owner_id: string;
+  notes: string;
+  status: ItemStatus;
+}
+
+export interface ItemUpdateDto {
+  id?: number;
+  manufacturer?: string;
+  model?: string;
+  location_id?: number;
+  serial?: string;
+  m_number?: string;
+  price?: number;
+  category_id?: number;
+  owner_id?: number;
+  notes?: string;
+  created_at?: Date;
+  updated_at?: Date;
+  status?: ItemStatus;
+  created_by?: number;
 }

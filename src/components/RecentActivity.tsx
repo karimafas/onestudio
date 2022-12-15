@@ -38,7 +38,7 @@ export function RecentActivity() {
   const events = useAppSelector((state) => state.data.events);
 
   return (
-    <div className="flex flex-col w-2/5 h-full p-8">
+    <div className="flex flex-col w-2/5 h-full py-8">
       <div className="w-full h-full border-dashed border-lightest_purple border-4 rounded-2xl flex flex-col p-8">
         <span className="font-bold text-xl text-dark_blue mb-6">
           Recent activity

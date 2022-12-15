@@ -17,6 +17,8 @@ module.exports = {
         grey: "#959595",
         light_grey: "#F6F6F6",
         red: "#FF6969",
+        light_red: "#FFB8B8",
+        lightest_red: "#FFD1D1",
       },
       animation: {
         fade: "fadeOut 400ms ease-in-out",

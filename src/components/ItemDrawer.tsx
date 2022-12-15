@@ -11,18 +11,7 @@ import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
 import { useState } from "react";
 import { StudioUser } from "../objects/StudioUser";
-
-export interface SubmittedData {
-  manufacturer: string;
-  model: string;
-  locationId: string;
-  serial: string;
-  mNumber: string;
-  price: string;
-  categoryId: string;
-  ownerId: string;
-  notes: string;
-}
+import { ItemDfo, ItemStatus } from "../objects/InventoryItem";
 
 export function ItemDrawer(props: { submit: Function }) {
   const [disabled, setDisabled] = useState(false);
@@ -37,7 +26,7 @@ export function ItemDrawer(props: { submit: Function }) {
   );
   const [priceError, setPriceError] = useState("");
 
-  function validate(data: SubmittedData): boolean {
+  function validate(data: ItemDfo): boolean {
     if (/^\d{1,10}(\.\d{1,4})?$/.test(data.price)) {
       setPriceError("");
       return true;
@@ -50,7 +39,7 @@ export function ItemDrawer(props: { submit: Function }) {
   return (
     <div>
       <FormContainer
-        onSuccess={async (data: SubmittedData) => {
+        onSuccess={async (data: ItemDfo) => {
           setDisabled(true);
           if (validate(data)) {
             await props.submit(data);
