@@ -1,5 +1,4 @@
-import { Button, Dialog, Typography } from "@mui/material";
-import "./ConfirmDialog.css";
+import { Dialog } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { PrimaryButton } from "./PrimaryButton";
 

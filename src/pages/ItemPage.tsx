@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { deleteDataItem, reloadItem } from "../features/data/dataSlice";
 import { deleteItems, updateItem } from "../features/data/inventorySlice";
 import { ItemDfo } from "../objects/InventoryItem";
-import "./ItemPage.css";
 import { EventSubmittedData, FaultDrawer } from "../components/FaultDrawer";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { Category } from "../objects/Category";

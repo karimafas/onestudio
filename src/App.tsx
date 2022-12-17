@@ -10,7 +10,6 @@ import Sidebar from "./components/Sidebar";
 import { SettingsPage } from "./pages/SettingsPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { Importer } from "./pages/Importer";
 import { ResetPassword } from "./pages/ResetPassword";
 import { AppBackground } from "./components/AppBackground";
 
@@ -87,7 +86,6 @@ export default function App() {
                 <Route path="/inventory" element={<InventoryPage />} />
                 <Route path="/inventory/:id" element={<ItemPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/inventory/import" element={<Importer />} />
               </Routes>
             </div>
           </div>
