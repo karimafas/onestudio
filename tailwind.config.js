@@ -20,6 +20,7 @@ module.exports = {
         red: "#FF6969",
         light_red: "#FFB8B8",
         lightest_red: "#FFD1D1",
+        green: "#98FFA2",
       },
       animation: {
         fade: "fadeOut 400ms ease-in-out",
