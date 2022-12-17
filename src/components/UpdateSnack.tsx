@@ -15,10 +15,19 @@ export function UpdateSnack(props: {
   state: UpdateSnackState;
   handleClose: Function;
 }) {
+  let timeout: any;
+
   useEffect(() => {
-    setTimeout(() => {
-      props.handleClose();
-    }, 5000);
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+
+    if (props.state.open) {
+      setTimeout(() => {
+        props.handleClose();
+      }, 5000);
+    }
   }, [props.state.open]);
 
   function snackText() {
