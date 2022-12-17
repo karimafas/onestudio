@@ -116,8 +116,8 @@ export function SettingsPage() {
         <span className="font-bold text-2xl text-dark_blue">Settings</span>
         <StudioInfoCard collapsed />
         <div className="flex flex-row mt-14 items-start">
-          <div className="flex flex-col w-72">
-            <div className="flex flex-row items-center justify-between w-full mb-8">
+          <div className="flex flex-col w-[22rem] h-80 overflow-auto pl-3">
+            <div className="flex flex-row items-center justify-between w-full mb-8 pr-4">
               <span className="text-dark_blue font-bold text-xl">
                 Categories
               </span>
@@ -147,8 +147,8 @@ export function SettingsPage() {
               </div>
             ))}
           </div>
-          <div className="flex flex-col w-72 ml-40">
-            <div className="flex flex-row items-center justify-between w-full mb-8">
+          <div className="flex flex-col w-[22rem] h-80 ml-40 overflow-auto pl-3">
+            <div className="flex flex-row items-center justify-between w-full mb-8 pr-4">
               <span className="text-dark_blue font-bold text-xl">
                 Locations
               </span>

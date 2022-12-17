@@ -191,17 +191,17 @@ export function ItemPage() {
                 </span>
               </div>
               <div className="flex flex-row">
+                <SquareButton
+                  icon={require("../assets/images/delete.png")}
+                  onClick={() => setDeleteOpen(true)}
+                />
+                <div className="mr-4"></div>
                 <PrimaryButton
                   backgroundColor="bg-blue_100"
                   textColor="text-white"
                   icon={require("../assets/images/fault.png")}
                   text="Report a fault"
                   onClick={() => handleSubmit()}
-                />
-                <div className="mr-4"></div>
-                <SquareButton
-                  icon={require("../assets/images/delete.png")}
-                  onClick={() => setDeleteOpen(true)}
                 />
                 <div className="mr-4"></div>
                 <PrimaryButton
