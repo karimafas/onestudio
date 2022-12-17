@@ -72,7 +72,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <div>
           <AppBackground />
-          <div className="relative mt-[-100vh] flex flex-row">
+          <div className="relative mt-[-100vh] flex flex-row overflow-hidden">
             <div>{loggedIn ? <Sidebar /> : <></>}</div>
             <div
               style={{

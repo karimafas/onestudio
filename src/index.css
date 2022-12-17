@@ -18,6 +18,7 @@ code {
 /* width */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 /* Track */
@@ -27,11 +28,11 @@ code {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #E3E2FF;
+  background: #e3e2ff;
   border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #A4A3FF;
+  background: #a4a3ff;
 }

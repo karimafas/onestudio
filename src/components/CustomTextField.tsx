@@ -1,16 +1,16 @@
 import { ValidationField, ValidationObject } from "../helpers/ValidationHelper";
 
 export function CustomTextField(props: {
-  width: string;
-  height: string;
-  fontSize: string;
   defaultValue: string;
   onChange: Function;
+  validationObject: ValidationObject;
+  width?: string;
+  height?: string;
+  fontSize?: string;
   disabled?: boolean;
   prefix?: string;
   style?: string;
   name?: string;
-  validationObject: ValidationObject;
 }) {
   let valid = true;
 
@@ -30,7 +30,7 @@ export function CustomTextField(props: {
     props.validationObject.fields.filter((inv) => inv.name === props.name)[0];
 
   const validClass = `p-1 h-full w-full hover:bg-lightest_purple rounded font-semibold text-dark_blue ${
-    props.fontSize
+    props.fontSize ?? "text-base"
   } border-[2px] focus-within:border-lightest_purple border-transparent ${
     props.disabled ? "opacity-60 pointer-events-none" : ""
   }`;
@@ -39,9 +39,11 @@ export function CustomTextField(props: {
   return (
     <div className="flex flex-col">
       <div
-        className={`flex flex-row ${props.style ?? ""} mb-1 ${props.width} ${
-          props.height
-        } items-center ${valid ? validClass : invalidClass}`}
+        className={`flex flex-row ${props.style ?? ""} mb-1 ${
+          props.width ?? "w-48"
+        } ${props.height ?? "h-8"} items-center ${
+          valid ? validClass : invalidClass
+        }`}
       >
         <div className="flex flex-row">
           {props.prefix ? (

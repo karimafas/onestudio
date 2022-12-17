@@ -25,6 +25,7 @@ import {
   UpdateSnackState,
   UpdateSnackType,
 } from "../components/UpdateSnack";
+import { CustomSelect } from "../components/CustomSelect";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -148,8 +149,6 @@ export function ItemPage() {
     setValidationObject(object);
   };
 
-  debugger;
-
   if (!item) {
     return <div></div>;
   } else {
@@ -218,7 +217,6 @@ export function ItemPage() {
                   disabled={disabled}
                   validationObject={validationObject}
                   fontSize="text-xl"
-                  width="w-48"
                   height="h-10"
                   defaultValue={dfo.manufacturer}
                   name="manufacturer"
@@ -228,8 +226,6 @@ export function ItemPage() {
                   disabled={disabled}
                   validationObject={validationObject}
                   fontSize="text-lg"
-                  width="w-48"
-                  height="h-8"
                   defaultValue={dfo.model}
                   name="model"
                   onChange={(v: string) => setDfo({ ...dfo, model: v })}
@@ -242,9 +238,6 @@ export function ItemPage() {
                     <CustomTextField
                       disabled={disabled}
                       validationObject={validationObject}
-                      fontSize="text-base"
-                      height="h-8"
-                      width="w-48"
                       defaultValue={dfo.price}
                       name="price"
                       onChange={(v: string) => setDfo({ ...dfo, price: v })}
@@ -258,9 +251,6 @@ export function ItemPage() {
                     <CustomTextField
                       disabled={disabled}
                       validationObject={validationObject}
-                      fontSize="text-base"
-                      height="h-8"
-                      width="w-48"
                       defaultValue={`${dfo.serial}`}
                       name="serial"
                       onChange={(v: string) => setDfo({ ...dfo, serial: v })}
@@ -273,9 +263,6 @@ export function ItemPage() {
                     <CustomTextField
                       disabled={disabled}
                       validationObject={validationObject}
-                      fontSize="text-base"
-                      height="h-8"
-                      width="w-48"
                       defaultValue={`${dfo.m_number}`}
                       name="mNumber"
                       onChange={(v: string) => setDfo({ ...dfo, m_number: v })}
@@ -289,9 +276,6 @@ export function ItemPage() {
                       disabled={disabled}
                       validationObject={validationObject}
                       name="notes"
-                      fontSize="text-base"
-                      height="h-8"
-                      width="w-48"
                       defaultValue={`${dfo.notes}`}
                       onChange={(v: string) => setDfo({ ...dfo, notes: v })}
                     />
@@ -302,49 +286,60 @@ export function ItemPage() {
                     <span className="text-light_blue font-semibold ml-1">
                       Location
                     </span>
-                    <CustomTextField
+                    <CustomSelect
+                      elements={locations.map((l) => {
+                        return {
+                          id: l.id,
+                          value: l.name,
+                        };
+                      })}
                       disabled={disabled}
                       validationObject={validationObject}
-                      fontSize="text-base"
-                      height="h-8"
-                      width="w-48"
                       defaultValue={`${dfo.location_id}`}
-                      name="locationId"
-                      onChange={(v: string) =>
-                        setDfo({ ...dfo, location_id: v })
-                      }
+                      name="location_id"
+                      onChange={(v: string) => {
+                        setDfo({ ...dfo, location_id: v + "" });
+                      }}
                     />
                   </div>
                   <div className="flex flex-row justify-between items-center">
                     <span className="text-light_blue font-semibold ml-1">
                       Category
                     </span>
-                    <CustomTextField
+                    <CustomSelect
+                      elements={categories.map((c) => {
+                        return {
+                          id: c.id,
+                          value: c.name,
+                        };
+                      })}
                       disabled={disabled}
                       validationObject={validationObject}
-                      fontSize="text-base"
-                      height="h-8"
-                      width="w-48"
                       defaultValue={`${dfo.category_id}`}
-                      name="categoryId"
-                      onChange={(v: string) =>
-                        setDfo({ ...dfo, category_id: v })
-                      }
+                      name="category_id"
+                      onChange={(v: string) => {
+                        setDfo({ ...dfo, category_id: v + "" });
+                      }}
                     />
                   </div>
                   <div className="flex flex-row justify-between items-center">
                     <span className="text-light_blue font-semibold ml-1">
                       Owner
                     </span>
-                    <CustomTextField
+                    <CustomSelect
+                      elements={owners.map((o) => {
+                        return {
+                          id: o.id,
+                          value: `${o.firstName} ${o.lastName}`,
+                        };
+                      })}
                       disabled={disabled}
                       validationObject={validationObject}
-                      fontSize="text-base"
-                      height="h-8"
-                      width="w-48"
                       defaultValue={`${dfo.owner_id}`}
-                      name="ownerId"
-                      onChange={(v: string) => setDfo({ ...dfo, owner_id: v })}
+                      name="owner_id"
+                      onChange={(v: string) => {
+                        setDfo({ ...dfo, owner_id: v + "" });
+                      }}
                     />
                   </div>
                 </div>
