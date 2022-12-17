@@ -1,6 +1,7 @@
 import { Button, Dialog, Typography } from "@mui/material";
 import "./ConfirmDialog.css";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { PrimaryButton } from "./PrimaryButton";
 
 const ConfirmDialog = (props: {
   title: string;
@@ -12,44 +13,38 @@ const ConfirmDialog = (props: {
   const { title, body, open, setOpen, onConfirm } = props;
   return (
     <Dialog
+      PaperProps={{
+        style: { borderRadius: 20, backgroundColor: "white" },
+      }}
       open={open}
       onClose={() => setOpen(false)}
       aria-labelledby="confirm-dialog"
     >
-      <div style={{ padding: "1.2em" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: "1em",
-          }}
-        >
-          <DeleteIcon sx={{ marginRight: "0.2em" }} fontSize="small" />
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              fontSize: "1.2em",
-            }}
-          >
-            {title}
-          </Typography>
+      <div className="p-6">
+        <div className="flex flex-row items-center mb-1 text-dark_blue">
+          <DeleteIcon className="mr-1" fontSize="small" />
+          <span className="text-lg font-semibold">{title}</span>
         </div>
-
-        <Typography sx={{ marginBottom: "0.5em" }}>{body}</Typography>
-        <div className="confirm-dialog__row">
-          <Button onClick={() => setOpen(false)} color="error">
-            No
-          </Button>
-          <Button
+        <span className="text-dark_blue text-sm font-base">{body}</span>
+        <div className="flex flex-row justify-end mt-6">
+          <PrimaryButton
+            onClick={() => setOpen(false)}
+            text="No"
+            icon={require("../assets/images/close-purple.png")}
+            iconStyle="w-3"
+          />
+          <PrimaryButton
             onClick={() => {
               setOpen(false);
               onConfirm();
             }}
-            color="primary"
-          >
-            Yes
-          </Button>
+            text="Yes"
+            backgroundColor="bg-blue_100"
+            textColor="text-white"
+            icon={require("../assets/images/check.png")}
+            iconStyle="w-4"
+            style="ml-4"
+          />
         </div>
       </div>
     </Dialog>

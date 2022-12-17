@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         blue: "#3531FF",
+        blue_100: "#3531FF",
         blue_50: "rgba(53, 49, 255, 0.5)",
         blue_30: "rgba(53, 49, 255, 0.3)",
         blue_20: "rgba(53, 49, 255, 0.2)",

@@ -12,7 +12,7 @@ function stringToType(type: string): TimelineEventType {
   switch (type) {
     case "created":
       return TimelineEventType.created;
-    case "edit":
+    case "edited":
       return TimelineEventType.edited;
     case "fault":
       return TimelineEventType.fault;

@@ -1,20 +1,34 @@
 export function PrimaryButton(props: {
   onClick: Function;
   text: string;
-  icon: any;
+  icon?: any;
   type?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  iconStyle?: string;
+  style?: string;
 }) {
   return (
-    <button type="submit">
-      <div
-        onClick={() => props.onClick()}
-        className="bg-light_purple2 h-10 rounded-lg cursor-pointer flex flex-row justify-around items-center px-4 transition-all duration-500"
+    <div
+      onClick={() => props.onClick()}
+      className={`${
+        props.backgroundColor ?? "bg-light_purple2"
+      } h-10 rounded-lg cursor-pointer flex flex-row ${
+        props.icon ? "justify-around" : "justify-center"
+      } items-center px-4 transition-all duration-500 ${props.style ?? ""}`}
+    >
+      <span
+        className={`font-semibold ${
+          props.textColor ?? "text-light_purple"
+        } mr-4 text-center`}
       >
-        <span className="font-semibold text-light_purple mr-4">
-          {props.text}
-        </span>
-        <img className="w-5" src={props.icon} />
-      </div>
-    </button>
+        {props.text}
+      </span>
+      {!props.icon ? (
+        <> </>
+      ) : (
+        <img className={`w-5 ${props.iconStyle ?? ""}`} src={props.icon} />
+      )}
+    </div>
   );
 }

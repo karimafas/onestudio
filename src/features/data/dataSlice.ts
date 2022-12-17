@@ -58,11 +58,7 @@ export const loadItemEvents = createAsyncThunk(
 export const reloadItem = createAsyncThunk(
   "users/reloadItem",
   async (itemId: number) => {
-    const item = await ApiHelper.getInventoryItem(itemId);
-    if (item) {
-      await item!.loadUser();
-    }
-    return item;
+    return await ApiHelper.getInventoryItem(itemId);
   }
 );
 

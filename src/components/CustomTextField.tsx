@@ -45,7 +45,7 @@ export function CustomTextField(props: {
       >
         <div className="flex flex-row">
           {props.prefix ? (
-            <span className="text-light_blue font-semibold mr-1 mt-px cursor-default">
+            <span className="text-light_blue font-semibold mr-1 cursor-default">
               {props.prefix}
             </span>
           ) : (
