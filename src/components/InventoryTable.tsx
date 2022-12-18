@@ -100,6 +100,7 @@ export function InventoryTable(props: {
             onClick={() => navigate(`${i.id}`)}
             className="flex flex-col justify-center h-full"
             style={style}
+            key={`details-${c.id}`}
           >
             <span className="font-bold text-[15px] mb-1">{i.manufacturer}</span>
             <span>{i.model}</span>
@@ -107,7 +108,11 @@ export function InventoryTable(props: {
         );
       case "select":
         return (
-          <div style={style} className="flex flex-row justify-center">
+          <div
+            key={`select-${c.id}`}
+            style={style}
+            className="flex flex-row justify-center"
+          >
             <CheckBox
               selected={props.selected.includes(i.id)}
               onClick={() => {
@@ -126,6 +131,7 @@ export function InventoryTable(props: {
       default:
         return (
           <span
+            key={`txt-${c.id}-${i.id}-${columnToItemText(c, i)}`}
             className="h-full flex flex-col justify-center"
             onClick={() => navigate(`${i.id}`)}
             style={style}
@@ -144,7 +150,11 @@ export function InventoryTable(props: {
     switch (c.id) {
       case "select":
         return (
-          <div style={style} className="flex flex-row justify-center">
+          <div
+            key="select-col"
+            style={style}
+            className="flex flex-row justify-center"
+          >
             <HeaderCheckBox
               selectedCount={
                 props.selected.filter((i) =>
@@ -158,7 +168,11 @@ export function InventoryTable(props: {
           </div>
         );
       default:
-        return <span style={style}>{c.name}</span>;
+        return (
+          <span key={`header-${c.id}`} style={style}>
+            {c.name}
+          </span>
+        );
     }
   }
 
@@ -169,7 +183,10 @@ export function InventoryTable(props: {
           {columns.map((c) => getHeaderContent(c))}
         </div>
         {filteredItems.map((i) => (
-          <div className="w-full h-20 bg-white shadow-lg rounded-lg text-dark_blue text-xs flex flex-row items-center px-4 font-medium mb-4 cursor-pointer">
+          <div
+            className="w-full h-20 bg-white shadow-lg rounded-lg text-dark_blue text-xs flex flex-row items-center px-4 font-medium mb-4 cursor-pointer"
+            key={`item-${i.id}`}
+          >
             {columns.map((c) => getRowContent(c, i))}
           </div>
         ))}

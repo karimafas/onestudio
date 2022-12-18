@@ -6,7 +6,6 @@ import { deleteDataItem, reloadItem } from "../features/data/dataSlice";
 import { deleteItems, updateItem } from "../features/data/inventorySlice";
 import { ItemDfo } from "../objects/InventoryItem";
 import { EventSubmittedData, FaultDrawer } from "../components/FaultDrawer";
-import { ApiHelper } from "../helpers/ApiHelper";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
 import { StudioUser } from "../objects/StudioUser";
@@ -18,7 +17,7 @@ import {
   RecentActivity,
   RecentActivityType,
 } from "../components/RecentActivity";
-import { ValidationObject } from "../helpers/ValidationHelper";
+import { ValidationObject } from "../services/ValidationService";
 import ConfirmDialog from "../components/ConfirmDialog";
 import {
   UpdateSnack,
@@ -26,6 +25,7 @@ import {
   UpdateSnackType,
 } from "../components/UpdateSnack";
 import { CustomSelect } from "../components/CustomSelect";
+import { EventRepository } from "../repositories/EventRepository";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -89,7 +89,7 @@ export function ItemPage() {
   }, []);
 
   async function _createEvent(data: EventSubmittedData) {
-    const success = await ApiHelper.createEvent(
+    const success = await EventRepository.createEvent(
       data.itemId,
       data.notes,
       data.type

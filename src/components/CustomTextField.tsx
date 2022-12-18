@@ -1,4 +1,4 @@
-import { ValidationField, ValidationObject } from "../helpers/ValidationHelper";
+import { ValidationField, ValidationObject } from "../services/ValidationService";
 
 export function CustomTextField(props: {
   defaultValue: string;

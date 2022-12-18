@@ -1,10 +1,10 @@
 import { Alert, Button } from "@mui/material";
 import "./LoginPage.css";
 import "../App.css";
-import { ApiHelper } from "../helpers/ApiHelper";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { AuthRepository } from "../repositories/AuthRepository";
 const logo = require("../assets/images/logo_typed.png");
 
 interface LoginData {
@@ -20,7 +20,7 @@ export function LoginPage() {
   const reset = searchParams.get("reset") === "true";
 
   async function _login(data: LoginData) {
-    const res = await ApiHelper.login(data.email, data.password);
+    const res = await AuthRepository.login(data.email, data.password);
     return res;
   }
 

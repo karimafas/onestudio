@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { ApiHelper } from "../../helpers/ApiHelper";
 import { InventoryItem, ItemDfo } from "../../objects/InventoryItem";
+import { ItemRepository } from "../../repositories/ItemRepository";
 
 // Define a type for the slice state
 interface InventoryState {
@@ -19,7 +19,7 @@ const initialState: InventoryState = {
 export const createItem = createAsyncThunk(
   "inventory/createItem",
   async (item: InventoryItem): Promise<{ success: boolean; id: any }> => {
-    const response = await ApiHelper.createItem(item);
+    const response = await ItemRepository.createItem(item);
     return { success: response.success, id: response.id };
   }
 );
@@ -27,14 +27,14 @@ export const createItem = createAsyncThunk(
 export const updateItem = createAsyncThunk(
   "inventory/updateItem",
   async (data: ItemDfo) => {
-    return await ApiHelper.updateItem(data);
+    return await ItemRepository.updateItem(data);
   }
 );
 
 export const deleteItems = createAsyncThunk(
   "inventory/deleteItem",
   async (ids: Array<number>) => {
-    return await ApiHelper.deleteItems(ids);
+    return await ItemRepository.deleteItems(ids);
   }
 );
 

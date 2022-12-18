@@ -1,10 +1,14 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { ApiHelper } from "../../helpers/ApiHelper";
 import { Category } from "../../objects/Category";
 import { InventoryItem } from "../../objects/InventoryItem";
 import { StudioLocation } from "../../objects/StudioLocation";
 import { StudioUser } from "../../objects/StudioUser";
 import { TimelineEvent } from "../../objects/TimelineEvent";
+import { AuthRepository } from "../../repositories/AuthRepository";
+import { CategoryRepository } from "../../repositories/CategoryRepository";
+import { EventRepository } from "../../repositories/EventRepository";
+import { ItemRepository } from "../../repositories/ItemRepository";
+import { LocationRepository } from "../../repositories/LocationRepository";
 
 // Define a type for the slice state
 interface DataState {
@@ -31,12 +35,13 @@ const initialState: DataState = {
 };
 
 export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
-  const items: Array<InventoryItem> = await ApiHelper.getInventoryItems();
-  const categories: Array<Category> = await ApiHelper.getCategories();
-  const locations: Array<StudioLocation> = await ApiHelper.getLocations();
-  const studioUsers: Array<StudioUser> = await ApiHelper.getStudioUsers();
-  const user = await ApiHelper.getCurrentUser();
-  const events = await ApiHelper.getStudioEvents();
+  const items: Array<InventoryItem> = await ItemRepository.getInventoryItems();
+  const categories: Array<Category> = await CategoryRepository.getCategories();
+  const locations: Array<StudioLocation> =
+    await LocationRepository.getLocations();
+  const studioUsers: Array<StudioUser> = await AuthRepository.getStudioUsers();
+  const user = await AuthRepository.getCurrentUser();
+  const events = await EventRepository.getStudioEvents();
 
   return {
     items: items,
@@ -58,17 +63,18 @@ export const loadItemEvents = createAsyncThunk(
 export const reloadItem = createAsyncThunk(
   "users/reloadItem",
   async (itemId: number) => {
-    return await ApiHelper.getInventoryItem(itemId);
+    return await ItemRepository.getInventoryItem(itemId);
   }
 );
 
 export const reloadUsers = createAsyncThunk("users/reloadUsers", async () => {
-  return await ApiHelper.getStudioUsers();
+  return await AuthRepository.getStudioUsers();
 });
 
 export const reloadTypes = createAsyncThunk("users/reloadTypes", async () => {
-  const categories: Array<Category> = await ApiHelper.getCategories();
-  const locations: Array<StudioLocation> = await ApiHelper.getLocations();
+  const categories: Array<Category> = await CategoryRepository.getCategories();
+  const locations: Array<StudioLocation> =
+    await LocationRepository.getLocations();
 
   return {
     categories: categories,

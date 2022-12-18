@@ -65,6 +65,7 @@ export function RecentActivity(props: {
         </span>
         {props.events.map((e) => (
           <div
+            key={e.id}
             onClick={() => {
               if (props.type === RecentActivityType.item) return;
               navigate(`inventory/${e.itemId}`);

@@ -1,9 +1,10 @@
 import moment from "moment";
-import { ApiHelper } from "../helpers/ApiHelper";
-import { Logger } from "../services/logger";
+import { LoggerService } from "../services/LoggerService";
 import { Constants } from "../utils/Constants";
 import { TimelineEvent } from "./TimelineEvent";
 import { StudioUser } from "./StudioUser";
+import { EventRepository } from "../repositories/EventRepository";
+import { AuthRepository } from "../repositories/AuthRepository";
 
 export enum ItemStatus {
   working = "working",
@@ -54,12 +55,12 @@ export class InventoryItem {
   }
 
   public async initEvents() {
-    Logger.log(`Initialising event for item ${this.id}`);
-    this.events = await ApiHelper.getItemEvents(this.id);
+    LoggerService.log(`Initialising event for item ${this.id}`);
+    this.events = await EventRepository.getItemEvents(this.id);
   }
 
   public async loadUser() {
-    this.user = await ApiHelper.getUser(this.createdBy);
+    this.user = await AuthRepository.getUser(this.createdBy);
   }
 
   static fromJson(json: { [key: string]: any }) {

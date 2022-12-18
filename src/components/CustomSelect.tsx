@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ValidationField, ValidationObject } from "../helpers/ValidationHelper";
+import { ValidationField, ValidationObject } from "../services/ValidationService";
 
 export interface SelectElement {
   id: number;

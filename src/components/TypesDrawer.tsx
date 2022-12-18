@@ -8,7 +8,6 @@ import {
 import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import { useState } from "react";
 import { useAppSelector } from "../app/hooks";
-import { SetOwnerType } from "../helpers/ApiHelper";
 
 export enum TypesDrawerType {
   category,
@@ -30,7 +29,6 @@ export function typesDrawerTypeToString(type: TypesDrawerType) {
 export interface TypesSubmittedData {
   name: string | undefined;
   userId: number | undefined;
-  setOwnerType: SetOwnerType;
 }
 
 export function TypesDrawer(props: {
@@ -46,7 +44,6 @@ export function TypesDrawer(props: {
     <div>
       <FormContainer
         onSuccess={async (data: TypesSubmittedData) => {
-          data.setOwnerType = SetOwnerType.grant;
           setDisabled(true);
           await props.submit(data);
           setDisabled(false);

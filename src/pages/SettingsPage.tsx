@@ -1,5 +1,4 @@
 import { Drawer } from "@mui/material";
-import { ApiHelper, SetOwnerType } from "../helpers/ApiHelper";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
@@ -15,6 +14,7 @@ import { StudioUser } from "../objects/StudioUser";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { Header } from "../components/Header";
 import { StudioInfoCard } from "../components/StudioInfoCard";
+import { TypesRepository } from "../repositories/TypesRepository";
 
 export function SettingsPage() {
   const [drawer, setDrawer] = useState<boolean>(false);
@@ -47,20 +47,12 @@ export function SettingsPage() {
 
   async function _submit(data: TypesSubmittedData) {
     let success = false;
-    if (drawerType === TypesDrawerType.owner) {
-      if (!data.userId) return;
-      success = await ApiHelper.setOwner(data.userId, data.setOwnerType);
 
-      if (success) {
-        await dispatch(reloadUsers());
-      }
-    } else {
-      if (!data.name) return;
-      success = await ApiHelper.createType(data.name, drawerType);
+    if (!data.name) return;
+    success = await TypesRepository.createType(data.name, drawerType);
 
-      if (success) {
-        await dispatch(reloadTypes());
-      }
+    if (success) {
+      await dispatch(reloadTypes());
     }
 
     if (success) setDrawer(false);
@@ -71,18 +63,11 @@ export function SettingsPage() {
     type: TypesDrawerType | undefined
   ) {
     let success = false;
-    if (type === TypesDrawerType.owner) {
-      success = await ApiHelper.setOwner(id!, SetOwnerType.revoke);
 
-      if (success) {
-        await dispatch(reloadUsers());
-      }
-    } else {
-      success = await ApiHelper.deleteType(id!, type!);
+    success = await TypesRepository.deleteType(id!, type!);
 
-      if (success) {
-        await dispatch(reloadTypes());
-      }
+    if (success) {
+      await dispatch(reloadTypes());
     }
   }
 
@@ -128,7 +113,10 @@ export function SettingsPage() {
               />
             </div>
             {categories.map((c) => (
-              <div className="w-72 cursor-pointer group mb-6">
+              <div
+                className="w-72 cursor-pointer group mb-6"
+                key={`category-${c.id}`}
+              >
                 <img
                   className="w-4"
                   src={require("../assets/images/delete.png")}
@@ -159,7 +147,10 @@ export function SettingsPage() {
               />
             </div>
             {locations.map((l) => (
-              <div className="w-72 cursor-pointer group mb-6">
+              <div
+                className="w-72 cursor-pointer group mb-6"
+                key={`location-${l.id}`}
+              >
                 <img
                   className="w-4"
                   src={require("../assets/images/delete.png")}

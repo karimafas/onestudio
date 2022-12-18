@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { initialLoad } from "./features/data/dataSlice";
-import { ApiHelper } from "./helpers/ApiHelper";
 import { InventoryPage } from "./pages/InventoryPage";
 import { ItemPage } from "./pages/ItemPage";
 import { LoginPage } from "./pages/LoginPage";
@@ -10,8 +9,8 @@ import Sidebar from "./components/Sidebar";
 import { SettingsPage } from "./pages/SettingsPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { ResetPassword } from "./pages/ResetPassword";
 import { AppBackground } from "./components/AppBackground";
+import { AuthRepository } from "./repositories/AuthRepository";
 
 export default function App() {
   const location = useLocation();
@@ -49,7 +48,7 @@ export default function App() {
     const refreshToken = true;
 
     if (refreshToken) {
-      ApiHelper.refreshToken().then((success) => {
+      AuthRepository.refreshToken().then((success) => {
         if (success) {
           login();
         } else {
@@ -82,7 +81,6 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/inventory" element={<InventoryPage />} />
                 <Route path="/inventory/:id" element={<ItemPage />} />
                 <Route path="/settings" element={<SettingsPage />} />

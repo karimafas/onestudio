@@ -3,8 +3,8 @@ import "./LoginPage.css";
 import "../App.css";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useEffect, useState } from "react";
-import { ApiHelper } from "../helpers/ApiHelper";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { AuthRepository } from "../repositories/AuthRepository";
 const logo = require("../assets/images/logo_typed.png");
 
 const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -23,23 +23,23 @@ export function ResetPassword() {
   const fromEmail = searchParams.get("reset") === "true";
   const token = searchParams.get("id");
 
-  useEffect(() => {
-    ApiHelper.checkToken().then((value) => {
-      if (value) {
-        navigate("/");
-      } else {
-        if (token) {
-          ApiHelper.checkResetToken(token).then((value) => {
-            if (!value) setTokenError(true);
-            setLoading(false);
-          });
-        } else {
-          setLoading(false);
-        }
-      }
-    });
-    return () => {};
-  }, []);
+  // useEffect(() => {
+  //   AuthRepository.checkToken().then((value) => {
+  //     if (value) {
+  //       navigate("/");
+  //     } else {
+  //       if (token) {
+  //         ApiHelper.checkResetToken(token).then((value) => {
+  //           if (!value) setTokenError(true);
+  //           setLoading(false);
+  //         });
+  //       } else {
+  //         setLoading(false);
+  //       }
+  //     }
+  //   });
+  //   return () => {};
+  // }, []);
 
   return (
     <div className="login-page__wrapper">
@@ -65,7 +65,7 @@ export function ResetPassword() {
             if (fromEmail) {
               if (!(data.password && data.confirmPassword && token)) return;
               setMatchError(data.password !== data.confirmPassword);
-              const success = await ApiHelper.resetPassword(
+              const success = await AuthRepository.resetPassword(
                 token,
                 data.password
               );
@@ -75,7 +75,7 @@ export function ResetPassword() {
             } else {
               if (!data.email) return;
               setEmail(data.email);
-              const success = await ApiHelper.resetToken(data.email);
+              const success = await AuthRepository.resetToken(data.email);
               setSent(success);
             }
           }}
