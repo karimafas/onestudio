@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { InventoryItem } from "../objects/InventoryItem";
+import { AddItemDialog } from "./AddItemDialog";
 import { CheckBox } from "./CheckBox";
 import { HeaderCheckBox } from "./HeaderCheckBox";
 

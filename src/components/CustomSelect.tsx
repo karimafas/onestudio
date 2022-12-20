@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { ValidationField, ValidationObject } from "../services/ValidationService";
+import {
+  ValidationField,
+  ValidationObject,
+} from "../services/ValidationService";
 
 export interface SelectElement {
   id: number;
@@ -7,10 +10,10 @@ export interface SelectElement {
 }
 
 export function CustomSelect(props: {
-  defaultValue: string;
   onChange: Function;
   elements: SelectElement[];
   validationObject: ValidationObject;
+  defaultValue?: string;
   name?: string;
   width?: string;
   height?: string;
@@ -18,6 +21,7 @@ export function CustomSelect(props: {
   disabled?: boolean;
   prefix?: string;
   style?: string;
+  placeholder?: string;
 }) {
   let valid = true;
 
@@ -52,16 +56,22 @@ export function CustomSelect(props: {
   const filteredElements = props.elements.filter((e) =>
     e.value.toLowerCase().includes(search.toLowerCase())
   );
+  const [changedResult, setChangedResult] = useState<number>(0);
 
-  let [displayValue, setDisplayValue] = useState<string>("");
+  const [selectedId, setSelectedId] = useState<number | undefined>(
+    props.defaultValue ? parseInt(props.defaultValue) : undefined
+  );
   let timeout: any;
 
   useEffect(() => {
-    setDisplayValue(
-      props.elements.find((e) => e.id === parseInt(props.defaultValue))
-        ?.value ?? ""
-    );
-  }, [props.defaultValue]);
+    props.onChange(selectedId?.toString() ?? "");
+  }, [selectedId, changedResult]);
+
+  function getVal(): string {
+    return !selectedId
+      ? ""
+      : props.elements.filter((e) => e.id === selectedId)[0].value;
+  }
 
   return (
     <div className="flex flex-col">
@@ -81,15 +91,20 @@ export function CustomSelect(props: {
             <></>
           )}
           <input
+            placeholder={props.placeholder ?? ""}
             onBlur={() => {
               clearTimeout(timeout);
               timeout = null;
               setTimeout(() => setFocus(false), 100);
             }}
             onFocus={(_) => setFocus(true)}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              const v: string = e.target.value;
+              setSelectedId(undefined);
+              setSearch(v);
+            }}
             name={props.name}
-            defaultValue={displayValue}
+            value={selectedId ? getVal() : search}
             className="bg-transparent outline-none w-full h-full"
           ></input>
         </div>
@@ -113,7 +128,8 @@ export function CustomSelect(props: {
           {filteredElements.map((e) => (
             <div
               onClick={() => {
-                props.onChange(e.id);
+                setChangedResult(changedResult + 1);
+                setSelectedId(e.id);
               }}
               key={`${e.id}-${e.value}`}
               className="h-8 w-full p-3 hover:bg-lightest_purple flex flex-row items-center cursor-pointer text-dark_blue text-sm font-medium"

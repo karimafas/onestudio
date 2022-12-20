@@ -114,7 +114,7 @@ export class InventoryItem {
     this.createdBy = createdBy;
   }
 
-  static fromDfo(i: ItemDfo): ItemUpdateDto {
+  static fromDfo(i: ItemDfo): ItemDto {
     return {
       manufacturer: i.manufacturer,
       model: i.model,
@@ -131,7 +131,7 @@ export class InventoryItem {
 }
 
 export interface ItemDfo {
-  id: number;
+  id?: number;
   manufacturer: string;
   model: string;
   location_id: string;
@@ -144,7 +144,7 @@ export interface ItemDfo {
   status: ItemStatus;
 }
 
-export interface ItemUpdateDto {
+export interface ItemDto {
   id?: number;
   manufacturer?: string;
   model?: string;

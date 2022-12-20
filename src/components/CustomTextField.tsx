@@ -1,9 +1,12 @@
-import { ValidationField, ValidationObject } from "../services/ValidationService";
+import {
+  ValidationField,
+  ValidationObject,
+} from "../services/ValidationService";
 
 export function CustomTextField(props: {
-  defaultValue: string;
   onChange: Function;
   validationObject: ValidationObject;
+  defaultValue?: string;
   width?: string;
   height?: string;
   fontSize?: string;
@@ -11,6 +14,7 @@ export function CustomTextField(props: {
   prefix?: string;
   style?: string;
   name?: string;
+  placeholder?: string;
 }) {
   let valid = true;
 
@@ -45,7 +49,7 @@ export function CustomTextField(props: {
           valid ? validClass : invalidClass
         }`}
       >
-        <div className="flex flex-row">
+        <div className="flex flex-row w-full">
           {props.prefix ? (
             <span className="text-light_blue font-semibold mr-1 cursor-default">
               {props.prefix}
@@ -54,9 +58,10 @@ export function CustomTextField(props: {
             <></>
           )}
           <input
+            placeholder={props.placeholder ?? ""}
             onChange={(e) => props.onChange(e.target.value)}
             name={props.name}
-            defaultValue={props.defaultValue}
+            defaultValue={props.defaultValue ?? ""}
             className="bg-transparent outline-none w-full h-full"
           ></input>
         </div>

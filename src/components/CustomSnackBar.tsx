@@ -1,18 +1,20 @@
 import { Snackbar } from "@mui/material";
 import { useEffect } from "react";
 
-export enum UpdateSnackType {
-  success,
-  error,
+export enum SnackType {
+  updateSuccess,
+  updateError,
+  createSuccess,
+  createError,
 }
 
-export interface UpdateSnackState {
-  type: UpdateSnackType;
+export interface SnackState {
+  type: SnackType;
   open: boolean;
 }
 
-export function UpdateSnack(props: {
-  state: UpdateSnackState;
+export function CustomSnackBar(props: {
+  state: SnackState;
   handleClose: Function;
 }) {
   let timeout: any;
@@ -32,18 +34,24 @@ export function UpdateSnack(props: {
 
   function snackText() {
     switch (props.state.type) {
-      case UpdateSnackType.success:
+      case SnackType.updateSuccess:
         return "Item updated successfully.";
-      case UpdateSnackType.error:
+      case SnackType.updateError:
         return "There was an error updating this item.";
+      case SnackType.createSuccess:
+        return "Item created successfully.";
+      case SnackType.createError:
+        return "There was an error creating this item.";
     }
   }
 
   function indicatorColor() {
     switch (props.state.type) {
-      case UpdateSnackType.success:
+      case SnackType.updateSuccess:
+      case SnackType.createSuccess:
         return "bg-green";
-      case UpdateSnackType.error:
+      case SnackType.updateError:
+      case SnackType.createError:
         return "bg-red";
     }
   }

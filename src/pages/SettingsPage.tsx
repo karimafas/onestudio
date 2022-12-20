@@ -9,7 +9,7 @@ import {
   typesDrawerTypeToString,
   TypesSubmittedData,
 } from "../components/TypesDrawer";
-import { reloadTypes, reloadUsers } from "../features/data/dataSlice";
+import { reloadTypes } from "../features/data/dataSlice";
 import { StudioUser } from "../objects/StudioUser";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { Header } from "../components/Header";

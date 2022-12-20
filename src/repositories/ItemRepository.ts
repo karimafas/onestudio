@@ -1,4 +1,8 @@
-import { InventoryItem, ItemDfo, ItemUpdateDto } from "../objects/InventoryItem";
+import {
+  InventoryItem,
+  ItemDfo,
+  ItemDto,
+} from "../objects/InventoryItem";
 import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
 
@@ -49,27 +53,17 @@ export class ItemRepository {
   }
 
   public static async createItem(
-    i: InventoryItem
+    i: ItemDfo
   ): Promise<{ success: boolean; id: any }> {
     let id;
     let success: boolean = false;
 
     try {
-      const body = {
-        m_number: i.mNumber,
-        manufacturer: i.manufacturer,
-        model: i.model,
-        notes: i.notes || "",
-        serial: i.serial,
-        location_id: i.locationId,
-        category_id: i.categoryId,
-        owner_id: i.ownerId,
-        price: i.price,
-      };
+      const dto = InventoryItem.fromDfo(i);
 
-      LoggerService.log(`adding item with body`, body);
+      LoggerService.log(`adding item with body`, dto);
 
-      const resp = await RequestService.request("item", RequestType.post, body);
+      const resp = await RequestService.request("item", RequestType.post, dto);
 
       if (resp.status === 201) {
         success = true;
@@ -88,7 +82,7 @@ export class ItemRepository {
   public static async updateItem(i: ItemDfo): Promise<boolean> {
     let success: boolean = false;
     try {
-      const item: ItemUpdateDto = InventoryItem.fromDfo(i);
+      const item: ItemDto = InventoryItem.fromDfo(i);
 
       const resp = await RequestService.request(
         `item/${i.id}`,

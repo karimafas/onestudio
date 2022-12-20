@@ -16,14 +16,6 @@ const initialState: InventoryState = {
   loading: false,
 };
 
-export const createItem = createAsyncThunk(
-  "inventory/createItem",
-  async (item: InventoryItem): Promise<{ success: boolean; id: any }> => {
-    const response = await ItemRepository.createItem(item);
-    return { success: response.success, id: response.id };
-  }
-);
-
 export const updateItem = createAsyncThunk(
   "inventory/updateItem",
   async (data: ItemDfo) => {

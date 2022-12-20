@@ -20,10 +20,10 @@ import {
 import { ValidationObject } from "../services/ValidationService";
 import ConfirmDialog from "../components/ConfirmDialog";
 import {
-  UpdateSnack,
-  UpdateSnackState,
-  UpdateSnackType,
-} from "../components/UpdateSnack";
+  CustomSnackBar,
+  SnackState,
+  SnackType,
+} from "../components/CustomSnackBar";
 import { CustomSelect } from "../components/CustomSelect";
 import { EventRepository } from "../repositories/EventRepository";
 
@@ -70,9 +70,9 @@ export function ItemPage() {
     notes: item.notes,
     status: item.status,
   });
-  const [snack, setSnack] = useState<UpdateSnackState>({
+  const [snack, setSnack] = useState<SnackState>({
     open: false,
-    type: UpdateSnackType.success,
+    type: SnackType.updateSuccess,
   });
 
   async function init() {
@@ -110,9 +110,9 @@ export function ItemPage() {
       await dispatch(reloadItem(item.id));
       await item.initEvents();
       forceUpdate();
-      setSnack({ open: true, type: UpdateSnackType.success });
+      setSnack({ open: true, type: SnackType.updateSuccess });
     } else {
-      setSnack({ open: true, type: UpdateSnackType.error });
+      setSnack({ open: true, type: SnackType.updateError });
     }
 
     setDisabled(false);
@@ -214,6 +214,7 @@ export function ItemPage() {
             <div className="flex flex-row h-full justify-between">
               <div className="flex flex-col h-full">
                 <CustomTextField
+                  placeholder="Manufacturer"
                   disabled={disabled}
                   validationObject={validationObject}
                   fontSize="text-xl"
@@ -223,6 +224,7 @@ export function ItemPage() {
                   onChange={(v: string) => setDfo({ ...dfo, manufacturer: v })}
                 />
                 <CustomTextField
+                  placeholder="Model"
                   disabled={disabled}
                   validationObject={validationObject}
                   fontSize="text-lg"
@@ -298,8 +300,9 @@ export function ItemPage() {
                       defaultValue={`${dfo.location_id}`}
                       name="location_id"
                       onChange={(v: string) => {
-                        setDfo({ ...dfo, location_id: v + "" });
+                        setDfo({ ...dfo, location_id: v });
                       }}
+                      key={`location-${dfo.location_id}`}
                     />
                   </div>
                   <div className="flex flex-row justify-between items-center">
@@ -318,8 +321,9 @@ export function ItemPage() {
                       defaultValue={`${dfo.category_id}`}
                       name="category_id"
                       onChange={(v: string) => {
-                        setDfo({ ...dfo, category_id: v + "" });
+                        setDfo({ ...dfo, category_id: v });
                       }}
+                      key={`category-${dfo.location_id}`}
                     />
                   </div>
                   <div className="flex flex-row justify-between items-center">
@@ -338,8 +342,9 @@ export function ItemPage() {
                       defaultValue={`${dfo.owner_id}`}
                       name="owner_id"
                       onChange={(v: string) => {
-                        setDfo({ ...dfo, owner_id: v + "" });
+                        setDfo({ ...dfo, owner_id: v });
                       }}
+                      key={`owner-${dfo.location_id}`}
                     />
                   </div>
                 </div>
@@ -357,13 +362,13 @@ export function ItemPage() {
             </div>
           </div>
         </div>
-        <UpdateSnack
-          handleClose={() => {
+        <CustomSnackBar
+          handleClose={() =>
             setSnack({
               ...snack,
               open: false,
-            });
-          }}
+            })
+          }
           state={snack}
         />
       </div>
