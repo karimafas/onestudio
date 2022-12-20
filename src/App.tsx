@@ -11,6 +11,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { AppBackground } from "./components/AppBackground";
 import { AuthRepository } from "./repositories/AuthRepository";
+import { NotFound } from "./pages/NotFound";
 
 export default function App() {
   const location = useLocation();
@@ -84,6 +85,7 @@ export default function App() {
                 <Route path="/inventory" element={<InventoryPage />} />
                 <Route path="/inventory/:id" element={<ItemPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </div>
           </div>
