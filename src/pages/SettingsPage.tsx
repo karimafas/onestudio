@@ -15,6 +15,7 @@ import ConfirmDialog from "../components/ConfirmDialog";
 import { Header } from "../components/Header";
 import { StudioInfoCard } from "../components/StudioInfoCard";
 import { TypesRepository } from "../repositories/TypesRepository";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export function SettingsPage() {
   const [drawer, setDrawer] = useState<boolean>(false);
@@ -74,6 +75,7 @@ export function SettingsPage() {
   return (
     <div className="py-3 px-10 w-full h-15">
       <ConfirmDialog
+        icon={<DeleteIcon className="mr-1" fontSize="small" />}
         title={`Delete ${typesDrawerTypeToString(deleteOpen.data?.type!)}`}
         body={`Are you sure you want to delete this ${typesDrawerTypeToString(
           deleteOpen.data?.type!

@@ -1,4 +1,4 @@
-import { Drawer, Snackbar } from "@mui/material";
+import { Drawer } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -26,6 +26,7 @@ import {
 } from "../components/CustomSnackBar";
 import { CustomSelect } from "../components/CustomSelect";
 import { EventRepository } from "../repositories/EventRepository";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -57,7 +58,7 @@ export function ItemPage() {
   const [validationObject, setValidationObject] = useState<ValidationObject>(
     ValidationObject.empty()
   );
-  const [dfo, setDfo] = useState<ItemDfo>({
+  const initialState: ItemDfo = {
     id: item.id,
     manufacturer: item.manufacturer,
     model: item.model,
@@ -69,11 +70,13 @@ export function ItemPage() {
     owner_id: item.ownerId + "",
     notes: item.notes,
     status: item.status,
-  });
+  };
+  const [dfo, setDfo] = useState<ItemDfo>(initialState);
   const [snack, setSnack] = useState<SnackState>({
     open: false,
     type: SnackType.updateSuccess,
   });
+  const [confirmDialog, setConfirmDialog] = useState<boolean>(false);
 
   async function init() {
     if (item && item.events && item.events.length === 0) {
@@ -87,6 +90,10 @@ export function ItemPage() {
   useEffect(() => {
     init();
   }, []);
+
+  function hasChanged() {
+    return JSON.stringify(initialState) !== JSON.stringify(dfo);
+  }
 
   async function _createEvent(data: EventSubmittedData) {
     const success = await EventRepository.createEvent(
@@ -103,6 +110,8 @@ export function ItemPage() {
   }
 
   async function _updateItem(data: ItemDfo) {
+    if (!hasChanged()) return alert();
+
     setDisabled(true);
 
     const result = await dispatch(updateItem(data));
@@ -156,11 +165,20 @@ export function ItemPage() {
       <div>
         <div className="py-3 px-10 w-full h-[100vh]">
           <ConfirmDialog
+            icon={<DeleteIcon className="mr-1" fontSize="small" />}
             title="Delete Item"
             body="Are you sure you want to delete this item?"
             open={deleteOpen}
             setOpen={() => setDeleteOpen(!deleteOpen)}
             onConfirm={_delete}
+          />
+          <ConfirmDialog
+            icon={<DeleteIcon className="mr-1" fontSize="small" />}
+            title="Unsaved Changes"
+            body="Are you sure you want to go back? All changes will be lost."
+            open={confirmDialog}
+            setOpen={() => setConfirmDialog(!confirmDialog)}
+            onConfirm={() => navigate("/inventory")}
           />
           <Drawer
             transitionDuration={300}
@@ -179,7 +197,13 @@ export function ItemPage() {
           <div className="flex flex-col w-full h-[85vh] animate-fade">
             <div className="w-full flex flex-row justify-between mt-6">
               <div
-                onClick={() => navigate("/inventory")}
+                onClick={() => {
+                  if (hasChanged()) {
+                    setConfirmDialog(true);
+                  } else {
+                    navigate("/inventory");
+                  }
+                }}
                 className="w-48 flex flex-row ml-1 items-center cursor-pointer transition-all"
               >
                 <img

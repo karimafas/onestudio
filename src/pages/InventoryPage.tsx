@@ -1,9 +1,7 @@
-import { Button, Snackbar } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch } from "../app/hooks";
 import { deleteItems } from "../features/data/inventorySlice";
 import { deleteDataItem } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
-import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
 import { SearchBar } from "../components/SearchBar";
 import { PrimaryButton } from "../components/PrimaryButton";
@@ -16,9 +14,9 @@ import {
   SnackState,
   SnackType,
 } from "../components/CustomSnackBar";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export function InventoryPage() {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [height, setHeight] = useState(window.innerHeight);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
@@ -53,6 +51,7 @@ export function InventoryPage() {
     <div>
       <div className="py-3 px-10 w-full h-[100vh] flex flex-col">
         <ConfirmDialog
+          icon={<DeleteIcon className="mr-1" fontSize="small" />}
           title="Delete Item"
           body={`Are you sure you want to delete ${selected.length} item${
             selected.length > 1 ? "s" : ""

@@ -24,7 +24,6 @@ export class RequestService {
 
     try {
       response = await performRequest(type, url, body);
-      debugger;
     } catch (e: any) {
       if (
         !retried &&

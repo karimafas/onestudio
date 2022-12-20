@@ -1,10 +1,10 @@
 import { Dialog } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { PrimaryButton } from "./PrimaryButton";
 
 const ConfirmDialog = (props: {
   title: string;
   body: string;
+  icon: any;
   open: boolean;
   setOpen: Function;
   onConfirm: Function;
@@ -21,7 +21,7 @@ const ConfirmDialog = (props: {
     >
       <div className="p-6">
         <div className="flex flex-row items-center mb-1 text-dark_blue">
-          <DeleteIcon className="mr-1" fontSize="small" />
+          {props.icon}
           <span className="text-lg font-semibold">{title}</span>
         </div>
         <span className="text-dark_blue text-sm font-base">{body}</span>
