@@ -19,12 +19,9 @@ import {
 
 export function InventoryPage() {
   const navigate = useNavigate();
-  const drawer = useAppSelector((state) => state.inventory.drawer);
   const dispatch = useAppDispatch();
   const [height, setHeight] = useState(window.innerHeight);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
-  const [snackOpen, setSnackOpen] = useState<boolean>(false);
-  const [snackId, setSnackId] = useState<any>(null);
   const [search, setSearch] = useState<string>("");
   const [selected, setSelected] = useState<number[]>([]);
   const [addDialog, setAddDialog] = useState<boolean>(false);
@@ -55,21 +52,6 @@ export function InventoryPage() {
   return (
     <div>
       <div className="py-3 px-10 w-full h-[100vh] flex flex-col">
-        <Snackbar
-          open={snackOpen}
-          autoHideDuration={6000}
-          message="Item created successfully."
-          action={
-            <Button
-              color="inherit"
-              size="small"
-              onClick={() => navigate(`/inventory/${snackId}`)}
-            >
-              View
-            </Button>
-          }
-          sx={{ bottom: { xs: 90, sm: 0 }, marginBottom: "1em" }}
-        />
         <ConfirmDialog
           title="Delete Item"
           body={`Are you sure you want to delete ${selected.length} item${

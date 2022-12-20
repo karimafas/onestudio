@@ -21,7 +21,7 @@ export function AddItemDialog(props: {
   const [validationObject, setValidationObject] = useState<ValidationObject>(
     ValidationObject.empty()
   );
-  const [dfo, setDfo] = useState<ItemDfo>({
+  const initialDfo: ItemDfo = {
     manufacturer: "",
     model: "",
     location_id: "",
@@ -32,7 +32,8 @@ export function AddItemDialog(props: {
     owner_id: "",
     notes: "",
     status: ItemStatus.working,
-  });
+  };
+  const [dfo, setDfo] = useState<ItemDfo>(initialDfo);
   const categories: Array<Category> = useAppSelector(
     (state) => state.data.categories
   );
@@ -73,6 +74,7 @@ export function AddItemDialog(props: {
     if (result.success) {
       dispatch(initialLoad());
       props.callback(true);
+      setDfo(initialDfo);
     } else {
       props.callback(false);
     }
