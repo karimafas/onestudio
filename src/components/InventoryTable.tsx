@@ -159,10 +159,10 @@ export function InventoryTable(props: {
             <HeaderCheckBox
               selectedCount={
                 props.selected.filter((i) =>
-                  filteredItems.map((fi) => fi.id).includes(i)
+                  items.map((fi) => fi.id).includes(i)
                 ).length
               }
-              totalCount={filteredItems.length}
+              totalCount={items.length}
               deselectAll={() => props.setSelected([])}
               selectAll={() => props.setSelected(items.map((i) => i.id))}
             />
