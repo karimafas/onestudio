@@ -264,8 +264,8 @@ export function ItemPage() {
                   onChange={(v: string) => setDfo({ ...dfo, model: v })}
                 />
                 <div className="w-80 mt-4">
-                  <div className="flex flex-row justify-between items-center">
-                    <span className="text-light_blue font-semibold ml-1">
+                  <div className="flex flex-row justify-between items-start">
+                    <span className="text-light_blue font-semibold ml-1 mt-[5px]">
                       Price
                     </span>
                     <CustomTextField
@@ -277,8 +277,8 @@ export function ItemPage() {
                       prefix="£"
                     />
                   </div>
-                  <div className="flex flex-row justify-between items-center">
-                    <span className="text-light_blue font-semibold ml-1">
+                  <div className="flex flex-row justify-between items-start">
+                    <span className="text-light_blue font-semibold ml-1 mt-[5px]">
                       Serial
                     </span>
                     <CustomTextField
@@ -289,20 +289,20 @@ export function ItemPage() {
                       onChange={(v: string) => setDfo({ ...dfo, serial: v })}
                     />
                   </div>
-                  <div className="flex flex-row justify-between items-center">
-                    <span className="text-light_blue font-semibold ml-1">
+                  <div className="flex flex-row justify-between items-start">
+                    <span className="text-light_blue font-semibold ml-1 mt-[5px]">
                       M-Number
                     </span>
                     <CustomTextField
                       disabled={disabled}
                       validationObject={validationObject}
                       defaultValue={`${dfo.m_number}`}
-                      name="mNumber"
+                      name="m_number"
                       onChange={(v: string) => setDfo({ ...dfo, m_number: v })}
                     />
                   </div>
-                  <div className="flex flex-row justify-between items-center">
-                    <span className="text-light_blue font-semibold ml-1">
+                  <div className="flex flex-row justify-between items-start">
+                    <span className="text-light_blue font-semibold ml-1 mt-[5px]">
                       Notes
                     </span>
                     <CustomTextField
@@ -315,8 +315,8 @@ export function ItemPage() {
                   </div>
                 </div>
                 <div className="w-80 mt-4">
-                  <div className="flex flex-row justify-between items-center">
-                    <span className="text-light_blue font-semibold ml-1">
+                  <div className="flex flex-row justify-between items-start">
+                    <span className="text-light_blue font-semibold ml-1 mt-[5px]">
                       Location
                     </span>
                     <CustomSelect
@@ -336,8 +336,8 @@ export function ItemPage() {
                       key={`location-${dfo.location_id}`}
                     />
                   </div>
-                  <div className="flex flex-row justify-between items-center">
-                    <span className="text-light_blue font-semibold ml-1">
+                  <div className="flex flex-row justify-between items-start">
+                    <span className="text-light_blue font-semibold ml-1 mt-[5px]">
                       Category
                     </span>
                     <CustomSelect
@@ -357,8 +357,8 @@ export function ItemPage() {
                       key={`category-${dfo.location_id}`}
                     />
                   </div>
-                  <div className="flex flex-row justify-between items-center">
-                    <span className="text-light_blue font-semibold ml-1">
+                  <div className="flex flex-row justify-between items-start">
+                    <span className="text-light_blue font-semibold ml-1 mt-[5px]">
                       Owner
                     </span>
                     <CustomSelect
