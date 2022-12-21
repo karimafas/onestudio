@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { InventoryItem } from "../objects/InventoryItem";
-import { AddItemDialog } from "./AddItemDialog";
 import { CheckBox } from "./CheckBox";
 import { HeaderCheckBox } from "./HeaderCheckBox";
 
@@ -12,30 +11,33 @@ class TableColumn {
   name: string;
   required: boolean;
   widthPercent: number;
+  priority: number;
 
   constructor(
     id: string,
     name: string,
     required: boolean,
-    widthPercent: number
+    widthPercent: number,
+    priority: number
   ) {
     this.id = id;
     this.name = name;
     this.required = required;
     this.widthPercent = widthPercent;
+    this.priority = priority;
   }
 }
 
 const columns = [
-  new TableColumn("select", "", true, 5),
-  new TableColumn("details", "Details", true, 10),
-  new TableColumn("price", "Price", true, 10),
-  new TableColumn("location", "Location", true, 10),
-  new TableColumn("category", "Category", true, 10),
-  new TableColumn("owner", "Owner", true, 10),
-  new TableColumn("mNumber", "M-Number", true, 15),
-  new TableColumn("serial", "Serial", true, 10),
-  new TableColumn("notes", "Notes", true, 10),
+  new TableColumn("select", "", true, 5, 0),
+  new TableColumn("details", "Details", true, 10, 0),
+  new TableColumn("price", "Price", true, 10, 0),
+  new TableColumn("location", "Location", true, 10, 0),
+  new TableColumn("category", "Category", true, 10, 0),
+  new TableColumn("owner", "Owner", true, 10, 0),
+  new TableColumn("mNumber", "M-Number", true, 15, 0),
+  new TableColumn("serial", "Serial", true, 10, 0),
+  new TableColumn("notes", "Notes", true, 10, 1),
 ];
 
 export function InventoryTable(props: {
@@ -43,6 +45,7 @@ export function InventoryTable(props: {
   selected: number[];
   setSelected: Function;
   itemsPerPage: number;
+  width: number;
 }) {
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(0);
@@ -67,6 +70,8 @@ export function InventoryTable(props: {
         i.notes.toLowerCase().includes(props.searchQuery.toLowerCase())
     )
     .slice(page * props.itemsPerPage, props.itemsPerPage * (page + 1));
+  const filteredColumns =
+    props.width > 1070 ? columns : columns.filter((c) => c.priority === 0);
 
   function columnToItemText(c: TableColumn, i: InventoryItem): string {
     switch (c.id) {
@@ -92,7 +97,7 @@ export function InventoryTable(props: {
 
   function getRowContent(c: TableColumn, i: InventoryItem) {
     const style = {
-      width: `${c.widthPercent}%`,
+      width: `${100 / filteredColumns.length}%`,
       paddingRight: 30,
     };
     switch (c.id) {
@@ -146,7 +151,7 @@ export function InventoryTable(props: {
 
   function getHeaderContent(c: TableColumn) {
     const style = {
-      width: `${c.widthPercent}%`,
+      width: `${100 / filteredColumns.length}%`,
       paddingRight: 30,
     };
     switch (c.id) {
@@ -171,7 +176,7 @@ export function InventoryTable(props: {
         );
       default:
         return (
-          <span key={`header-${c.id}`} style={style}>
+          <span className="whitespace-nowrap" key={`header-${c.id}`} style={style}>
             {c.name}
           </span>
         );
@@ -182,14 +187,14 @@ export function InventoryTable(props: {
     <div className="flex flex-col justify-between grow">
       <div>
         <div className="w-full flex flex-row mt-8 font-semibold text-xs text-light_purple mb-4 px-4">
-          {columns.map((c) => getHeaderContent(c))}
+          {filteredColumns.map((c) => getHeaderContent(c))}
         </div>
         {filteredItems.map((i) => (
           <div
             className="w-full h-20 bg-white shadow-lg rounded-lg text-dark_blue text-xs flex flex-row items-center px-4 font-medium mb-4 cursor-pointer"
             key={`item-${i.id}`}
           >
-            {columns.map((c) => getRowContent(c, i))}
+            {filteredColumns.map((c) => getRowContent(c, i))}
           </div>
         ))}
       </div>
@@ -203,10 +208,7 @@ export function InventoryTable(props: {
             setPage(page - 1);
           }}
         >
-          <img
-            className="w-[5.5px]"
-            src={ImageHelper.image(Images.backBlue)}
-          />
+          <img className="w-[5.5px]" src={ImageHelper.image(Images.backBlue)} />
         </div>
         <div className="h-8 w-12 bg-light_purple2 mx-4 rounded-lg flex flex-row justify-center items-center text-xs font-semibold text-light_purple">
           {page + 1} / {totalPages}

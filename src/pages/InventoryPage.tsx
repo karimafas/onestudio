@@ -8,7 +8,7 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { InventoryTable } from "../components/InventoryTable";
 import { SquareButton } from "../components/SquareButton";
 import { AddItemDialog } from "../components/AddItemDialog";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   CustomSnackBar,
   SnackState,
@@ -16,10 +16,10 @@ import {
 } from "../components/CustomSnackBar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { useWindowSize } from "@react-hook/window-size";
 
 export function InventoryPage() {
   const dispatch = useAppDispatch();
-  const [height, setHeight] = useState(window.innerHeight);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [selected, setSelected] = useState<number[]>([]);
@@ -28,15 +28,7 @@ export function InventoryPage() {
     open: false,
     type: SnackType.createSuccess,
   });
-
-  const updateMedia = () => {
-    setHeight(window.innerHeight);
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", updateMedia);
-    return () => window.removeEventListener("resize", updateMedia);
-  });
+  const [width, height] = useWindowSize();
 
   async function _delete(ids: Array<number>) {
     const success = await dispatch(deleteItems(ids));
@@ -97,6 +89,7 @@ export function InventoryPage() {
             selected={selected}
             setSelected={setSelected}
             searchQuery={search}
+            width={width}
           />
         </div>
       </div>

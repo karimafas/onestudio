@@ -24,7 +24,7 @@ export function DashboardButton(props: {
 
   return (
     <div
-      className="h-12 mb-4 cursor-pointer w-1/2"
+      className="h-12 cursor-pointer w-1/2 mb-4"
       onClick={() => navigate(getPath())}
     >
       <div className="flex flex-col w-full mt-14 cursor-pointer">

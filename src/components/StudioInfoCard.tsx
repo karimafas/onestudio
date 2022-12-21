@@ -7,7 +7,7 @@ export function StudioInfoCard(props: { collapsed: boolean }) {
   const locations = useAppSelector((state) => state.data.locations);
 
   return (
-    <div className="h-50 w-64 bg-white drop-shadow-2xl rounded-2xl mt-8 flex flex-col p-8 justify-center cursor-pointer hover:translate-y-[-0.5rem] transition-all duration-500">
+    <div className="h-50 w-64 bg-white drop-shadow-2xl rounded-2xl flex flex-col p-8 justify-center cursor-pointer hover:translate-y-[-0.5rem] transition-all duration-500">
       <div className="flex flex-row items-between">
         <div className="border-dashed border-medium_blue border-2 h-12 w-12 rounded-xl flex flex-row items-center justify-center">
           <img

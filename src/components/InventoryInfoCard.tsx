@@ -20,7 +20,7 @@ export function InventoryInfoCard() {
       className="cursor-pointer hover:translate-y-[-0.5rem] transition-all duration-500"
       onClick={() => navigate("inventory")}
     >
-      <div className="h-50 w-72 ml-12 bg-blue shadow-blue_50 shadow-2xl rounded-2xl mt-8 flex flex-col p-8">
+      <div className="h-50 w-72 ml-12 bg-blue shadow-blue_50 shadow-2xl rounded-2xl flex flex-col p-8">
         <div className="flex flex-row">
           <div className="border-dashed border-light_blue border-2 h-12 w-12 rounded-xl flex flex-row items-center justify-center">
             <img
@@ -47,12 +47,7 @@ export function InventoryInfoCard() {
           </span>
         </div>
       </div>
-      <div className="h-50 w-72 ml-12 flex flex-row p-8 relative mt-[-12rem] z-[100] justify-end">
-        <img
-          className="w-[4.5px]"
-          src={ImageHelper.image(Images.arrowRight)}
-        />
-      </div>
+      
     </div>
   );
 }
