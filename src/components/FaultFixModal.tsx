@@ -1,5 +1,6 @@
 import { Dialog } from "@mui/material";
 import { useState } from "react";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { ValidationObject } from "../services/ValidationService";
 import { CustomTextField } from "./CustomTextField";
 import { PrimaryButton } from "./PrimaryButton";
@@ -49,8 +50,8 @@ export function FaultFixModal(props: {
             className="w-5 mr-2"
             src={
               type === FaultFixModalType.fix
-                ? require("../assets/images/fix-blue.png")
-                : require("../assets/images/fault-blue.png")
+                ? ImageHelper.image(Images.fixBlue)
+                : ImageHelper.image(Images.faultBlue)
             }
           />
           <span className="text-lg font-semibold">{title()}</span>
@@ -74,7 +75,7 @@ export function FaultFixModal(props: {
           <PrimaryButton
             onClick={() => setOpen(false)}
             text="Cancel"
-            icon={require("../assets/images/close-purple.png")}
+            icon={ImageHelper.image(Images.closePurple)}
             iconStyle="w-3"
           />
           <PrimaryButton
@@ -85,7 +86,7 @@ export function FaultFixModal(props: {
             text="Report"
             backgroundColor="bg-blue_100"
             textColor="text-white"
-            icon={require("../assets/images/check.png")}
+            icon={ImageHelper.image(Images.check)}
             iconStyle="w-4"
             style="ml-4"
           />

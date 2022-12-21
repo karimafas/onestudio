@@ -1,12 +1,12 @@
 import { Alert } from "@mui/material";
 import "../App.css";
-import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { AuthRepository } from "../repositories/AuthRepository";
 import { ValidationObject } from "../services/ValidationService";
 import { CustomTextField } from "../components/CustomTextField";
 import { PrimaryButton } from "../components/PrimaryButton";
-const logo = require("../assets/images/logo_typed.png");
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 
 interface LoginDfo {
   email: string;
@@ -14,7 +14,6 @@ interface LoginDfo {
 }
 
 export function LoginPage() {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [disabled, setDisabled] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -42,10 +41,11 @@ export function LoginPage() {
 
       if (result) {
         const savedUrl = sessionStorage.getItem("url");
-        const url = savedUrl || "/";
+        let url = savedUrl || "/";
 
-        if (savedUrl && !savedUrl.includes("login"))
-          sessionStorage.removeItem("url");
+        sessionStorage.removeItem("url");
+
+        if (url.includes("login")) url = "/";
 
         window.location.replace(url);
       }
@@ -61,7 +61,7 @@ export function LoginPage() {
       <img
         style={{ marginBottom: "2em" }}
         width={200}
-        src={logo}
+        src={ImageHelper.image(Images.logoTyped)}
         alt="one-studio-logo"
       />
 
@@ -100,7 +100,7 @@ export function LoginPage() {
           text="Login"
           onClick={_login}
           iconStyle="w-2"
-          icon={require("../assets/images/forward-purple.png")}
+          icon={ImageHelper.image(Images.forwardPurple)}
         />
         {error ? (
           <div className="bg-light_red rounded-lg flex flex-col justify-center items-center mt-4">

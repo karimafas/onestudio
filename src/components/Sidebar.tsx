@@ -2,6 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SidebarTab, SidebarTabs } from "./SidebarTab";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 
 function getTab(location: any): SidebarTabs {
   const path = location.pathname.replace("/", "");
@@ -67,7 +68,7 @@ export default function Sidebar() {
       <div className="h-full w-full flex flex-row">
         <div>
           <div className="px-14 pt-8">
-            <img src={require("../assets/images/logo_typed.png")} />
+            <img src={ImageHelper.image(Images.logoTyped)} />
           </div>
           <div className="flex-col align-center pt-8 w-full">
             <SidebarTab

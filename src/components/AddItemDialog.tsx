@@ -2,6 +2,7 @@ import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { initialLoad } from "../features/data/dataSlice";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { Category } from "../objects/Category";
 import { ItemDfo, ItemStatus } from "../objects/InventoryItem";
 import { StudioLocation } from "../objects/StudioLocation";
@@ -96,10 +97,7 @@ export function AddItemDialog(props: {
     >
       <div className="p-6">
         <div className="flex flex-row items-center mb-1 text-dark_blue">
-          <img
-            className="w-5 mr-2"
-            src={require("../assets/images/add-blue.png")}
-          />
+          <img className="w-5 mr-2" src={ImageHelper.image(Images.addBlue)} />
           <span className="text-lg font-semibold">Add an item</span>
         </div>
         <div className="flex flex-col w-full">
@@ -209,7 +207,7 @@ export function AddItemDialog(props: {
           <PrimaryButton
             onClick={() => setOpen(false)}
             text="Cancel"
-            icon={require("../assets/images/close-purple.png")}
+            icon={ImageHelper.image(Images.closePurple)}
             iconStyle="w-3"
           />
           <PrimaryButton
@@ -217,7 +215,7 @@ export function AddItemDialog(props: {
             text="Add item"
             backgroundColor="bg-blue_100"
             textColor="text-white"
-            icon={require("../assets/images/check.png")}
+            icon={ImageHelper.image(Images.check)}
             iconStyle="w-4"
             style="ml-4"
           />

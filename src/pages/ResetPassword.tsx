@@ -5,7 +5,7 @@ import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthRepository } from "../repositories/AuthRepository";
-const logo = require("../assets/images/logo_typed.png");
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop: string) => searchParams.get(prop),
@@ -23,30 +23,12 @@ export function ResetPassword() {
   const fromEmail = searchParams.get("reset") === "true";
   const token = searchParams.get("id");
 
-  // useEffect(() => {
-  //   AuthRepository.checkToken().then((value) => {
-  //     if (value) {
-  //       navigate("/");
-  //     } else {
-  //       if (token) {
-  //         ApiHelper.checkResetToken(token).then((value) => {
-  //           if (!value) setTokenError(true);
-  //           setLoading(false);
-  //         });
-  //       } else {
-  //         setLoading(false);
-  //       }
-  //     }
-  //   });
-  //   return () => {};
-  // }, []);
-
   return (
     <div className="login-page__wrapper">
       <img
         style={{ marginBottom: "2em" }}
         width={200}
-        src={logo}
+        src={ImageHelper.image(Images.logoTyped)}
         alt="one-studio-logo"
       />
       {loading ? (

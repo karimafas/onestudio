@@ -15,6 +15,7 @@ import {
   SnackType,
 } from "../components/CustomSnackBar";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 
 export function InventoryPage() {
   const dispatch = useAppDispatch();
@@ -79,13 +80,13 @@ export function InventoryPage() {
                 <></>
               ) : (
                 <SquareButton
-                  icon={require("../assets/images/delete.png")}
+                  icon={ImageHelper.image(Images.delete)}
                   onClick={() => setDeleteOpen(true)}
                 />
               )}
               <div className="w-3"></div>
               <PrimaryButton
-                icon={require("../assets/images/add-purple.png")}
+                icon={ImageHelper.image(Images.addPurple)}
                 text="Add an item"
                 onClick={() => setAddDialog(true)}
               />

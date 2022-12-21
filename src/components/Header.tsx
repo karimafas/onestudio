@@ -1,5 +1,6 @@
 import moment from "moment";
 import { useAppSelector } from "../app/hooks";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { AuthRepository } from "../repositories/AuthRepository";
 
 function _logout() {
@@ -19,7 +20,7 @@ export function Header() {
         <div className="flex flex-row items-center">
           <img
             className="mr-4 w-5"
-            src={require("../assets/images/calendar.png")}
+            src={ImageHelper.image(Images.calendar)}
           />
           <span className="text-base font-medium text-dark_blue">
             {moment().format("D MMMM")}
@@ -32,7 +33,7 @@ export function Header() {
               onClick={() => _logout()}
               className={`w-full h-9 bg-white shadow-xl rounded-lg flex flex-row justify-between items-center px-4 cursor-pointer absolute mt-28 mr-12 group-hover:opacity-100 group-hover:translate-x-0 opacity-0 translate-x-10 transition-all`}
             >
-              <img className="h-4" src={require("../assets/images/exit.png")} />
+              <img className="h-4" src={ImageHelper.image(Images.exit)} />
               <span className="text-red font-semibold text-sm">Log out</span>
             </div>
           </div>

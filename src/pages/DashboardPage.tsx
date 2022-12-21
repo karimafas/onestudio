@@ -12,6 +12,7 @@ import {
 } from "../components/RecentActivity";
 import { StudioInfoCard } from "../components/StudioInfoCard";
 import { DateHelper } from "../helpers/DateHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 
 export function DashboardPage() {
   const user = useAppSelector((state) => state.data.user);
@@ -33,22 +34,22 @@ export function DashboardPage() {
           <DashboardButton
             type={DashboardButtonType.inventory}
             onClick={() => navigate("inventory")}
-            image={require("../assets/images/add-circle.png")}
+            image={ImageHelper.image(Images.addCircle)}
           />
           <DashboardButton
             type={DashboardButtonType.addUser}
             onClick={() => navigate("inventory")}
-            image={require("../assets/images/person.png")}
+            image={ImageHelper.image(Images.person)}
           />
           <DashboardButton
             type={DashboardButtonType.viewProfile}
             onClick={() => navigate("inventory")}
-            image={require("../assets/images/info-purple.png")}
+            image={ImageHelper.image(Images.infoPurple)}
           />
           <DashboardButton
             type={DashboardButtonType.studioSettings}
             onClick={() => navigate("settings")}
-            image={require("../assets/images/settings.png")}
+            image={ImageHelper.image(Images.settings)}
           />
         </div>
         <div>

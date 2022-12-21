@@ -1,5 +1,6 @@
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { TimelineEvent, TimelineEventType } from "../objects/TimelineEvent";
 
 export enum RecentActivityType {
@@ -38,7 +39,7 @@ export function RecentActivity(props: {
               ? "an inventory"
               : "this"
           } item.`,
-          image: require("../assets/images/add-white.png"),
+          image: ImageHelper.image(Images.addWhite),
         };
       case TimelineEventType.edited:
         return {
@@ -47,17 +48,17 @@ export function RecentActivity(props: {
               ? "an inventory"
               : "this"
           }  item.`,
-          image: require("../assets/images/edit.png"),
+          image: ImageHelper.image(Images.edit),
         };
       case TimelineEventType.fault:
         return {
           text: `reported a fault on an item. ${eventNotes(e)}`,
-          image: require("../assets/images/fault.png"),
+          image: ImageHelper.image(Images.fault),
         };
       case TimelineEventType.fix:
         return {
           text: `reported a fix on an item. ${eventNotes(e)}`,
-          image: require("../assets/images/fix.png"),
+          image: ImageHelper.image(Images.fix),
         };
     }
   }

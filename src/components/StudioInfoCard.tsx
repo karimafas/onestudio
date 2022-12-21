@@ -1,4 +1,5 @@
 import { useAppSelector } from "../app/hooks";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 
 export function StudioInfoCard(props: { collapsed: boolean }) {
   const users = useAppSelector((state) => state.data.studioUsers);
@@ -10,7 +11,7 @@ export function StudioInfoCard(props: { collapsed: boolean }) {
       <div className="flex flex-row items-between">
         <div className="border-dashed border-medium_blue border-2 h-12 w-12 rounded-xl flex flex-row items-center justify-center">
           <img
-            src={require("../assets/images/info.png")}
+            src={ImageHelper.image(Images.info)}
             className="p-[10px]"
           />
         </div>

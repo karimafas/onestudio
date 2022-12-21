@@ -27,6 +27,7 @@ import { EventRepository } from "../repositories/EventRepository";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TimelineEventType } from "../objects/TimelineEvent";
 import { FaultFixModal, FaultFixModalType } from "../components/FaultFixModal";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -207,7 +208,7 @@ export function ItemPage() {
               >
                 <img
                   className="h-[8.5px] mr-3"
-                  src={require("../assets/images/back-blue.png")}
+                  src={ImageHelper.image(Images.addBlue)}
                 />
                 <span className="font-semibold text-light_purple text-sm">
                   Back to inventory
@@ -215,7 +216,7 @@ export function ItemPage() {
               </div>
               <div className="flex flex-row">
                 <SquareButton
-                  icon={require("../assets/images/delete.png")}
+                  icon={ImageHelper.image(Images.delete)}
                   onClick={() => setDeleteOpen(true)}
                 />
                 <div className="mr-4"></div>
@@ -224,8 +225,8 @@ export function ItemPage() {
                   textColor="text-white"
                   icon={
                     item.status === ItemStatus.faulty
-                      ? require("../assets/images/fix.png")
-                      : require("../assets/images/fault.png")
+                      ? ImageHelper.image(Images.fix)
+                      : ImageHelper.image(Images.fault)
                   }
                   text={
                     item.status === ItemStatus.faulty
@@ -236,7 +237,7 @@ export function ItemPage() {
                 />
                 <div className="mr-4"></div>
                 <PrimaryButton
-                  icon={require("../assets/images/save.png")}
+                  icon={ImageHelper.image(Images.save)}
                   text="Save"
                   onClick={() => handleSubmit()}
                 />

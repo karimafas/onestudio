@@ -1,4 +1,5 @@
 import { Dialog } from "@mui/material";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { PrimaryButton } from "./PrimaryButton";
 
 const ConfirmDialog = (props: {
@@ -29,7 +30,7 @@ const ConfirmDialog = (props: {
           <PrimaryButton
             onClick={() => setOpen(false)}
             text="No"
-            icon={require("../assets/images/close-purple.png")}
+            icon={ImageHelper.image(Images.closePurple)}
             iconStyle="w-3"
           />
           <PrimaryButton
@@ -40,7 +41,7 @@ const ConfirmDialog = (props: {
             text="Yes"
             backgroundColor="bg-blue_100"
             textColor="text-white"
-            icon={require("../assets/images/check.png")}
+            icon={ImageHelper.image(Images.check)}
             iconStyle="w-4"
             style="ml-4"
           />

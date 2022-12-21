@@ -1,5 +1,6 @@
 import { Snackbar } from "@mui/material";
 import { useEffect } from "react";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 
 export enum SnackType {
   updateSuccess,
@@ -75,7 +76,7 @@ export function CustomSnackBar(props: {
         <img
           onClick={() => props.handleClose()}
           className="w-3 opacity-50 cursor-pointer"
-          src={require("../assets/images/close-white.png")}
+          src={ImageHelper.image(Images.closeWhite)}
         />
       </div>
     </div>

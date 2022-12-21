@@ -1,3 +1,5 @@
+import { ImageHelper, Images } from "../helpers/ImageHelper";
+
 export enum SidebarTabs {
   dashboard = "Dashboard",
   inventory = "Inventory",
@@ -10,17 +12,22 @@ export function SidebarTab(props: {
   selectedTab: SidebarTabs;
 }) {
   const selected = props.selectedTab === props.tab;
-  const focus = selected ? "focused" : "unfocused";
   const textColor = selected ? "text-blue" : "text-grey";
 
   function getImage() {
     switch (props.tab) {
       case SidebarTabs.dashboard:
-        return require(`../assets/images/dashboard-${focus}.png`);
+        return ImageHelper.image(
+          selected ? Images.dashboardFocused : Images.dashboardUnfocused
+        );
       case SidebarTabs.inventory:
-        return require(`../assets/images/inventory-${focus}.png`);
+        return ImageHelper.image(
+          selected ? Images.inventoryFocused : Images.inventoryUnfocused
+        );
       case SidebarTabs.settings:
-        return require(`../assets/images/settings-${focus}.png`);
+        return ImageHelper.image(
+          selected ? Images.settingsFocused : Images.settingsUnfocused
+        );
     }
   }
 

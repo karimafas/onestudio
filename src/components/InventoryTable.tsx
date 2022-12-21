@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { InventoryItem } from "../objects/InventoryItem";
 import { AddItemDialog } from "./AddItemDialog";
 import { CheckBox } from "./CheckBox";
@@ -204,7 +205,7 @@ export function InventoryTable(props: {
         >
           <img
             className="w-[5.5px]"
-            src={require("../assets/images/back-blue.png")}
+            src={ImageHelper.image(Images.backBlue)}
           />
         </div>
         <div className="h-8 w-12 bg-light_purple2 mx-4 rounded-lg flex flex-row justify-center items-center text-xs font-semibold text-light_purple">
@@ -221,7 +222,7 @@ export function InventoryTable(props: {
         >
           <img
             className="w-[5.5px]"
-            src={require("../assets/images/forward-blue.png")}
+            src={ImageHelper.image(Images.forwardBlue)}
           />
         </div>
       </div>

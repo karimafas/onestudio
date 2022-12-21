@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { ItemStatus } from "../objects/InventoryItem";
 
 export function InventoryInfoCard() {
@@ -23,7 +24,7 @@ export function InventoryInfoCard() {
         <div className="flex flex-row">
           <div className="border-dashed border-light_blue border-2 h-12 w-12 rounded-xl flex flex-row items-center justify-center">
             <img
-              src={require("../assets/images/inventory-white.png")}
+              src={ImageHelper.image(Images.inventoryWhite)}
               className="p-[10px]"
             />
           </div>
@@ -49,7 +50,7 @@ export function InventoryInfoCard() {
       <div className="h-50 w-72 ml-12 flex flex-row p-8 relative mt-[-12rem] z-[100] justify-end">
         <img
           className="w-[4.5px]"
-          src={require("../assets/images/arrow-right.png")}
+          src={ImageHelper.image(Images.arrowRight)}
         />
       </div>
     </div>

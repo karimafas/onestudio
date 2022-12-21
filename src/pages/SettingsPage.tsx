@@ -16,6 +16,7 @@ import { Header } from "../components/Header";
 import { StudioInfoCard } from "../components/StudioInfoCard";
 import { TypesRepository } from "../repositories/TypesRepository";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
 
 export function SettingsPage() {
   const [drawer, setDrawer] = useState<boolean>(false);
@@ -110,7 +111,7 @@ export function SettingsPage() {
               </span>
               <img
                 className="w-6 h-6 cursor-pointer"
-                src={require("../assets/images/add-blue.png")}
+                src={ImageHelper.image(Images.addBlue)}
                 onClick={() => _openDrawer(TypesDrawerType.category)}
               />
             </div>
@@ -121,7 +122,7 @@ export function SettingsPage() {
               >
                 <img
                   className="w-4"
-                  src={require("../assets/images/delete.png")}
+                  src={ImageHelper.image(Images.delete)}
                   onClick={() =>
                     setDeleteOpen({
                       open: true,
@@ -144,7 +145,7 @@ export function SettingsPage() {
               </span>
               <img
                 className="w-6 h-6 cursor-pointer"
-                src={require("../assets/images/add-blue.png")}
+                src={ImageHelper.image(Images.addBlue)}
                 onClick={() => _openDrawer(TypesDrawerType.location)}
               />
             </div>
@@ -155,7 +156,7 @@ export function SettingsPage() {
               >
                 <img
                   className="w-4"
-                  src={require("../assets/images/delete.png")}
+                  src={ImageHelper.image(Images.delete)}
                   onClick={() =>
                     setDeleteOpen({
                       open: true,
