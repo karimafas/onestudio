@@ -1,11 +1,9 @@
-import { Drawer } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { deleteDataItem, reloadItem } from "../features/data/dataSlice";
 import { deleteItems, updateItem } from "../features/data/inventorySlice";
-import { ItemDfo } from "../objects/InventoryItem";
-import { EventSubmittedData, FaultDrawer } from "../components/FaultDrawer";
+import { ItemDfo, ItemStatus } from "../objects/InventoryItem";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
 import { StudioUser } from "../objects/StudioUser";
@@ -27,6 +25,8 @@ import {
 import { CustomSelect } from "../components/CustomSelect";
 import { EventRepository } from "../repositories/EventRepository";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { TimelineEventType } from "../objects/TimelineEvent";
+import { FaultFixModal, FaultFixModalType } from "../components/FaultFixModal";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -77,6 +77,7 @@ export function ItemPage() {
     type: SnackType.updateSuccess,
   });
   const [confirmDialog, setConfirmDialog] = useState<boolean>(false);
+  const [faultFixModal, setFaultFixModal] = useState<boolean>(false);
 
   async function init() {
     if (item && item.events && item.events.length === 0) {
@@ -95,17 +96,18 @@ export function ItemPage() {
     return JSON.stringify(initialState) !== JSON.stringify(dfo);
   }
 
-  async function _createEvent(data: EventSubmittedData) {
-    const success = await EventRepository.createEvent(
-      data.itemId,
-      data.notes,
-      data.type
-    );
+  async function _createEvent(notes: string) {
+    const type =
+      item.status === ItemStatus.faulty
+        ? TimelineEventType.fix
+        : TimelineEventType.fault;
+    const success = await EventRepository.createEvent(item.id, notes, type);
 
     if (success) {
       await dispatch(reloadItem(item.id));
+      await item.initEvents();
       forceUpdate();
-      setDrawer(false);
+      setFaultFixModal(false);
     }
   }
 
@@ -180,19 +182,16 @@ export function ItemPage() {
             setOpen={() => setConfirmDialog(!confirmDialog)}
             onConfirm={() => navigate("/inventory")}
           />
-          <Drawer
-            transitionDuration={300}
-            anchor="right"
-            open={drawer}
-            onClose={() => setDrawer(false)}
-          >
-            <FaultDrawer
-              submit={(data: EventSubmittedData) => {
-                _createEvent(data);
-              }}
-              item={item}
-            />
-          </Drawer>
+          <FaultFixModal
+            open={faultFixModal}
+            setOpen={setFaultFixModal}
+            callback={_createEvent}
+            type={
+              item.status === ItemStatus.working
+                ? FaultFixModalType.fault
+                : FaultFixModalType.fix
+            }
+          />
           <Header />
           <div className="flex flex-col w-full h-[85vh] animate-fade">
             <div className="w-full flex flex-row justify-between mt-6">
@@ -223,9 +222,17 @@ export function ItemPage() {
                 <PrimaryButton
                   backgroundColor="bg-blue_100"
                   textColor="text-white"
-                  icon={require("../assets/images/fault.png")}
-                  text="Report a fault"
-                  onClick={() => handleSubmit()}
+                  icon={
+                    item.status === ItemStatus.faulty
+                      ? require("../assets/images/fix.png")
+                      : require("../assets/images/fault.png")
+                  }
+                  text={
+                    item.status === ItemStatus.faulty
+                      ? "Report a fix"
+                      : "Report a fault"
+                  }
+                  onClick={() => setFaultFixModal(true)}
                 />
                 <div className="mr-4"></div>
                 <PrimaryButton

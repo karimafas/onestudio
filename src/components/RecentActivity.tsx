@@ -19,6 +19,16 @@ export function RecentActivity(props: {
 }) {
   const navigate = useNavigate();
 
+  function eventNotes(e: TimelineEvent) {
+    if (props.type === RecentActivityType.item) {
+      if (e.notes) {
+        return `Notes: ${e.notes}`;
+      }
+      return "";
+    }
+    return "";
+  }
+
   function eventData(e: TimelineEvent): DashboardEventData {
     switch (e.type) {
       case TimelineEventType.created:
@@ -41,12 +51,12 @@ export function RecentActivity(props: {
         };
       case TimelineEventType.fault:
         return {
-          text: "reported a fault on an item.",
+          text: `reported a fault on an item. ${eventNotes(e)}`,
           image: require("../assets/images/fault.png"),
         };
       case TimelineEventType.fix:
         return {
-          text: "reported a fix on an item.",
+          text: `reported a fix on an item. ${eventNotes(e)}`,
           image: require("../assets/images/fix.png"),
         };
     }
@@ -76,7 +86,7 @@ export function RecentActivity(props: {
                 : "cursor-default"
             }`}
           >
-            <div className="h-8 w-8 bg-light_blue rounded-lg flex flex-col justify-center items-center">
+            <div className="min-h-[33px] min-w-[33px] bg-light_blue rounded-lg flex flex-col justify-center items-center">
               <img className="w-[14px]" src={eventData(e).image} />
             </div>
             <div className="flex flex-col ml-4 justify-center">

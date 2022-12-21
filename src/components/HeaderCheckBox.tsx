@@ -9,14 +9,13 @@ export function HeaderCheckBox(props: {
   return (
     <div
       onClick={() => {
-        debugger;
         if (props.selectedCount === props.totalCount) {
           props.deselectAll();
         } else {
           props.selectAll();
         }
       }}
-      className={`cursor-pointer h-5 w-5 transition-all border border-light_purple2 border-[3px] rounded flex flex-column justify-center items-center ${
+      className={`cursor-pointer min-h-[20px] min-w-[20px] transition-all border border-light_purple2 border-[3px] rounded flex flex-column justify-center items-center ${
         props.selectedCount === 0 ? "" : "bg-light_purple border-light_purple"
       }`}
     >
