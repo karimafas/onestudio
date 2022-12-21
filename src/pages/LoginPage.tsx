@@ -39,13 +39,19 @@ export function LoginPage() {
     setValidationObject(object);
 
     if (object.isValid) {
-      const res = await AuthRepository.login(dfo.email, dfo.password);
+      setDisabled(true);
+      const result = await AuthRepository.login(dfo.email, dfo.password);
 
-      if (res) {
-        navigate("/");
-      } else {
-        setError(true);
+      if (result) {
+        const savedUrl = sessionStorage.getItem("url");
+        const url = savedUrl || "/";
+
+        if (savedUrl) sessionStorage.removeItem("url");
+
+        window.location.replace(url);
       }
+
+      setError(!result);
     }
 
     setDisabled(false);
@@ -76,6 +82,7 @@ export function LoginPage() {
           validationObject={validationObject}
           onChange={(v: string) => setDfo({ ...dfo, email: v })}
           width="w-60"
+          onSubmit={_login}
         />
         <CustomTextField
           variant="outlined"
@@ -86,6 +93,8 @@ export function LoginPage() {
           onChange={(v: string) => setDfo({ ...dfo, password: v })}
           width="w-60"
           style="mt-2"
+          onSubmit={_login}
+          obscureText
         />
         <PrimaryButton
           style="mt-4"

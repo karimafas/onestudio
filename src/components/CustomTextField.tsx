@@ -16,6 +16,8 @@ export function CustomTextField(props: {
   name?: string;
   placeholder?: string;
   variant?: "transparent" | "outlined";
+  obscureText?: boolean;
+  onSubmit?: Function;
 }) {
   let valid = true;
 
@@ -43,6 +45,12 @@ export function CustomTextField(props: {
   } ${props.disabled ? "opacity-60 pointer-events-none" : ""}`;
   const invalidClass = `p-1 h-full w-full bg-lightest_red rounded font-semibold text-dark_blue ${props.fontSize} border-[2px] border-red`;
 
+  function handleKeyPress(e: any) {
+    if (e.key === "Enter") {
+      if (props.onSubmit) props.onSubmit();
+    }
+  }
+
   return (
     <div className="flex flex-col">
       <div
@@ -61,8 +69,10 @@ export function CustomTextField(props: {
             <></>
           )}
           <input
+            type={props.obscureText ? "password" : undefined}
             placeholder={props.placeholder ?? ""}
             onChange={(e) => props.onChange(e.target.value)}
+            onKeyUp={handleKeyPress}
             name={props.name}
             defaultValue={props.defaultValue ?? ""}
             className="bg-transparent outline-none w-full h-full"
