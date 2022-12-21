@@ -1,7 +1,5 @@
-import { Alert, Button } from "@mui/material";
-import "./LoginPage.css";
+import { Alert } from "@mui/material";
 import "../App.css";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthRepository } from "../repositories/AuthRepository";
@@ -46,7 +44,8 @@ export function LoginPage() {
         const savedUrl = sessionStorage.getItem("url");
         const url = savedUrl || "/";
 
-        if (savedUrl) sessionStorage.removeItem("url");
+        if (savedUrl && !savedUrl.includes("login"))
+          sessionStorage.removeItem("url");
 
         window.location.replace(url);
       }
@@ -66,7 +65,7 @@ export function LoginPage() {
         alt="one-studio-logo"
       />
 
-      <div className="login-page__form">
+      <div className="flex flex-col items-center">
         {reset ? (
           <Alert severity="success" sx={{ marginBottom: "1.5em" }}>
             Your password was reset successfully.
@@ -81,7 +80,7 @@ export function LoginPage() {
           name="email"
           validationObject={validationObject}
           onChange={(v: string) => setDfo({ ...dfo, email: v })}
-          width="w-60"
+          width="w-64"
           onSubmit={_login}
         />
         <CustomTextField
@@ -91,13 +90,13 @@ export function LoginPage() {
           name="password"
           validationObject={validationObject}
           onChange={(v: string) => setDfo({ ...dfo, password: v })}
-          width="w-60"
+          width="w-64"
           style="mt-2"
           onSubmit={_login}
           obscureText
         />
         <PrimaryButton
-          style="mt-4"
+          style="mt-4 w-30"
           text="Login"
           onClick={_login}
           iconStyle="w-2"
