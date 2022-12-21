@@ -208,7 +208,7 @@ export function ItemPage() {
               >
                 <img
                   className="h-[8.5px] mr-3"
-                  src={ImageHelper.image(Images.addBlue)}
+                  src={ImageHelper.image(Images.backBlue)}
                 />
                 <span className="font-semibold text-light_purple text-sm">
                   Back to inventory

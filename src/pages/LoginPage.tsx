@@ -1,4 +1,3 @@
-import { Alert } from "@mui/material";
 import "../App.css";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -14,14 +13,15 @@ interface LoginDfo {
 }
 
 export function LoginPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [disabled, setDisabled] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-  const reset = searchParams.get("reset") === "true";
   const [validationObject, setValidationObject] = useState<ValidationObject>(
     ValidationObject.empty()
   );
   const [dfo, setDfo] = useState<LoginDfo>({ email: "", password: "" });
+  const [searchParams] = useSearchParams();
+  const reset = searchParams.get("reset");
+  const fromReset = reset !== null && reset === "true";
 
   async function _login() {
     setDisabled(true);
@@ -45,7 +45,7 @@ export function LoginPage() {
 
         sessionStorage.removeItem("url");
 
-        if (url.includes("login")) url = "/";
+        if (url.includes("login") || url.includes("reset-password")) url = "/";
 
         window.location.replace(url);
       }
@@ -66,10 +66,12 @@ export function LoginPage() {
       />
 
       <div className="flex flex-col items-center">
-        {reset ? (
-          <Alert severity="success" sx={{ marginBottom: "1.5em" }}>
-            Your password was reset successfully.
-          </Alert>
+        {fromReset ? (
+          <div className="bg-green rounded-lg flex flex-col justify-center items-center mt-2 mb-8">
+            <span className="text-sm p-3 text-dark_blue">
+              Your password was reset successfully, please log in.
+            </span>
+          </div>
         ) : (
           <></>
         )}
@@ -104,7 +106,7 @@ export function LoginPage() {
         />
         {error ? (
           <div className="bg-light_red rounded-lg flex flex-col justify-center items-center mt-4">
-            <span className="text-sm p-3">
+            <span className="text-sm p-3 text-dark_blue">
               You have entered an invalid username or password.
             </span>
           </div>

@@ -4,6 +4,8 @@ const axios = require("axios");
 
 const baseUrl = "http://localhost:3001/";
 
+const unauthorisedRoutes = ["login", "reset-password"];
+
 export enum RequestType {
   get = "GET",
   post = "POST",
@@ -29,7 +31,8 @@ export class RequestService {
         !retried &&
         url !== "auth/login" &&
         url !== "auth/refreshToken" &&
-        url !== "auth/logout"
+        url !== "auth/logout" &&
+        (response.status === 304 || response.status === 401)
       ) {
         LoggerService.log(
           "Request failed, trying to refresh authentication token."
@@ -45,6 +48,11 @@ export class RequestService {
     }
 
     return response;
+  }
+
+  public static needsAuth(route: string) {
+    if (unauthorisedRoutes.includes(route.replace("/", ""))) return false;
+    return true;
   }
 }
 

@@ -144,7 +144,7 @@ export class AuthRepository {
     return users;
   }
 
-  public static async resetToken(email: string): Promise<boolean> {
+  public static async sendPasswordResetEmail(email: string): Promise<boolean> {
     let success = false;
 
     try {
@@ -152,40 +152,43 @@ export class AuthRepository {
         email: email,
       };
       const resp = await RequestService.request(
-        "reset-token",
+        "auth/sendPasswordResetEmail",
         RequestType.post,
         body
       );
 
-      if (resp.status === 200) {
+      if (resp.status === 201) {
         success = true;
-        LoggerService.log(`Reset email sent.`);
+        LoggerService.log(`Password reset email sent.`);
       }
     } catch (e) {
-      LoggerService.log("Couldn't send reset email.");
+      LoggerService.log("Couldn't send password reset email.");
     }
 
     return success;
   }
 
-  public static async checkResetToken(token: string): Promise<boolean> {
-    let success: boolean = false;
+  public static async validatePasswordResetToken(
+    token: string
+  ): Promise<boolean> {
+    let success = false;
 
     try {
-      const body = { token: token };
-
+      const body = {
+        token: token,
+      };
       const resp = await RequestService.request(
-        "reset-token-chk",
+        "auth/validatePasswordResetToken",
         RequestType.post,
         body
       );
 
-      if (resp.status === 200) {
+      if (resp.status === 201) {
         success = true;
-        LoggerService.log("Found valid token.", resp.data);
+        LoggerService.log(`Reset token valid.`);
       }
     } catch (e) {
-      LoggerService.log("Couldn't find valid token.");
+      LoggerService.log("Couldn't validate reset token.");
     }
 
     return success;
@@ -203,17 +206,17 @@ export class AuthRepository {
         password: password,
       };
       const resp = await RequestService.request(
-        "reset-password",
+        "auth/resetPassword",
         RequestType.post,
         body
       );
 
-      if (resp.status === 200) {
+      if (resp.status === 201) {
         success = true;
-        LoggerService.log("Password reset.");
+        LoggerService.log(`Password reset.`);
       }
     } catch (e) {
-      LoggerService.log("Couldn't reset password.");
+      LoggerService.log("Error resetting password.");
     }
 
     return success;
