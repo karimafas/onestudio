@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { AuthRepository } from "../repositories/AuthRepository";
 import { LoggerService } from "./LoggerService";
 const axios = require("axios");
@@ -27,15 +28,16 @@ export class RequestService {
     try {
       response = await performRequest(type, url, body);
     } catch (e: any) {
+      const status: number = e.response.status;
       if (
         !retried &&
         url !== "auth/login" &&
         url !== "auth/refreshToken" &&
         url !== "auth/logout" &&
-        (response.status === 304 || response.status === 401)
+        (status === 403 || status === 401)
       ) {
         LoggerService.log(
-          "Request failed, trying to refresh authentication token."
+          "Token seems expired, refreshing auth token."
         );
         retried = true;
         const refreshed = await AuthRepository.refreshToken();
