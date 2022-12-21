@@ -124,7 +124,7 @@ export function CustomSelect(props: {
         }`}
       >
         <div className="h-4"></div>
-        <div className={`rounded shadow-lg bg-light_purple2 py-2 max-h-60`}>
+        <div className={`rounded bg-light_purple2 py-2 max-h-28 overflow-auto`}>
           {filteredElements.map((e) => (
             <div
               onClick={() => {
