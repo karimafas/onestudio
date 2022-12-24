@@ -1,6 +1,7 @@
 {
   "name": "onestudio",
   "version": "0.1.0",
+  "allowedHosts": "all",
   "options": {
     "allowedHosts": [
       "localhost",
