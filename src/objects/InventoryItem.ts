@@ -1,13 +1,14 @@
 import moment from "moment";
-import { ApiHelper } from "../helpers/ApiHelper";
-import { Logger } from "../services/logger";
+import { LoggerService } from "../services/LoggerService";
 import { Constants } from "../utils/Constants";
 import { TimelineEvent } from "./TimelineEvent";
 import { StudioUser } from "./StudioUser";
+import { EventRepository } from "../repositories/EventRepository";
+import { AuthRepository } from "../repositories/AuthRepository";
 
 export enum ItemStatus {
-  working,
-  faulty,
+  working = "working",
+  faulty = "faulty",
 }
 
 function stringToStatus(status: "faulty" | "working"): ItemStatus {
@@ -54,12 +55,12 @@ export class InventoryItem {
   }
 
   public async initEvents() {
-    Logger.log(`Initialising event for item ${this.id}`);
-    this.events = await ApiHelper.getItemEvents(this.id);
+    LoggerService.log(`Initialising event for item ${this.id}`);
+    this.events = await EventRepository.getItemEvents(this.id);
   }
 
   public async loadUser() {
-    this.user = await ApiHelper.getUser(this.createdBy);
+    this.user = await AuthRepository.getUser(this.createdBy);
   }
 
   static fromJson(json: { [key: string]: any }) {
@@ -112,4 +113,91 @@ export class InventoryItem {
     this.status = status;
     this.createdBy = createdBy;
   }
+
+  static fromDfo(i: ItemDfo): ItemDto {
+    return {
+      manufacturer: i.manufacturer,
+      model: i.model,
+      location_id: parseInt(i.location_id),
+      serial: i.serial,
+      m_number: i.m_number,
+      price: parseFloat(i.price),
+      category_id: parseInt(i.category_id),
+      owner_id: parseInt(i.owner_id),
+      notes: i.notes,
+      updated_at: new Date(),
+    };
+  }
+
+  static fromCsvDfo(i: CsvItemDfo) {
+    return {
+      manufacturer: i.manufacturer,
+      model: i.model,
+      location: i.location,
+      serial: i.serial,
+      m_number: i.m_number,
+      price: parseFloat(i.price),
+      category: i.category,
+      owner: i.owner,
+      notes: i.notes,
+      status: ItemStatus.working,
+    };
+  }
+}
+
+export interface ItemDfo {
+  id?: number;
+  manufacturer: string;
+  model: string;
+  location_id: string;
+  serial: string;
+  m_number: string;
+  price: string;
+  category_id: string;
+  owner_id: string;
+  notes: string;
+  status: ItemStatus;
+}
+
+export interface CsvItemDfo {
+  manufacturer: string;
+  model: string;
+  location: string;
+  serial: string;
+  m_number: string;
+  price: string;
+  category: string;
+  owner: string;
+  notes: string;
+  status: ItemStatus;
+}
+
+export interface CsvItemDto {
+  manufacturer?: string;
+  model?: string;
+  location?: string;
+  serial?: string;
+  m_number?: string;
+  price?: number;
+  category?: string;
+  owner?: string;
+  notes?: string;
+  status?: ItemStatus;
+}
+
+export interface ItemDto {
+  id?: number;
+  manufacturer?: string;
+  model?: string;
+  location_id?: number;
+  serial?: string;
+  m_number?: string;
+  price?: number;
+  category_id?: number;
+  owner_id?: number;
+  notes?: string;
+  created_at?: Date;
+  updated_at?: Date;
+  status?: ItemStatus;
+  created_by?: number;
 }

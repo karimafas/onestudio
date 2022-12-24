@@ -1,5 +1,4 @@
 import moment from "moment";
-import { ApiHelper } from "../helpers/ApiHelper";
 import { StudioUser } from "./StudioUser";
 
 export enum TimelineEventType {
@@ -13,7 +12,7 @@ function stringToType(type: string): TimelineEventType {
   switch (type) {
     case "created":
       return TimelineEventType.created;
-    case "edit":
+    case "edited":
       return TimelineEventType.edited;
     case "fault":
       return TimelineEventType.fault;
@@ -27,37 +26,39 @@ function stringToType(type: string): TimelineEventType {
 export class TimelineEvent {
   id: number;
   userId: number;
+  userName: string;
   createdAt: Date;
   type: TimelineEventType;
   notes: string;
-
-  user?: StudioUser | undefined;
-
-  public async initialise() {
-    this.user = await ApiHelper.getUser(this.userId);
-  }
+  itemId: number;
 
   constructor(
     id: number,
     userId: number,
+    userName: string,
     createdAt: Date,
     type: TimelineEventType,
-    notes: string
+    notes: string,
+    itemId: number
   ) {
     this.id = id;
     this.userId = userId;
+    this.userName = userName;
     this.createdAt = createdAt;
     this.type = type;
     this.notes = notes;
+    this.itemId = itemId;
   }
 
   static fromJson(json: { [key: string]: any }) {
     return new TimelineEvent(
       json["id"],
       json["user_id"],
+      json["user_name"],
       moment(json["created_at"]).toDate(),
       stringToType(json["type"]),
-      json["notes"] ?? ""
+      json["notes"] ?? "",
+      json["item_id"]
     );
   }
 }

@@ -1,41 +1,34 @@
-import InventoryTable from "../components/InventoryTable";
-import "./InventoryPage.css";
-import BentoIcon from "@mui/icons-material/Bento";
-import { Button, Drawer, IconButton, Snackbar, TextField } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { createItem, search, setDrawer } from "../features/data/inventorySlice";
-import CloseIcon from "@mui/icons-material/Close";
-import React, { useEffect, useState } from "react";
-import { ItemDrawer, SubmittedData } from "../components/ItemDrawer";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useAppDispatch } from "../app/hooks";
 import { deleteItems } from "../features/data/inventorySlice";
-import { deleteDataItem, initialLoad } from "../features/data/dataSlice";
+import { deleteDataItem } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
-import { InventoryItem, ItemStatus } from "../objects/InventoryItem";
-import { useNavigate } from "react-router-dom";
-import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
+import { Header } from "../components/Header";
+import { SearchBar } from "../components/SearchBar";
+import { PrimaryButton } from "../components/PrimaryButton";
+import { InventoryTable } from "../components/InventoryTable";
+import { SquareButton } from "../components/SquareButton";
+import { AddItemDialog } from "../components/AddItemDialog";
+import { useState } from "react";
+import {
+  CustomSnackBar,
+  SnackState,
+  SnackType,
+} from "../components/CustomSnackBar";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { useWindowSize } from "@react-hook/window-size";
 
 export function InventoryPage() {
-  const navigate = useNavigate();
-  const drawer = useAppSelector((state) => state.inventory.drawer);
-  const searchValue = useAppSelector((state) => state.inventory.search);
   const dispatch = useAppDispatch();
-  const [isDesktop, setDesktop] = useState(window.innerWidth > 700);
-  const selectedItems = useAppSelector((state) =>
-    state.data.items.filter((i) => i.selected)
-  );
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
-  const [snackOpen, setSnackOpen] = useState<boolean>(false);
-  const [snackId, setSnackId] = useState<any>(null);
-
-  const updateMedia = () => {
-    setDesktop(window.innerWidth > 700);
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", updateMedia);
-    return () => window.removeEventListener("resize", updateMedia);
+  const [search, setSearch] = useState<string>("");
+  const [selected, setSelected] = useState<number[]>([]);
+  const [addDialog, setAddDialog] = useState<boolean>(false);
+  const [createSnack, setCreateSnack] = useState<SnackState>({
+    open: false,
+    type: SnackType.createSuccess,
   });
+  const [width, height] = useWindowSize();
 
   async function _delete(ids: Array<number>) {
     const success = await dispatch(deleteItems(ids));
@@ -47,127 +40,63 @@ export function InventoryPage() {
     }
   }
 
-  async function _create(data: SubmittedData) {
-    const item: InventoryItem = new InventoryItem(
-      0,
-      data.manufacturer,
-      data.model,
-      parseInt(data.locationId),
-      data.serial,
-      data.mNumber,
-      parseFloat(data.price),
-      parseInt(data.categoryId),
-      parseInt(data.ownerId),
-      data.notes,
-      new Date(),
-      new Date(),
-      ItemStatus.working,
-      0
-    );
-
-    const result = await dispatch(createItem(item));
-
-    if ((result.payload as { success: boolean; id: any }).success) {
-      dispatch(setDrawer(false));
-      setSnackOpen(true);
-      setSnackId((result.payload as { success: boolean; id: any }).id);
-      dispatch(initialLoad());
-    }
-  }
-
   return (
-    <div className="inventory-page__wrapper">
-      <div className="inventory-page__padding">
-        <Snackbar
-          open={snackOpen}
-          autoHideDuration={6000}
-          message="Item created successfully."
-          action={
-            <Button
-              color="inherit"
-              size="small"
-              onClick={() => navigate(`/inventory/${snackId}`)}
-            >
-              View
-            </Button>
-          }
-          sx={{ bottom: { xs: 90, sm: 0 }, marginBottom: "1em" }}
-        />
+    <div>
+      <div className="py-3 px-10 w-full h-[100vh] flex flex-col">
         <ConfirmDialog
+          icon={<DeleteIcon className="mr-1" fontSize="small" />}
           title="Delete Item"
-          body={`Are you sure you want to delete ${selectedItems.length} item${
-            selectedItems.length > 1 ? "s" : ""
+          body={`Are you sure you want to delete ${selected.length} item${
+            selected.length > 1 ? "s" : ""
           }?`}
           open={deleteOpen}
           setOpen={() => setDeleteOpen(!deleteOpen)}
-          onConfirm={() => _delete(selectedItems.map((i) => i.id))}
+          onConfirm={() => _delete(selected)}
         />
-        <React.Fragment key="right">
-          <Drawer
-            transitionDuration={300}
-            anchor="right"
-            open={drawer}
-            onClose={() => dispatch(setDrawer(false))}
-          >
-            <ItemDrawer submit={(data: SubmittedData) => _create(data)} />
-          </Drawer>
-        </React.Fragment>
-        <div className="inventory-page__row">
-          <div className="inventory-page__title-row">
-            <BentoIcon fontSize="medium" />
-            <span className="inventory-page__title">Inventory</span>
-          </div>
-          <div className="inventory-page__title-row">
-            {isDesktop ? (
-              <TextField
-                value={searchValue}
-                label="Search..."
-                size="small"
-                className="inventory-page__input"
-                onChange={(event) => dispatch(search(event.target.value))}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      aria-label="delete"
-                      size="small"
-                      onClick={() => dispatch(search(""))}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  ),
-                }}
-              />
-            ) : (
-              <div></div>
-            )}
-          </div>
-          <div className="inventory-page__title-row inventory-page__title-row--end">
-            {selectedItems.length > 0 ? (
-              <div>
-                <IconButton
-                  aria-label="delete"
-                  size="medium"
-                  sx={{ marginRight: "1em" }}
-                  color="error"
+        <AddItemDialog
+          open={addDialog}
+          setOpen={setAddDialog}
+          callback={(success: boolean) =>
+            setCreateSnack({
+              open: true,
+              type: success ? SnackType.createSuccess : SnackType.createError,
+            })
+          }
+        />
+        <Header />
+        <div className="animate-fade grow flex flex-col">
+          <div className="w-full h-15 flex flex-row justify-between mt-10">
+            <SearchBar onChange={(v: string) => setSearch(v)} />
+            <div className="flex flex-row">
+              {selected.length === 0 ? (
+                <></>
+              ) : (
+                <SquareButton
+                  icon={ImageHelper.image(Images.delete)}
                   onClick={() => setDeleteOpen(true)}
-                >
-                  <DeleteIcon fontSize="inherit" />
-                </IconButton>
-              </div>
-            ) : (
-              <div></div>
-            )}
-            <Button
-              variant="contained"
-              onClick={() => dispatch(setDrawer(true))}
-            >
-              <DataSaverOnIcon fontSize="small" sx={{ marginRight: "0.3em" }} />
-              Add new item
-            </Button>
+                />
+              )}
+              <div className="w-3"></div>
+              <PrimaryButton
+                icon={ImageHelper.image(Images.addPurple)}
+                text="Add an item"
+                onClick={() => setAddDialog(true)}
+              />
+            </div>
           </div>
+          <InventoryTable
+            itemsPerPage={Math.round(height / 175)}
+            selected={selected}
+            setSelected={setSelected}
+            searchQuery={search}
+            width={width}
+          />
         </div>
-        <InventoryTable />
       </div>
+      <CustomSnackBar
+        state={createSnack}
+        handleClose={() => setCreateSnack({ ...createSnack, open: false })}
+      />
     </div>
   );
 }
