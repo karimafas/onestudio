@@ -45,7 +45,6 @@ export function ImportPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [state, setState] = useState<ImportState>(ImportState.initial);
-  const [match, setMatch] = useState<ColumnCsvMatch[]>([]);
   const [csvColumns, setCsvColumns] = useState<string[]>([]);
   const [csvData, setCsvData] = useState<string[][]>([]);
   const [missingColumns, setMissingColumns] = useState<string[]>([]);
@@ -77,7 +76,6 @@ export function ImportPage() {
     const csvColumns = getCsvColumns(data);
     setCsvColumns(csvColumns);
     const result = findMatches(csvColumns);
-    setMatch(result);
     const success = result.filter((m) => !m.csvColumn).length === 0;
 
     if (success) {

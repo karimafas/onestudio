@@ -185,7 +185,7 @@ export function InventoryTable(props: {
           <img className="w-[5.5px]" src={ImageHelper.image(Images.backBlue)} />
         </div>
         <div className="h-8 w-12 bg-light_purple2 mx-4 rounded-lg flex flex-row justify-center items-center text-xs font-semibold text-light_purple">
-          {page + 1} / {totalPages}
+          {page + 1} / {!totalPages ? 1 : totalPages}
         </div>
         <div
           className={`${
