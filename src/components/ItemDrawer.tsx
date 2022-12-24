@@ -1,10 +1,5 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import "./ItemDrawer.css";
-import {
-  FormContainer,
-  SelectElement,
-  TextFieldElement,
-} from "react-hook-form-mui";
 import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import { useAppSelector } from "../app/hooks";
 import { Category } from "../objects/Category";
@@ -38,7 +33,7 @@ export function ItemDrawer(props: { submit: Function }) {
 
   return (
     <div>
-      <FormContainer
+      {/* <FormContainer
         onSuccess={async (data: ItemDfo) => {
           setDisabled(true);
           if (validate(data)) {
@@ -152,7 +147,7 @@ export function ItemDrawer(props: { submit: Function }) {
             </div>
           </div>
         </Box>
-      </FormContainer>
+      </FormContainer> */}
     </div>
   );
 }
