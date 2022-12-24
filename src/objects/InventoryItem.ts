@@ -128,6 +128,21 @@ export class InventoryItem {
       updated_at: new Date(),
     };
   }
+
+  static fromCsvDfo(i: CsvItemDfo) {
+    return {
+      manufacturer: i.manufacturer,
+      model: i.model,
+      location: i.location,
+      serial: i.serial,
+      m_number: i.m_number,
+      price: parseFloat(i.price),
+      category: i.category,
+      owner: i.owner,
+      notes: i.notes,
+      status: ItemStatus.working,
+    };
+  }
 }
 
 export interface ItemDfo {
@@ -142,6 +157,32 @@ export interface ItemDfo {
   owner_id: string;
   notes: string;
   status: ItemStatus;
+}
+
+export interface CsvItemDfo {
+  manufacturer: string;
+  model: string;
+  location: string;
+  serial: string;
+  m_number: string;
+  price: string;
+  category: string;
+  owner: string;
+  notes: string;
+  status: ItemStatus;
+}
+
+export interface CsvItemDto {
+  manufacturer?: string;
+  model?: string;
+  location?: string;
+  serial?: string;
+  m_number?: string;
+  price?: number;
+  category?: string;
+  owner?: string;
+  notes?: string;
+  status?: ItemStatus;
 }
 
 export interface ItemDto {

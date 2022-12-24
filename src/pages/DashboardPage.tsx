@@ -33,7 +33,7 @@ export function DashboardPage() {
             {width > 1330 ? <StudioInfoCard collapsed={false} /> : <></>}
             <InventoryInfoCard />
           </div>
-          <div className="flex flex-col ml-8">
+          <div className="flex flex-col">
             <DashboardButton
               type={DashboardButtonType.inventory}
               onClick={() => navigate("inventory")}

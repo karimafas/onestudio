@@ -7,13 +7,14 @@ export function StudioInfoCard(props: { collapsed: boolean }) {
   const locations = useAppSelector((state) => state.data.locations);
 
   return (
-    <div className="h-50 w-64 bg-white drop-shadow-2xl rounded-2xl flex flex-col p-8 justify-center cursor-pointer hover:translate-y-[-0.5rem] transition-all duration-500">
+    <div
+      className={`h-50 w-64 bg-white drop-shadow-2xl rounded-2xl flex flex-col p-8 justify-center cursor-pointer hover:translate-y-[-0.5rem] transition-all duration-500 ${
+        props.collapsed ? "mt-6" : ""
+      }`}
+    >
       <div className="flex flex-row items-between">
         <div className="border-dashed border-medium_blue border-2 h-12 w-12 rounded-xl flex flex-row items-center justify-center">
-          <img
-            src={ImageHelper.image(Images.info)}
-            className="p-[10px]"
-          />
+          <img src={ImageHelper.image(Images.info)} className="p-[10px]" />
         </div>
         <div className="flex flex-col ml-3">
           <span className="text-dark_blue font-semibold text-lg">

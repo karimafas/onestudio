@@ -1,4 +1,6 @@
 import {
+  CsvItemDfo,
+  CsvItemDto,
   InventoryItem,
   ItemDfo,
   ItemDto,
@@ -77,6 +79,37 @@ export class ItemRepository {
     }
 
     return { success: success, id: id };
+  }
+
+  public static async createItemsList(items: CsvItemDfo[]): Promise<boolean> {
+    let success: boolean = false;
+
+    try {
+      const dtos = [];
+
+      for (const item of items) {
+        const dto = InventoryItem.fromCsvDfo(item);
+        dtos.push(dto);
+      }
+
+      LoggerService.log(`adding item with body`, dtos);
+
+      const resp = await RequestService.request(
+        "item/createItemsFromList",
+        RequestType.post,
+        dtos
+      );
+
+      if (resp.status === 201) {
+        success = true;
+      }
+
+      LoggerService.log("Added new lot of items.", success);
+    } catch (e: any) {
+      LoggerService.log(e.toString());
+    }
+
+    return success;
   }
 
   public static async updateItem(i: ItemDfo): Promise<boolean> {

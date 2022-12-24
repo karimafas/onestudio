@@ -1,44 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
+import { AppConstants } from "../config/AppConstants";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { InventoryItem } from "../objects/InventoryItem";
+import { TableColumn } from "../objects/TableColumn";
 import { CheckBox } from "./CheckBox";
 import { HeaderCheckBox } from "./HeaderCheckBox";
-
-class TableColumn {
-  id: string;
-  name: string;
-  required: boolean;
-  widthPercent: number;
-  priority: number;
-
-  constructor(
-    id: string,
-    name: string,
-    required: boolean,
-    widthPercent: number,
-    priority: number
-  ) {
-    this.id = id;
-    this.name = name;
-    this.required = required;
-    this.widthPercent = widthPercent;
-    this.priority = priority;
-  }
-}
-
-const columns = [
-  new TableColumn("select", "", true, 5, 0),
-  new TableColumn("details", "Details", true, 10, 0),
-  new TableColumn("price", "Price", true, 10, 0),
-  new TableColumn("location", "Location", true, 10, 0),
-  new TableColumn("category", "Category", true, 10, 0),
-  new TableColumn("owner", "Owner", true, 10, 0),
-  new TableColumn("mNumber", "M-Number", true, 15, 0),
-  new TableColumn("serial", "Serial", true, 10, 0),
-  new TableColumn("notes", "Notes", true, 10, 1),
-];
 
 export function InventoryTable(props: {
   searchQuery: string;
@@ -71,7 +39,9 @@ export function InventoryTable(props: {
     )
     .slice(page * props.itemsPerPage, props.itemsPerPage * (page + 1));
   const filteredColumns =
-    props.width > 1070 ? columns : columns.filter((c) => c.priority === 0);
+    props.width > 1070
+      ? AppConstants.tableColumns
+      : AppConstants.tableColumns.filter((c) => c.priority === 0);
 
   function columnToItemText(c: TableColumn, i: InventoryItem): string {
     switch (c.id) {
@@ -176,7 +146,11 @@ export function InventoryTable(props: {
         );
       default:
         return (
-          <span className="whitespace-nowrap" key={`header-${c.id}`} style={style}>
+          <span
+            className="whitespace-nowrap"
+            key={`header-${c.id}`}
+            style={style}
+          >
             {c.name}
           </span>
         );

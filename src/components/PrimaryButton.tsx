@@ -7,9 +7,11 @@ export function PrimaryButton(props: {
   textColor?: string;
   iconStyle?: string;
   style?: string;
+  id?: string;
 }) {
   return (
     <div
+      id={props.id}
       onClick={() => props.onClick()}
       className={`${
         props.backgroundColor ?? "bg-light_purple2"

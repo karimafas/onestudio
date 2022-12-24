@@ -23,15 +23,11 @@ export function SettingsPage() {
   const [drawerType, setDrawerType] = useState<TypesDrawerType>(
     TypesDrawerType.category
   );
-  const user = useAppSelector((state) => state.data.user);
   const categories: Array<Category> = useAppSelector(
     (state) => state.data.categories
   );
   const locations: Array<StudioLocation> = useAppSelector(
     (state) => state.data.locations
-  );
-  const owners: Array<StudioUser> = useAppSelector((state) =>
-    state.data.studioUsers.filter((u) => u.owner)
   );
   const [deleteOpen, setDeleteOpen] = useState<{
     open: boolean;

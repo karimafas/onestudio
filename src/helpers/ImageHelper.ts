@@ -9,6 +9,7 @@ export enum Images {
   check = "check.png",
   closePurple = "close-purple.png",
   closeWhite = "close-white.png",
+  complete = "complete.png",
   dashboardFocused = "dashboard-focused.png",
   dashboardUnfocused = "dashboard-unfocused.png",
   delete = "delete.png",
@@ -24,6 +25,7 @@ export enum Images {
   infoPurple = "info-purple.png",
   info = "info.png",
   inventoryFocused = "inventory-focused.png",
+  inventoryPurple = "inventory-purple.png",
   inventoryUnfocused = "inventory-unfocused.png",
   inventoryWhite = "inventory-white.png",
   logoTyped = "logo-typed.png",
@@ -33,6 +35,8 @@ export enum Images {
   settingsFocused = "settings-focused.png",
   settingsUnfocused = "settings-unfocused.png",
   settings = "settings.png",
+  uploadCloud = "upload-cloud.png",
+  uploadFile = "upload-file.png",
 }
 
 export class ImageHelper {

@@ -14,6 +14,8 @@ import { AuthRepository } from "./repositories/AuthRepository";
 import { NotFound } from "./pages/NotFound";
 import { ResetPassword } from "./pages/ResetPassword";
 import { RequestService } from "./services/RequestService";
+import { ImportPage } from "./pages/ImportPage";
+import { AppConstants } from "./config/AppConstants";
 
 export default function App() {
   const location = useLocation();
@@ -78,7 +80,13 @@ export default function App() {
         <div>
           <AppBackground />
           <div className="relative mt-[-100vh] flex flex-row overflow-hidden">
-            <div>{loggedIn ? <Sidebar /> : <></>}</div>
+            <div>
+              {loggedIn && AppConstants.hasSidebar(location.pathname) ? (
+                <Sidebar />
+              ) : (
+                <></>
+              )}
+            </div>
             <div
               style={{
                 width: loggedIn ? "calc(100vw - 15em)" : "100vw",
@@ -87,6 +95,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/import" element={<ImportPage />} />
                 <Route path="/inventory" element={<InventoryPage />} />
                 <Route path="/inventory/:id" element={<ItemPage />} />
                 <Route path="/settings" element={<SettingsPage />} />

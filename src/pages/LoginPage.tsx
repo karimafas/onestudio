@@ -6,6 +6,7 @@ import { ValidationObject } from "../services/ValidationService";
 import { CustomTextField } from "../components/CustomTextField";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { AppAlert, AppAlertType } from "../components/AppAlert";
 
 interface LoginDfo {
   email: string;
@@ -66,15 +67,6 @@ export function LoginPage() {
       />
 
       <div className="flex flex-col items-center">
-        {fromReset ? (
-          <div className="bg-green rounded-lg flex flex-col justify-center items-center mt-2 mb-8">
-            <span className="text-sm p-3 text-dark_blue">
-              Your password was reset successfully, please log in.
-            </span>
-          </div>
-        ) : (
-          <></>
-        )}
         <CustomTextField
           variant="outlined"
           placeholder="Email"
@@ -105,11 +97,20 @@ export function LoginPage() {
           icon={ImageHelper.image(Images.forwardPurple)}
         />
         {error ? (
-          <div className="bg-light_red rounded-lg flex flex-col justify-center items-center mt-4">
-            <span className="text-sm p-3 text-dark_blue">
-              You have entered an invalid username or password.
-            </span>
-          </div>
+          <AppAlert
+            type={AppAlertType.error}
+            message="You have entered an invalid username or password."
+            style="mt-6"
+          />
+        ) : (
+          <></>
+        )}
+        {fromReset && !error ? (
+          <AppAlert
+            type={AppAlertType.success}
+            message="Your password was reset successfully, please log in."
+            style="mt-6"
+          />
         ) : (
           <></>
         )}
