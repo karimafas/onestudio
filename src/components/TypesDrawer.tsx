@@ -1,10 +1,5 @@
 import { Box, Button } from "@mui/material";
 import "./ItemDrawer.css";
-import {
-  FormContainer,
-  SelectElement,
-  TextFieldElement,
-} from "react-hook-form-mui";
 import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import { useState } from "react";
 import { useAppSelector } from "../app/hooks";
@@ -42,7 +37,7 @@ export function TypesDrawer(props: {
 
   return (
     <div>
-      <FormContainer
+      {/* <FormContainer
         onSuccess={async (data: TypesSubmittedData) => {
           setDisabled(true);
           await props.submit(data);
@@ -95,7 +90,7 @@ export function TypesDrawer(props: {
             </div>
           </div>
         </Box>
-      </FormContainer>
+      </FormContainer> */}
     </div>
   );
 }

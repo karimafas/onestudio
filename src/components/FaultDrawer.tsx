@@ -1,7 +1,6 @@
 import { Box, Button } from "@mui/material";
 import "./FaultDrawer.css";
 import React from "react";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
 import { InventoryItem, ItemStatus } from "../objects/InventoryItem";
 import { TimelineEventType } from "../objects/TimelineEvent";
@@ -18,7 +17,7 @@ export function FaultDrawer(props: { submit: Function; item: InventoryItem }) {
 
   return (
     <div>
-      <FormContainer
+      {/* <FormContainer
         key="add-fault-drawer"
         onSuccess={async (formData) => {
           const data: EventSubmittedData = {
@@ -94,7 +93,7 @@ export function FaultDrawer(props: { submit: Function; item: InventoryItem }) {
             </div>
           </div>
         </Box>
-      </FormContainer>
+      </FormContainer> */}
     </div>
   );
 }
