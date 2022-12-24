@@ -1,10 +1,12 @@
 {
   "name": "onestudio",
   "version": "0.1.0",
-  "allowedHosts": [
-    "localhost",
-    ".localhost"
-  ],
+  "options": {
+    "allowedHosts": [
+      "localhost",
+      ".localhost"
+    ]
+  },
   "proxy": "http://localhost:3000",
   "private": true,
   "dependencies": {
