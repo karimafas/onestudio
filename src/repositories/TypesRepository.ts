@@ -1,11 +1,11 @@
-import { TypesDrawerType } from "../components/TypesDrawer";
+import { TypesDialogType } from "../components/AddTypesDialog";
 import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
 
 export class TypesRepository {
   public static async createType(
     name: string,
-    type: TypesDrawerType
+    type: TypesDialogType
   ): Promise<boolean> {
     let success = false;
 
@@ -15,7 +15,7 @@ export class TypesRepository {
       };
 
       const resp = await RequestService.request(
-        `${type === TypesDrawerType.category ? "category" : "location"}`,
+        `${type === TypesDialogType.category ? "category" : "location"}`,
         RequestType.post,
         body
       );
@@ -33,13 +33,13 @@ export class TypesRepository {
 
   public static async deleteType(
     id: number,
-    type: TypesDrawerType
+    type: TypesDialogType
   ): Promise<boolean> {
     let success = false;
 
     try {
       const resp = await RequestService.request(
-        `${type === TypesDrawerType.category ? "category" : "location"}/${id}`,
+        `${type === TypesDialogType.category ? "category" : "location"}/${id}`,
         RequestType.delete
       );
 
