@@ -113,9 +113,7 @@ export function ItemPage() {
   }
 
   async function _updateItem(data: ItemDfo) {
-    if (!hasChanged()) return alert();
-
-    setDisabled(true);
+    if (!hasChanged()) setDisabled(true);
 
     const result = await dispatch(updateItem(data));
     if (result.payload) {

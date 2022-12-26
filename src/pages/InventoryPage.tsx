@@ -1,4 +1,4 @@
-import { useAppDispatch } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { deleteItems } from "../features/data/inventorySlice";
 import { deleteDataItem } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
@@ -17,6 +17,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { useWindowSize } from "@react-hook/window-size";
+import { TokenService } from "../services/TokenService";
 
 export function InventoryPage() {
   const dispatch = useAppDispatch();

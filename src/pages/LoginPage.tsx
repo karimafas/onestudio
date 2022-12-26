@@ -7,6 +7,7 @@ import { CustomTextField } from "../components/CustomTextField";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { AppAlert, AppAlertType } from "../components/AppAlert";
+import { useAppDispatch } from "../app/hooks";
 
 interface LoginDfo {
   email: string;
@@ -14,6 +15,7 @@ interface LoginDfo {
 }
 
 export function LoginPage() {
+  const dispatch = useAppDispatch();
   const [disabled, setDisabled] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [validationObject, setValidationObject] = useState<ValidationObject>(
@@ -38,9 +40,9 @@ export function LoginPage() {
 
     if (object.isValid) {
       setDisabled(true);
-      const result = await AuthRepository.login(dfo.email, dfo.password);
+      const success = await AuthRepository.login(dfo.email, dfo.password);
 
-      if (result) {
+      if (success) {
         const savedUrl = sessionStorage.getItem("url");
         let url = savedUrl || "/";
 
@@ -51,7 +53,7 @@ export function LoginPage() {
         window.location.replace(url);
       }
 
-      setError(!result);
+      setError(!success);
     }
 
     setDisabled(false);

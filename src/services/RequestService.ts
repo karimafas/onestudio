@@ -1,9 +1,10 @@
 import { AxiosError } from "axios";
 import { AuthRepository } from "../repositories/AuthRepository";
 import { LoggerService } from "./LoggerService";
+import { TokenService } from "./TokenService";
 const axios = require("axios");
 
-const baseUrl = "http://185.3.95.67:3000/api/";
+const baseUrl = "http://localhost:3000/api/";
 
 const unauthorisedRoutes = ["login", "reset-password"];
 
@@ -36,9 +37,7 @@ export class RequestService {
         url !== "auth/logout" &&
         (status === 403 || status === 401)
       ) {
-        LoggerService.log(
-          "Token seems expired, refreshing auth token."
-        );
+        LoggerService.log("Token seems expired, refreshing auth token.");
         retried = true;
         const refreshed = await AuthRepository.refreshToken();
         if (refreshed) {
@@ -59,25 +58,30 @@ export class RequestService {
 }
 
 async function performRequest(type: RequestType, url: string, body: any) {
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${TokenService.token}`,
+  };
+
   switch (type) {
     case RequestType.get:
       return await axios.get(baseUrl + url, {
-        withCredentials: true,
+        headers,
       });
       break;
     case RequestType.post:
       return await axios.post(baseUrl + url, body, {
-        withCredentials: true,
+        headers,
       });
       break;
     case RequestType.put:
       return await axios.put(baseUrl + url, body, {
-        withCredentials: true,
+        headers,
       });
       break;
     case RequestType.delete:
       return await axios.delete(baseUrl + url, {
-        withCredentials: true,
+        headers,
       });
       break;
   }
