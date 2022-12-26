@@ -1,10 +1,9 @@
-import { AxiosError } from "axios";
 import { AuthRepository } from "../repositories/AuthRepository";
 import { LoggerService } from "./LoggerService";
 import { TokenService } from "./TokenService";
 const axios = require("axios");
 
-const baseUrl = "http://localhost:3000/api/";
+const baseUrl = `${process.env.API_URL}/api/`;
 
 const unauthorisedRoutes = ["login", "reset-password"];
 
