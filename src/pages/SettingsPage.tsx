@@ -3,12 +3,6 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
 import { useState } from "react";
-import {
-  TypesDrawer,
-  TypesDrawerType,
-  typesDrawerTypeToString,
-  TypesSubmittedData,
-} from "../components/TypesDrawer";
 import { reloadTypes } from "../features/data/dataSlice";
 import { StudioUser } from "../objects/StudioUser";
 import ConfirmDialog from "../components/ConfirmDialog";
@@ -17,11 +11,16 @@ import { StudioInfoCard } from "../components/StudioInfoCard";
 import { TypesRepository } from "../repositories/TypesRepository";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { AddTypesDialog, TypesDialogType } from "../components/AddTypesDialog";
+
+export interface TypesSubmittedData {
+  name: string;
+}
 
 export function SettingsPage() {
-  const [drawer, setDrawer] = useState<boolean>(false);
-  const [drawerType, setDrawerType] = useState<TypesDrawerType>(
-    TypesDrawerType.category
+  const [dialog, setDialog] = useState<boolean>(false);
+  const [dialogType, setDialogType] = useState<TypesDialogType>(
+    TypesDialogType.category
   );
   const categories: Array<Category> = useAppSelector(
     (state) => state.data.categories
@@ -31,34 +30,34 @@ export function SettingsPage() {
   );
   const [deleteOpen, setDeleteOpen] = useState<{
     open: boolean;
-    data: { type: TypesDrawerType; id: number } | undefined;
+    data: { type: TypesDialogType; id: number } | undefined;
   }>({
     open: false,
     data: undefined,
   });
   const dispatch = useAppDispatch();
 
-  function _openDrawer(type: TypesDrawerType) {
-    setDrawerType(type);
-    setDrawer(true);
+  function _openDrawer(type: TypesDialogType) {
+    setDialogType(type);
+    setDialog(true);
   }
 
   async function _submit(data: TypesSubmittedData) {
     let success = false;
 
     if (!data.name) return;
-    success = await TypesRepository.createType(data.name, drawerType);
+    success = await TypesRepository.createType(data.name, dialogType);
 
     if (success) {
       await dispatch(reloadTypes());
     }
 
-    if (success) setDrawer(false);
+    if (success) setDialog(false);
   }
 
   async function _delete(
     id: number | undefined,
-    type: TypesDrawerType | undefined
+    type: TypesDialogType | undefined
   ) {
     let success = false;
 
@@ -73,27 +72,22 @@ export function SettingsPage() {
     <div className="py-3 px-10 w-full h-15">
       <ConfirmDialog
         icon={<DeleteIcon className="mr-1" fontSize="small" />}
-        title={`Delete ${typesDrawerTypeToString(deleteOpen.data?.type!)}`}
-        body={`Are you sure you want to delete this ${typesDrawerTypeToString(
-          deleteOpen.data?.type!
-        )}?`}
+        title={`Delete ${deleteOpen.data?.type ?? ""}`}
+        body={`Are you sure you want to delete this ${
+          deleteOpen.data?.type ?? ""
+        }?`}
         open={deleteOpen.open}
         setOpen={() =>
           setDeleteOpen({ open: !deleteOpen, data: deleteOpen.data! })
         }
         onConfirm={() => _delete(deleteOpen.data?.id, deleteOpen.data?.type)}
       />
-      <Drawer
-        transitionDuration={300}
-        anchor="right"
-        open={drawer}
-        onClose={() => setDrawer(false)}
-      >
-        <TypesDrawer
-          type={drawerType}
-          submit={(data: TypesSubmittedData) => _submit(data)}
-        />
-      </Drawer>
+      <AddTypesDialog
+        open={dialog}
+        setOpen={setDialog}
+        type={dialogType}
+        callback={_submit}
+      />
       <Header />
       <div className="animate-fade">
         <div className="h-8"></div>
@@ -108,7 +102,7 @@ export function SettingsPage() {
               <img
                 className="w-6 h-6 cursor-pointer"
                 src={ImageHelper.image(Images.addBlue)}
-                onClick={() => _openDrawer(TypesDrawerType.category)}
+                onClick={() => _openDrawer(TypesDialogType.category)}
               />
             </div>
             {categories.map((c) => (
@@ -122,7 +116,7 @@ export function SettingsPage() {
                   onClick={() =>
                     setDeleteOpen({
                       open: true,
-                      data: { type: TypesDrawerType.category, id: c.id },
+                      data: { type: TypesDialogType.category, id: c.id },
                     })
                   }
                 />
@@ -142,7 +136,7 @@ export function SettingsPage() {
               <img
                 className="w-6 h-6 cursor-pointer"
                 src={ImageHelper.image(Images.addBlue)}
-                onClick={() => _openDrawer(TypesDrawerType.location)}
+                onClick={() => _openDrawer(TypesDialogType.location)}
               />
             </div>
             {locations.map((l) => (
@@ -156,7 +150,7 @@ export function SettingsPage() {
                   onClick={() =>
                     setDeleteOpen({
                       open: true,
-                      data: { type: TypesDrawerType.location, id: l.id },
+                      data: { type: TypesDialogType.location, id: l.id },
                     })
                   }
                 />
