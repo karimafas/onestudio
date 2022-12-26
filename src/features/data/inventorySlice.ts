@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { InventoryItem, ItemDfo } from "../../objects/InventoryItem";
+import { ItemDfo } from "../../objects/InventoryItem";
 import { ItemRepository } from "../../repositories/ItemRepository";
 
 // Define a type for the slice state

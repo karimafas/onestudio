@@ -1,7 +1,9 @@
+import { AxiosResponse } from "axios";
 import { DelayHelper } from "../helpers/DelayHelper";
 import { StudioUser } from "../objects/StudioUser";
 import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
+import { TokenService } from "../services/TokenService";
 
 export class AuthRepository {
   public static async login(email: string, password: string): Promise<boolean> {
@@ -23,6 +25,13 @@ export class AuthRepository {
         await DelayHelper.sleep(1);
         success = true;
         LoggerService.log("Logged in user.", resp.data);
+
+        const rt = (resp as AxiosResponse).data.refreshToken;
+        const at = (resp as AxiosResponse).data.accessToken;
+
+        window.localStorage.removeItem("rt");
+        window.localStorage.setItem("rt", rt);
+        TokenService.token = at;
       }
     } catch (e) {
       LoggerService.log("Couldn't login user.");
@@ -35,16 +44,9 @@ export class AuthRepository {
     let success: boolean = false;
 
     try {
-      const resp = await RequestService.request(
-        "auth/logout",
-        RequestType.post
-      );
-
-      if (resp.status === 201) {
-        success = true;
-        LoggerService.log("Logged out.", resp.data);
-        window.location.reload();
-      }
+      window.localStorage.removeItem("rt");
+      LoggerService.log("Logged out.");
+      window.location.reload();
     } catch (e) {
       LoggerService.log("Couldn't log out user.");
     }
@@ -55,16 +57,28 @@ export class AuthRepository {
   public static async refreshToken(): Promise<boolean> {
     let success: boolean = false;
 
+    const rt = window.localStorage.getItem("rt");
+
     try {
       const resp = await RequestService.request(
         "auth/refreshToken",
         RequestType.post,
-        {}
+        {
+          refreshToken: rt,
+        }
       );
 
       if (resp.status === 201) {
         success = true;
         LoggerService.log("Token refreshed successfully.", resp.data);
+
+        const rt = (resp as AxiosResponse).data.refreshToken;
+        const at = (resp as AxiosResponse).data.accessToken;
+
+        window.localStorage.removeItem("rt");
+        window.localStorage.setItem("rt", rt);
+
+        TokenService.token = at;
       }
     } catch (e) {
       LoggerService.log("Could not refresh token.");
