@@ -16,6 +16,7 @@ import { ResetPassword } from "./pages/ResetPassword";
 import { RequestService } from "./services/RequestService";
 import { ImportPage } from "./pages/ImportPage";
 import { AppConstants } from "./config/AppConstants";
+import { CustomSnackBar } from "./components/CustomSnackBar";
 
 export default function App() {
   const location = useLocation();
@@ -104,6 +105,7 @@ export default function App() {
               </Routes>
             </div>
           </div>
+          <CustomSnackBar />
         </div>
       </ThemeProvider>
     );
