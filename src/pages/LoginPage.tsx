@@ -8,7 +8,7 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { AppAlert, AppAlertType } from "../components/AppAlert";
 import { useAppDispatch } from "../app/hooks";
-import { startLoading, stopLoading } from "../features/data/uiSlice";
+import { authorise } from "../features/data/authSlice";
 
 interface LoginDfo {
   email: string;
@@ -42,19 +42,9 @@ export function LoginPage() {
     if (object.isValid) {
       setDisabled(true);
       const success = await AuthRepository.login(dfo.email, dfo.password);
-
-      if (success) {
-        const savedUrl = sessionStorage.getItem("url");
-        let url = savedUrl || "/";
-
-        sessionStorage.removeItem("url");
-
-        if (url.includes("login") || url.includes("reset-password")) url = "/";
-
-        window.location.replace(url);
-      }
-
       setError(!success);
+
+      if (success) dispatch(authorise());
     }
 
     setDisabled(false);

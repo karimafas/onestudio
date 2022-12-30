@@ -45,8 +45,8 @@ export class AuthRepository {
 
     try {
       window.localStorage.removeItem("rt");
+      success = true;
       LoggerService.log("Logged out.");
-      window.location.reload();
     } catch (e) {
       LoggerService.log("Couldn't log out user.");
     }

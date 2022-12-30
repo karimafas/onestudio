@@ -18,13 +18,14 @@ import { ImportPage } from "./pages/ImportPage";
 import { AppConstants } from "./config/AppConstants";
 import { CustomSnackBar } from "./components/CustomSnackBar";
 import { LoadingOverlay } from "./components/LoadingOverlay";
+import { authorise, unauthorise } from "./features/data/authSlice";
 
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.data.loading);
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const authorised = useAppSelector((state) => state.auth.authorised);
   const [pageLoaded, setPageLoaded] = useState<boolean>(false);
 
   let theme = createTheme({
@@ -39,19 +40,18 @@ export default function App() {
   });
 
   function logout() {
-    setLoggedIn(false);
-    navigate("/login");
+    dispatch(unauthorise());
     setPageLoaded(true);
   }
 
   function login() {
+    dispatch(authorise());
     setPageLoaded(true);
-    setLoggedIn(true);
     dispatch(initialLoad());
   }
 
   function renderAuthorised() {
-    setLoggedIn(false);
+    dispatch(unauthorise());
     setPageLoaded(true);
   }
 
@@ -70,11 +70,11 @@ export default function App() {
     });
 
     return () => {};
-  }, []);
+  }, [authorised]);
 
   if (!pageLoaded) return <div></div>;
 
-  if (loading && loggedIn) {
+  if (loading && authorised) {
     return <div></div>;
   } else {
     return (
@@ -83,7 +83,7 @@ export default function App() {
           <AppBackground />
           <div className="relative mt-[-100vh] flex flex-row overflow-hidden">
             <div>
-              {loggedIn && AppConstants.hasSidebar(location.pathname) ? (
+              {authorised && AppConstants.hasSidebar(location.pathname) ? (
                 <Sidebar />
               ) : (
                 <></>
@@ -91,19 +91,22 @@ export default function App() {
             </div>
             <div
               style={{
-                width: loggedIn ? "calc(100vw - 15em)" : "100vw",
+                width: authorised ? "calc(100vw - 15em)" : "100vw",
               }}
             >
-              <Routes>
-                <Route path="/" element={<DashboardPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/import" element={<ImportPage />} />
-                <Route path="/inventory" element={<InventoryPage />} />
-                <Route path="/inventory/:id" element={<ItemPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              {authorised ? (
+                <Routes>
+                  <Route path="/" element={<DashboardPage />} />
+                  <Route path="/import" element={<ImportPage />} />
+                  <Route path="/inventory" element={<InventoryPage />} />
+                  <Route path="/inventory/:id" element={<ItemPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              ) : (
+                <LoginPage />
+              )}
             </div>
           </div>
           <CustomSnackBar />

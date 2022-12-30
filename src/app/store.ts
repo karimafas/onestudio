@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import authSlice from "../features/data/authSlice";
 import dataSlice from "../features/data/dataSlice";
 import inventorySlice from "../features/data/inventorySlice";
 import uiSlice from "../features/data/uiSlice";
@@ -8,6 +9,7 @@ export const store = configureStore({
     data: dataSlice,
     inventory: inventorySlice,
     ui: uiSlice,
+    auth: authSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

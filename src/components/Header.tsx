@@ -1,14 +1,17 @@
 import moment from "moment";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { unauthorise } from "../features/data/authSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { AuthRepository } from "../repositories/AuthRepository";
 
-function _logout() {
-  AuthRepository.logout().then((_) => window.location.reload());
-}
-
 export function Header() {
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.data.user);
+
+  async function _logout() {
+    const success = await AuthRepository.logout();
+    if (success) dispatch(unauthorise());
+  }
 
   const initials = `${user?.firstName?.substring(0, 1) ?? ""}${
     user?.lastName?.substring(0, 1) ?? ""
@@ -18,10 +21,7 @@ export function Header() {
     <div className="flex flex-col">
       <div className="w-full h-20 flex flex-row items-center justify-between">
         <div className="flex flex-row items-center">
-          <img
-            className="mr-4 w-5"
-            src={ImageHelper.image(Images.calendar)}
-          />
+          <img className="mr-4 w-5" src={ImageHelper.image(Images.calendar)} />
           <span className="text-base font-medium text-dark_blue">
             {moment().format("D MMMM")}
           </span>
