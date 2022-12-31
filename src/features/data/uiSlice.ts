@@ -1,17 +1,16 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { ItemDfo } from "../../objects/InventoryItem";
-import { ItemRepository } from "../../repositories/ItemRepository";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export enum SnackType {
-    success,
-    error,
-  }
+  success,
+  error,
+}
 
 // Define a type for the slice state
 interface UiState {
   snackOpen: boolean;
   snackMessage: string;
   snackType: SnackType;
+  loading: boolean;
 }
 
 // Define the initial state using that type
@@ -19,24 +18,11 @@ const initialState: UiState = {
   snackOpen: false,
   snackMessage: "",
   snackType: SnackType.success,
+  loading: false,
 };
 
-export const updateItem = createAsyncThunk(
-  "inventory/updateItem",
-  async (data: ItemDfo) => {
-    return await ItemRepository.updateItem(data);
-  }
-);
-
-export const deleteItems = createAsyncThunk(
-  "inventory/deleteItem",
-  async (ids: Array<number>) => {
-    return await ItemRepository.deleteItems(ids);
-  }
-);
-
-export const counterSlice = createSlice({
-  name: "inventory",
+export const uiSlice = createSlice({
+  name: "ui",
   initialState,
   reducers: {
     openSnack: (
@@ -50,9 +36,16 @@ export const counterSlice = createSlice({
     closeSnack: (state: UiState) => {
       state.snackOpen = false;
     },
+    startLoading: (state: UiState) => {
+      state.loading = true;
+    },
+    stopLoading: (state: UiState) => {
+      state.loading = false;
+    },
   },
 });
 
-export const { openSnack, closeSnack } = counterSlice.actions;
+export const { openSnack, closeSnack, startLoading, stopLoading } =
+  uiSlice.actions;
 
-export default counterSlice.reducer;
+export default uiSlice.reducer;
