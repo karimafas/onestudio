@@ -8,7 +8,7 @@ import { LoginPage } from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
 import { SettingsPage } from "./pages/SettingsPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import { createTheme, ThemeProvider } from "@mui/material";
+import { CircularProgress, createTheme, ThemeProvider } from "@mui/material";
 import { AppBackground } from "./components/AppBackground";
 import { AuthRepository } from "./repositories/AuthRepository";
 import { NotFound } from "./pages/NotFound";
@@ -16,6 +16,8 @@ import { ResetPassword } from "./pages/ResetPassword";
 import { RequestService } from "./services/RequestService";
 import { ImportPage } from "./pages/ImportPage";
 import { AppConstants } from "./config/AppConstants";
+import { CustomSnackBar } from "./components/CustomSnackBar";
+import { LoadingOverlay } from "./components/LoadingOverlay";
 
 export default function App() {
   const location = useLocation();
@@ -104,6 +106,8 @@ export default function App() {
               </Routes>
             </div>
           </div>
+          <CustomSnackBar />
+          <LoadingOverlay />
         </div>
       </ThemeProvider>
     );

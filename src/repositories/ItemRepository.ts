@@ -134,6 +134,25 @@ export class ItemRepository {
     return success;
   }
 
+  public static async duplicateItem(id: number): Promise<boolean> {
+    let success: boolean = false;
+    try {
+      const resp = await RequestService.request(
+        `item/duplicate/${id}`,
+        RequestType.post
+      );
+
+      if (resp.status === 201) {
+        success = true;
+        LoggerService.log("Duplicated item.", resp.data);
+      }
+    } catch (e) {
+      LoggerService.log("Couldn't duplicate item.", e);
+    }
+
+    return success;
+  }
+
   public static async deleteItems(ids: Array<number>): Promise<boolean> {
     let success: boolean = false;
     try {

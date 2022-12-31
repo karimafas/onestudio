@@ -81,7 +81,7 @@ export function CustomSelect(props: {
         } mb-1 ${width} ${height} items-center ${
           valid ? validClass : invalidClass
         }`}
-      >
+    >
         <div className="flex flex-row">
           {props.prefix ? (
             <span className="text-light_blue font-semibold mr-1 cursor-default">
