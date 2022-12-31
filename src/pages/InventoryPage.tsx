@@ -10,6 +10,7 @@ import { SquareButton } from "../components/SquareButton";
 import { AddItemDialog } from "../components/AddItemDialog";
 import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CopyIcon from "@mui/icons-material/ContentCopyTwoTone";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { useWindowSize } from "@react-hook/window-size";
 import { initialLoad } from "../features/data/dataSlice";
@@ -62,7 +63,7 @@ export function InventoryPage() {
     <div className="py-3 px-10 w-full h-[100vh] flex flex-col">
       <ConfirmDialog
         key="duplicate-dialog"
-        icon={<DeleteIcon className="mr-1" fontSize="small" />}
+        icon={<CopyIcon className="mr-[8px]" fontSize="small" />}
         title="Duplicate Item"
         body="Are you sure you want to duplicate this item?"
         open={duplicateOpen}
@@ -101,23 +102,23 @@ export function InventoryPage() {
               <></>
             ) : (
               <div className="flex flex-row">
+                {selected.length === 1 ? (
+                  <div className="flex flex-row">
+                    <SquareButton
+                      key="duplicate-cta"
+                      icon={ImageHelper.image(Images.duplicate)}
+                      onClick={() => setDuplicateOpen(true)}
+                    />
+                    <div className="w-3"></div>
+                  </div>
+                ) : (
+                  <></>
+                )}
                 <SquareButton
                   key="delete-cta"
                   icon={ImageHelper.image(Images.delete)}
                   onClick={() => setDeleteOpen(true)}
                 />
-                {selected.length === 1 ? (
-                  <div className="flex flex-row">
-                    <div className="w-3"></div>
-                    <SquareButton
-                      key="duplicate-cta"
-                      icon={ImageHelper.image(Images.addCircle)}
-                      onClick={() => setDuplicateOpen(true)}
-                    />
-                  </div>
-                ) : (
-                  <></>
-                )}
               </div>
             )}
             <div className="w-3"></div>

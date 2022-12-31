@@ -13,6 +13,8 @@ export enum Images {
   dashboardFocused = "dashboard-focused.png",
   dashboardUnfocused = "dashboard-unfocused.png",
   delete = "delete.png",
+  duplicate = "duplicate.png",
+  duplicateBlue = "duplicate-blue.png",
   edit = "edit.png",
   exit = "exit.png",
   faultBlue = "fault-blue.png",
