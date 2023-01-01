@@ -28,8 +28,8 @@ module.exports = {
       },
       keyframes: (theme) => ({
         fadeOut: {
-          "0%": { opacity: 0, marginTop: "-20px" },
-          "100%": { opacity: 1, marginTop: 0 },
+          "0%": { opacity: 0, transform: "translateY(-20px)" },
+          "100%": { opacity: 1, marginTop: "translateY(0px)" },
         },
       }),
     },

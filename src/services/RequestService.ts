@@ -3,7 +3,7 @@ import { LoggerService } from "./LoggerService";
 import { TokenService } from "./TokenService";
 const axios = require("axios");
 
-const baseUrl = `${process.env.API_URL}/api/`;
+const baseUrl = `${process.env.API_URL}/`;
 
 const unauthorisedRoutes = ["login", "reset-password"];
 
