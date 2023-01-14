@@ -6,13 +6,14 @@ import { reloadTypes } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { Header } from "../components/Header";
 import { StudioInfoCard } from "../components/StudioInfoCard";
-import { TypesRepository } from "../repositories/TypesRepository";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { AddTypesDialog, TypesDialogType } from "../components/AddTypesDialog";
 import { Status } from "../objects/Status";
 import { StringHelper } from "../helpers/StringHelper";
 import { StatusRepository } from "../repositories/StatusRepository";
+import { CategoryRepository } from "../repositories/CategoryRepository";
+import { LocationRepository } from "../repositories/LocationRepository";
 
 export interface TypesSubmittedData {
   name: string;
@@ -49,10 +50,16 @@ export function SettingsPage() {
 
     if (!data.name) return;
 
-    if (dialogType === TypesDialogType.status) {
-      success = await StatusRepository.createStatus(data.name);
-    } else {
-      success = await TypesRepository.createType(data.name, dialogType);
+    switch (dialogType) {
+      case TypesDialogType.status:
+        success = await StatusRepository.createStatus(data.name);
+        break;
+      case TypesDialogType.category:
+        success = await CategoryRepository.createCategory(data.name);
+        break;
+      case TypesDialogType.location:
+        success = await LocationRepository.createLocation(data.name);
+        break;
     }
 
     if (success) {
@@ -70,10 +77,16 @@ export function SettingsPage() {
     if (!type) return;
     let success = false;
 
-    if (type === TypesDialogType.status) {
-      success = await StatusRepository.deleteStatus(id!);
-    } else {
-      success = await TypesRepository.deleteType(id!, type!);
+    switch (dialogType) {
+      case TypesDialogType.status:
+        success = await StatusRepository.deleteStatus(id);
+        break;
+      case TypesDialogType.category:
+        success = await CategoryRepository.deleteCategory(id);
+        break;
+      case TypesDialogType.location:
+        success = await LocationRepository.deleteLocation(id);
+        break;
     }
 
     if (success) {
