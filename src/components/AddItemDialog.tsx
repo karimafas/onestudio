@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { initialLoad } from "../features/data/dataSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { Category } from "../objects/Category";
-import { ItemDfo, ItemStatus } from "../objects/InventoryItem";
+import { ItemDfo } from "../objects/InventoryItem";
 import { StudioLocation } from "../objects/StudioLocation";
 import { StudioUser } from "../objects/StudioUser";
 import { ItemRepository } from "../repositories/ItemRepository";
@@ -32,7 +32,6 @@ export function AddItemDialog(props: {
     category_id: "",
     owner_id: "",
     notes: "",
-    status: ItemStatus.working,
   };
   const [dfo, setDfo] = useState<ItemDfo>(initialDfo);
   const categories: Category[] = useAppSelector(

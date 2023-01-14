@@ -5,20 +5,7 @@ import { TimelineEvent } from "./TimelineEvent";
 import { StudioUser } from "./StudioUser";
 import { EventRepository } from "../repositories/EventRepository";
 import { AuthRepository } from "../repositories/AuthRepository";
-
-export enum ItemStatus {
-  working = "working",
-  faulty = "faulty",
-}
-
-function stringToStatus(status: "faulty" | "working"): ItemStatus {
-  switch (status) {
-    case "faulty":
-      return ItemStatus.faulty;
-    case "working":
-      return ItemStatus.working;
-  }
-}
+import { Status } from "./Status";
 
 export class InventoryItem {
   id: number;
@@ -37,7 +24,7 @@ export class InventoryItem {
 
   user?: StudioUser;
 
-  status: ItemStatus;
+  status: Status;
 
   events: TimelineEvent[] = [];
 
@@ -77,7 +64,7 @@ export class InventoryItem {
       json["notes"],
       moment(json["created_at"]).toDate(),
       moment(json["updated_at"]).toDate(),
-      stringToStatus(json["status"]),
+      Status.fromJson(json["status"]),
       json["created_by"]
     );
   }
@@ -95,7 +82,7 @@ export class InventoryItem {
     notes: string,
     createdAt: Date,
     updatedAt: Date,
-    status: ItemStatus,
+    status: Status,
     createdBy: number
   ) {
     this.id = id;
@@ -140,7 +127,6 @@ export class InventoryItem {
       category: i.category,
       owner: i.owner,
       notes: i.notes,
-      status: ItemStatus.working,
     };
   }
 }
@@ -156,7 +142,6 @@ export interface ItemDfo {
   category_id: string;
   owner_id: string;
   notes: string;
-  status: ItemStatus;
 }
 
 export interface CsvItemDfo {
@@ -169,7 +154,6 @@ export interface CsvItemDfo {
   category: string;
   owner: string;
   notes: string;
-  status: ItemStatus;
 }
 
 export interface CsvItemDto {
@@ -182,7 +166,6 @@ export interface CsvItemDto {
   category?: string;
   owner?: string;
   notes?: string;
-  status?: ItemStatus;
 }
 
 export interface ItemDto {
@@ -198,6 +181,5 @@ export interface ItemDto {
   notes?: string;
   created_at?: Date;
   updated_at?: Date;
-  status?: ItemStatus;
   created_by?: number;
 }

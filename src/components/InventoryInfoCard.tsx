@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
-import { ItemStatus } from "../objects/InventoryItem";
+import { PrimitiveStatuses } from "../objects/Status";
 
 export function InventoryInfoCard() {
   const navigate = useNavigate();
@@ -12,8 +12,12 @@ export function InventoryInfoCard() {
     price += p;
   }
 
-  const faulty = items.filter((i) => i.status === ItemStatus.faulty).length;
-  const working = items.filter((i) => i.status === ItemStatus.working).length;
+  const faulty = items.filter(
+    (i) => i.status.name === PrimitiveStatuses.faulty
+  ).length;
+  const working = items.filter(
+    (i) => i.status.name === PrimitiveStatuses.working
+  ).length;
 
   return (
     <div
@@ -47,7 +51,6 @@ export function InventoryInfoCard() {
           </span>
         </div>
       </div>
-      
     </div>
   );
 }

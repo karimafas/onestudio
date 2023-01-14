@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { deleteDataItem, reloadItem } from "../features/data/dataSlice";
 import { deleteItems, updateItem } from "../features/data/inventorySlice";
-import { ItemDfo, ItemStatus } from "../objects/InventoryItem";
+import { ItemDfo } from "../objects/InventoryItem";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
 import { StudioUser } from "../objects/StudioUser";
@@ -14,14 +14,12 @@ import { SquareButton } from "../components/SquareButton";
 import { ValidationObject } from "../services/ValidationService";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { CustomSelect } from "../components/CustomSelect";
-import { EventRepository } from "../repositories/EventRepository";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { TimelineEventType } from "../objects/TimelineEvent";
-import { FaultFixModal, FaultFixModalType } from "../components/FaultFixModal";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { openSnack, SnackType } from "../features/data/uiSlice";
 import { Status } from "../objects/Status";
 import { StringHelper } from "../helpers/StringHelper";
+import { StatusRepository } from "../repositories/StatusRepository";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -39,8 +37,6 @@ export function ItemPage() {
   );
   const [disabled, setDisabled] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
-  const [drawer, setDrawer] = useState<boolean>(false);
-  const [loadingTimeline, setLoadingTimeline] = useState<boolean>(true);
   const categories: Category[] = useAppSelector(
     (state) => state.data.categories
   );
@@ -65,42 +61,12 @@ export function ItemPage() {
     category_id: item.categoryId + "",
     owner_id: item.ownerId + "",
     notes: item.notes,
-    status: item.status,
   };
   const [dfo, setDfo] = useState<ItemDfo>(initialState);
   const [confirmDialog, setConfirmDialog] = useState<boolean>(false);
-  const [faultFixModal, setFaultFixModal] = useState<boolean>(false);
-
-  async function init() {
-    if (item && item.events && item.events.length === 0) {
-      await item.initEvents();
-      setLoadingTimeline(false);
-    } else {
-      setLoadingTimeline(false);
-    }
-  }
-
-  useEffect(() => {
-    init();
-  }, []);
 
   function hasChanged() {
     return JSON.stringify(initialState) !== JSON.stringify(dfo);
-  }
-
-  async function _createEvent(notes: string) {
-    const type =
-      item.status === ItemStatus.faulty
-        ? TimelineEventType.fix
-        : TimelineEventType.fault;
-    const success = await EventRepository.createEvent(item.id, notes, type);
-
-    if (success) {
-      await dispatch(reloadItem(item.id));
-      await item.initEvents();
-      forceUpdate();
-      setFaultFixModal(false);
-    }
   }
 
   async function _updateItem(data: ItemDfo) {
@@ -120,13 +86,26 @@ export function ItemPage() {
     } else {
       dispatch(
         openSnack({
-          type: SnackType.success,
+          type: SnackType.error,
           message: "There was an error updating item.",
         })
       );
     }
 
     setDisabled(false);
+  }
+
+  async function _updateStatus(newStatusId: number) {
+    const success = await StatusRepository.changeStatus(newStatusId, item.id);
+
+    if (!success) {
+      dispatch(
+        openSnack({
+          type: SnackType.error,
+          message: "Error updating item status.",
+        })
+      );
+    }
   }
 
   async function _delete() {
@@ -181,7 +160,7 @@ export function ItemPage() {
           setOpen={() => setConfirmDialog(!confirmDialog)}
           onConfirm={() => navigate("/inventory")}
         />
-        <FaultFixModal
+        {/* <FaultFixModal
           open={faultFixModal}
           setOpen={setFaultFixModal}
           callback={_createEvent}
@@ -190,10 +169,10 @@ export function ItemPage() {
               ? FaultFixModalType.fault
               : FaultFixModalType.fix
           }
-        />
+        /> */}
         <Header />
         <div className="flex flex-col w-full h-[85vh] animate-fade">
-          <div className="w-full flex flex-row justify-between mt-6">
+          <div className="w-full flex flex-row justify-between mt-6 items-start">
             <div
               onClick={() => {
                 if (hasChanged()) {
@@ -202,7 +181,7 @@ export function ItemPage() {
                   navigate("/inventory");
                 }
               }}
-              className="w-48 flex flex-row ml-1 items-center cursor-pointer transition-all"
+              className="w-48 flex flex-row ml-1 items-center cursor-pointer mt-3"
             >
               <img
                 className="h-[8.5px] mr-3"
@@ -213,7 +192,7 @@ export function ItemPage() {
               </span>
             </div>
             <div>
-              <div className="flex flex-row justify-end">
+              <div className="flex flex-row justify-end w-[10em]">
                 <SquareButton
                   icon={ImageHelper.image(Images.delete)}
                   onClick={() => setDeleteOpen(true)}
@@ -227,8 +206,12 @@ export function ItemPage() {
               </div>
               <CustomSelect
                 style="mt-3 w-[10em]"
-                onChange={(e: string) => {}}
+                variant="filled"
+                disableTyping
+                onChange={(e: string) => _updateStatus(parseInt(e))}
+                defaultValue={item.status.id + ""}
                 elements={statuses.map((s) => {
+                  console.log(s);
                   return {
                     id: s.id,
                     value: StringHelper.toFirstUpperCase(s.name),

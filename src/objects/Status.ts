@@ -1,3 +1,9 @@
+export enum PrimitiveStatuses {
+  faulty = "faulty",
+  repairing = "repairing",
+  working = "working",
+}
+
 export class Status {
   id: number;
   name: string;

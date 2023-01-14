@@ -63,4 +63,34 @@ export class StatusRepository {
 
     return success;
   }
+
+  public static async changeStatus(
+    newStatusId: number,
+    itemId: number
+  ): Promise<boolean> {
+    let success = false;
+
+    try {
+      const body = {
+        itemId: itemId,
+        statusId: newStatusId,
+      };
+
+      const resp = await RequestService.request(
+        "status/changeStatus",
+        RequestType.post,
+        body
+      );
+
+      if (resp.status === 201) {
+        success = true;
+        LoggerService.log("Changed item status.", resp.data);
+      }
+    } catch (e) {
+      success = false;
+      LoggerService.log("Couldn't change item status.");
+    }
+
+    return success;
+  }
 }

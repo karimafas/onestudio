@@ -24,7 +24,8 @@ module.exports = {
         green: "#98FFA2",
       },
       animation: {
-        fade: "fadeOut 400ms ease-in-out",
+        // fade: "fadeOut 400ms ease-in-out",
+        fade: "",
       },
       keyframes: (theme) => ({
         fadeOut: {
