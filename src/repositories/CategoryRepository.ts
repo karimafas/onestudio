@@ -3,8 +3,8 @@ import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
 
 export class CategoryRepository {
-  public static async getCategories(): Promise<Array<Category>> {
-    let categories: Array<Category> = [];
+  public static async getCategories(): Promise<Category[]> {
+    let categories: Category[] = [];
 
     try {
       const resp = await RequestService.request("category", RequestType.get);

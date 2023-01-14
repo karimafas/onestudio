@@ -3,8 +3,8 @@ import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
 
 export class LocationRepository {
-  public static async getLocations(): Promise<Array<StudioLocation>> {
-    let locations: Array<StudioLocation> = [];
+  public static async getLocations(): Promise<StudioLocation[]> {
+    let locations: StudioLocation[] = [];
 
     try {
       const resp = await RequestService.request("location", RequestType.get);

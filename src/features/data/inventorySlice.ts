@@ -25,7 +25,7 @@ export const updateItem = createAsyncThunk(
 
 export const deleteItems = createAsyncThunk(
   "inventory/deleteItem",
-  async (ids: Array<number>) => {
+  async (ids: number[]) => {
     return await ItemRepository.deleteItems(ids);
   }
 );

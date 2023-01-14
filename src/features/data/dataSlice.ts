@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Category } from "../../objects/Category";
 import { InventoryItem } from "../../objects/InventoryItem";
+import { Status } from "../../objects/Status";
 import { StudioLocation } from "../../objects/StudioLocation";
 import { StudioUser } from "../../objects/StudioUser";
 import { TimelineEvent } from "../../objects/TimelineEvent";
@@ -9,17 +10,19 @@ import { CategoryRepository } from "../../repositories/CategoryRepository";
 import { EventRepository } from "../../repositories/EventRepository";
 import { ItemRepository } from "../../repositories/ItemRepository";
 import { LocationRepository } from "../../repositories/LocationRepository";
+import { StatusRepository } from "../../repositories/StatusRepository";
 
 // Define a type for the slice state
 interface DataState {
   loading: boolean;
   loggedIn: boolean;
   user: StudioUser | undefined;
-  studioUsers: Array<StudioUser>;
-  items: Array<InventoryItem>;
-  categories: Array<Category>;
-  locations: Array<StudioLocation>;
-  events: Array<TimelineEvent>;
+  studioUsers: StudioUser[];
+  items: InventoryItem[];
+  categories: Category[];
+  locations: StudioLocation[];
+  events: TimelineEvent[];
+  statuses: Status[];
 }
 
 // Define the initial state using that type
@@ -32,16 +35,18 @@ const initialState: DataState = {
   categories: [],
   locations: [],
   events: [],
+  statuses: [],
 };
 
 export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
-  const items: Array<InventoryItem> = await ItemRepository.getInventoryItems();
-  const categories: Array<Category> = await CategoryRepository.getCategories();
-  const locations: Array<StudioLocation> =
+  const items: InventoryItem[] = await ItemRepository.getInventoryItems();
+  const categories: Category[] = await CategoryRepository.getCategories();
+  const locations: StudioLocation[] =
     await LocationRepository.getLocations();
-  const studioUsers: Array<StudioUser> = await AuthRepository.getStudioUsers();
+  const studioUsers: StudioUser[] = await AuthRepository.getStudioUsers();
   const user = await AuthRepository.getCurrentUser();
   const events = await EventRepository.getStudioEvents();
+  const statuses = await StatusRepository.getStatuses();
 
   return {
     items: items,
@@ -50,6 +55,7 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
     user: user,
     studioUsers: studioUsers,
     events: events,
+    statuses: statuses,
   };
 });
 
@@ -72,13 +78,14 @@ export const reloadUsers = createAsyncThunk("users/reloadUsers", async () => {
 });
 
 export const reloadTypes = createAsyncThunk("users/reloadTypes", async () => {
-  const categories: Array<Category> = await CategoryRepository.getCategories();
-  const locations: Array<StudioLocation> =
-    await LocationRepository.getLocations();
+  const categories: Category[] = await CategoryRepository.getCategories();
+  const locations: StudioLocation[] = await LocationRepository.getLocations();
+  const statuses: Status[] = await StatusRepository.getStatuses();
 
   return {
     categories: categories,
     locations: locations,
+    statuses: statuses,
   };
 });
 
@@ -155,6 +162,7 @@ export const counterSlice = createSlice({
       state.user = payload.user;
       state.studioUsers = payload.studioUsers;
       state.events = payload.events;
+      state.statuses = payload.statuses;
       state.loading = false;
     });
     builder.addCase(reloadItem.fulfilled, (state: DataState, action) => {
@@ -186,6 +194,7 @@ export const counterSlice = createSlice({
         ...state,
         locations: [...payload.locations],
         categories: [...payload.categories],
+        statuses: [...payload.statuses],
       };
     });
     builder.addCase(reloadUsers.fulfilled, (state: DataState, action) => {

@@ -26,7 +26,7 @@ export function InventoryPage() {
   const [addDialog, setAddDialog] = useState<boolean>(false);
   const [width, height] = useWindowSize();
 
-  async function _delete(ids: Array<number>) {
+  async function _delete(ids: number[]) {
     const success = await dispatch(deleteItems(ids));
 
     if (success) {
@@ -36,7 +36,7 @@ export function InventoryPage() {
     }
   }
 
-  async function _duplicate(ids: Array<number>) {
+  async function _duplicate(ids: number[]) {
     const id = ids[0];
 
     const success = await ItemRepository.duplicateItem(id);

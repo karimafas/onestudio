@@ -10,13 +10,13 @@ import { ItemDfo, ItemStatus } from "../objects/InventoryItem";
 
 export function ItemDrawer(props: { submit: Function }) {
   const [disabled, setDisabled] = useState(false);
-  const categories: Array<Category> = useAppSelector(
+  const categories: Category[] = useAppSelector(
     (state) => state.data.categories
   );
-  const locations: Array<StudioLocation> = useAppSelector(
+  const locations: StudioLocation[] = useAppSelector(
     (state) => state.data.locations
   );
-  const owners: Array<StudioUser> = useAppSelector((state) =>
+  const owners: StudioUser[] = useAppSelector((state) =>
     state.data.studioUsers.filter((u) => u.owner)
   );
   const [priceError, setPriceError] = useState("");

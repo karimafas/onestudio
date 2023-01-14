@@ -39,7 +39,7 @@ export class InventoryItem {
 
   status: ItemStatus;
 
-  events: Array<TimelineEvent> = [];
+  events: TimelineEvent[] = [];
 
   // Internal properties.
   selected: boolean = false;

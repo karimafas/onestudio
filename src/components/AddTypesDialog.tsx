@@ -8,6 +8,7 @@ import { PrimaryButton } from "./PrimaryButton";
 export enum TypesDialogType {
   category = "category",
   location = "location",
+  status = "status",
 }
 
 export function AddTypesDialog(props: {
@@ -23,12 +24,7 @@ export function AddTypesDialog(props: {
   );
 
   function title() {
-    switch (type) {
-      case TypesDialogType.category:
-        return "Create a category";
-      default:
-        return "Create a location";
-    }
+    return `Create a ${type}`;
   }
 
   return (
@@ -82,6 +78,7 @@ export function AddTypesDialog(props: {
               if (!object.isValid) return;
 
               callback({ name });
+              setName("");
             }}
             text="Add"
             backgroundColor="bg-blue_100"

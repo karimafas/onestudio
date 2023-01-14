@@ -9,8 +9,8 @@ import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
 
 export class ItemRepository {
-  public static async getInventoryItems(): Promise<Array<InventoryItem>> {
-    let items: Array<InventoryItem> = [];
+  public static async getInventoryItems(): Promise<InventoryItem[]> {
+    let items: InventoryItem[] = [];
 
     try {
       const resp = await RequestService.request("item", RequestType.get);
@@ -153,7 +153,7 @@ export class ItemRepository {
     return success;
   }
 
-  public static async deleteItems(ids: Array<number>): Promise<boolean> {
+  public static async deleteItems(ids: number[]): Promise<boolean> {
     let success: boolean = false;
     try {
       const body = {

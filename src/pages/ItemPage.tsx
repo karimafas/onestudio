@@ -11,10 +11,6 @@ import { Header } from "../components/Header";
 import { CustomTextField } from "../components/CustomTextField";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { SquareButton } from "../components/SquareButton";
-import {
-  RecentActivity,
-  RecentActivityType,
-} from "../components/RecentActivity";
 import { ValidationObject } from "../services/ValidationService";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { CustomSelect } from "../components/CustomSelect";
@@ -24,6 +20,8 @@ import { TimelineEventType } from "../objects/TimelineEvent";
 import { FaultFixModal, FaultFixModalType } from "../components/FaultFixModal";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { openSnack, SnackType } from "../features/data/uiSlice";
+import { Status } from "../objects/Status";
+import { StringHelper } from "../helpers/StringHelper";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -43,15 +41,16 @@ export function ItemPage() {
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [drawer, setDrawer] = useState<boolean>(false);
   const [loadingTimeline, setLoadingTimeline] = useState<boolean>(true);
-  const categories: Array<Category> = useAppSelector(
+  const categories: Category[] = useAppSelector(
     (state) => state.data.categories
   );
-  const locations: Array<StudioLocation> = useAppSelector(
+  const locations: StudioLocation[] = useAppSelector(
     (state) => state.data.locations
   );
-  const owners: Array<StudioUser> = useAppSelector((state) =>
+  const owners: StudioUser[] = useAppSelector((state) =>
     state.data.studioUsers.filter((u) => u.owner)
   );
+  const statuses: Status[] = useAppSelector((state) => state.data.statuses);
   const [validationObject, setValidationObject] = useState<ValidationObject>(
     ValidationObject.empty()
   );
@@ -213,32 +212,29 @@ export function ItemPage() {
                 Back to inventory
               </span>
             </div>
-            <div className="flex flex-row">
-              <SquareButton
-                icon={ImageHelper.image(Images.delete)}
-                onClick={() => setDeleteOpen(true)}
-              />
-              <div className="mr-4"></div>
-              <PrimaryButton
-                backgroundColor="bg-blue_100"
-                textColor="text-white"
-                icon={
-                  item.status === ItemStatus.faulty
-                    ? ImageHelper.image(Images.fix)
-                    : ImageHelper.image(Images.fault)
-                }
-                text={
-                  item.status === ItemStatus.faulty
-                    ? "Report a fix"
-                    : "Report a fault"
-                }
-                onClick={() => setFaultFixModal(true)}
-              />
-              <div className="mr-4"></div>
-              <PrimaryButton
-                icon={ImageHelper.image(Images.save)}
-                text="Save"
-                onClick={() => handleSubmit()}
+            <div>
+              <div className="flex flex-row justify-end">
+                <SquareButton
+                  icon={ImageHelper.image(Images.delete)}
+                  onClick={() => setDeleteOpen(true)}
+                />
+                <PrimaryButton
+                  style="ml-4"
+                  icon={ImageHelper.image(Images.save)}
+                  text="Save"
+                  onClick={() => handleSubmit()}
+                />
+              </div>
+              <CustomSelect
+                style="mt-3 w-[10em]"
+                onChange={(e: string) => {}}
+                elements={statuses.map((s) => {
+                  return {
+                    id: s.id,
+                    value: StringHelper.toFirstUpperCase(s.name),
+                  };
+                })}
+                validationObject={ValidationObject.empty()}
               />
             </div>
           </div>
@@ -380,16 +376,6 @@ export function ItemPage() {
                 </div>
               </div>
             </div>
-            {loadingTimeline ? (
-              <></>
-            ) : (
-              <div className="h-[75vh] w-1/3 flex flex-row justify-end">
-                <RecentActivity
-                  type={RecentActivityType.item}
-                  events={item.events}
-                />
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -133,8 +133,8 @@ export class AuthRepository {
     return user;
   }
 
-  public static async getStudioUsers(): Promise<Array<StudioUser>> {
-    let users: Array<StudioUser> = [];
+  public static async getStudioUsers(): Promise<StudioUser[]> {
+    let users: StudioUser[] = [];
 
     try {
       const resp = await RequestService.request(

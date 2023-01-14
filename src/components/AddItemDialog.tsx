@@ -35,13 +35,13 @@ export function AddItemDialog(props: {
     status: ItemStatus.working,
   };
   const [dfo, setDfo] = useState<ItemDfo>(initialDfo);
-  const categories: Array<Category> = useAppSelector(
+  const categories: Category[] = useAppSelector(
     (state) => state.data.categories
   );
-  const locations: Array<StudioLocation> = useAppSelector(
+  const locations: StudioLocation[] = useAppSelector(
     (state) => state.data.locations
   );
-  const owners: Array<StudioUser> = useAppSelector((state) =>
+  const owners: StudioUser[] = useAppSelector((state) =>
     state.data.studioUsers.filter((u) => u.owner)
   );
   const { open, setOpen } = props;

@@ -1,10 +1,8 @@
-import { Drawer } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
 import { useState } from "react";
 import { reloadTypes } from "../features/data/dataSlice";
-import { StudioUser } from "../objects/StudioUser";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { Header } from "../components/Header";
 import { StudioInfoCard } from "../components/StudioInfoCard";
@@ -12,6 +10,9 @@ import { TypesRepository } from "../repositories/TypesRepository";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { AddTypesDialog, TypesDialogType } from "../components/AddTypesDialog";
+import { Status } from "../objects/Status";
+import { StringHelper } from "../helpers/StringHelper";
+import { StatusRepository } from "../repositories/StatusRepository";
 
 export interface TypesSubmittedData {
   name: string;
@@ -22,12 +23,13 @@ export function SettingsPage() {
   const [dialogType, setDialogType] = useState<TypesDialogType>(
     TypesDialogType.category
   );
-  const categories: Array<Category> = useAppSelector(
+  const categories: Category[] = useAppSelector(
     (state) => state.data.categories
   );
-  const locations: Array<StudioLocation> = useAppSelector(
+  const locations: StudioLocation[] = useAppSelector(
     (state) => state.data.locations
   );
+  const statuses: Status[] = useAppSelector((state) => state.data.statuses);
   const [deleteOpen, setDeleteOpen] = useState<{
     open: boolean;
     data: { type: TypesDialogType; id: number } | undefined;
@@ -46,7 +48,12 @@ export function SettingsPage() {
     let success = false;
 
     if (!data.name) return;
-    success = await TypesRepository.createType(data.name, dialogType);
+
+    if (dialogType === TypesDialogType.status) {
+      success = await StatusRepository.createStatus(data.name);
+    } else {
+      success = await TypesRepository.createType(data.name, dialogType);
+    }
 
     if (success) {
       await dispatch(reloadTypes());
@@ -59,9 +66,15 @@ export function SettingsPage() {
     id: number | undefined,
     type: TypesDialogType | undefined
   ) {
+    if (!id) return;
+    if (!type) return;
     let success = false;
 
-    success = await TypesRepository.deleteType(id!, type!);
+    if (type === TypesDialogType.status) {
+      success = await StatusRepository.deleteStatus(id!);
+    } else {
+      success = await TypesRepository.deleteType(id!, type!);
+    }
 
     if (success) {
       await dispatch(reloadTypes());
@@ -69,7 +82,7 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="py-3 px-10 w-full h-15">
+    <div className="py-3 px-10 w-full h-15 h-screen overflow-auto">
       <ConfirmDialog
         icon={<DeleteIcon className="mr-1" fontSize="small" />}
         title={`Delete ${deleteOpen.data?.type ?? ""}`}
@@ -162,6 +175,38 @@ export function SettingsPage() {
               </div>
             ))}
           </div>
+        </div>
+        <div className="flex flex-col w-[22rem] h-80 overflow-auto pl-3 mt-12">
+          <div className="flex flex-row items-center justify-between w-full mb-8 pr-4">
+            <span className="text-dark_blue font-bold text-xl">Statuses</span>
+            <img
+              className="w-6 h-6 cursor-pointer"
+              src={ImageHelper.image(Images.addBlue)}
+              onClick={() => _openDrawer(TypesDialogType.status)}
+            />
+          </div>
+          {statuses.map((s) => (
+            <div
+              className="w-72 cursor-pointer group mb-6"
+              key={`status-${s.id}`}
+            >
+              <img
+                className="w-4"
+                src={ImageHelper.image(Images.delete)}
+                onClick={() =>
+                  setDeleteOpen({
+                    open: true,
+                    data: { type: TypesDialogType.status, id: s.id },
+                  })
+                }
+              />
+              <div className="bg-white shadow-lg h-10 w-72 group-hover:translate-x-8 transition-all rounded-lg px-4 flex flex-col justify-center relative mt-[-1.8rem]">
+                <span className="font-medium text-sm text-dark_blue">
+                  {StringHelper.toFirstUpperCase(s.name)}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
