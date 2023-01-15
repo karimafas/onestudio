@@ -17,7 +17,7 @@ import { useWindowSize } from "@react-hook/window-size";
 
 export function DashboardPage() {
   const user = useAppSelector((state) => state.data.user);
-  const events = useAppSelector((state) => state.data.events);
+  const activity = useAppSelector((state) => state.data.activity);
   const navigate = useNavigate();
   const [width, height] = useWindowSize();
 
@@ -57,7 +57,10 @@ export function DashboardPage() {
           </div>
         </div>
         <div className="w-2/5">
-          <RecentActivity type={RecentActivityType.dashboard} events={events} />
+          <RecentActivity
+            type={RecentActivityType.dashboard}
+            activity={activity}
+          />
         </div>
       </div>
     </div>

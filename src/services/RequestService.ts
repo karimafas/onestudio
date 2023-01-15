@@ -5,7 +5,7 @@ const axios = require("axios");
 
 const baseUrl = `${process.env.API_URL}/`;
 
-const unauthorisedRoutes = ["login", "reset-password"];
+const unauthorisedRoutes = ["reset-password"];
 
 export enum RequestType {
   get = "GET",
@@ -29,17 +29,11 @@ export class RequestService {
       response = await performRequest(type, url, body);
     } catch (e: any) {
       const status: number = e.response.status;
-      if (
-        !retried &&
-        url !== "auth/login" &&
-        url !== "auth/refreshToken" &&
-        url !== "auth/logout" &&
-        (status === 403 || status === 401)
-      ) {
+      if (status === 403 || status === 401) {
         LoggerService.log("Token seems expired, refreshing auth token.");
         retried = true;
-        const refreshed = await AuthRepository.refreshToken();
-        if (refreshed) {
+        const success = await AuthRepository.refreshToken();
+        if (success) {
           response = await performRequest(type, url, body);
         } else {
           window.location.reload();

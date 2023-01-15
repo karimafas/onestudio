@@ -2,9 +2,11 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Category } from "../../objects/Category";
 import { InventoryItem } from "../../objects/InventoryItem";
 import { Status } from "../../objects/Status";
+import { StudioActivity } from "../../objects/StudioActivity";
 import { StudioLocation } from "../../objects/StudioLocation";
 import { StudioUser } from "../../objects/StudioUser";
 import { TimelineEvent } from "../../objects/TimelineEvent";
+import { ActivityRepository } from "../../repositories/ActivityRepository";
 import { AuthRepository } from "../../repositories/AuthRepository";
 import { CategoryRepository } from "../../repositories/CategoryRepository";
 import { EventRepository } from "../../repositories/EventRepository";
@@ -23,6 +25,7 @@ interface DataState {
   locations: StudioLocation[];
   events: TimelineEvent[];
   statuses: Status[];
+  activity: StudioActivity[];
 }
 
 // Define the initial state using that type
@@ -36,17 +39,18 @@ const initialState: DataState = {
   locations: [],
   events: [],
   statuses: [],
+  activity: [],
 };
 
 export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
   const items: InventoryItem[] = await ItemRepository.getInventoryItems();
   const categories: Category[] = await CategoryRepository.getCategories();
-  const locations: StudioLocation[] =
-    await LocationRepository.getLocations();
+  const locations: StudioLocation[] = await LocationRepository.getLocations();
   const studioUsers: StudioUser[] = await AuthRepository.getStudioUsers();
   const user = await AuthRepository.getCurrentUser();
   const events = await EventRepository.getStudioEvents();
   const statuses = await StatusRepository.getStatuses();
+  const activity = await ActivityRepository.getStudioActivity();
 
   return {
     items: items,
@@ -56,6 +60,7 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
     studioUsers: studioUsers,
     events: events,
     statuses: statuses,
+    activity: activity,
   };
 });
 
@@ -163,6 +168,7 @@ export const counterSlice = createSlice({
       state.studioUsers = payload.studioUsers;
       state.events = payload.events;
       state.statuses = payload.statuses;
+      state.activity = payload.activity;
       state.loading = false;
     });
     builder.addCase(reloadItem.fulfilled, (state: DataState, action) => {

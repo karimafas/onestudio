@@ -211,7 +211,6 @@ export function ItemPage() {
                 onChange={(e: string) => _updateStatus(parseInt(e))}
                 defaultValue={item.status.id + ""}
                 elements={statuses.map((s) => {
-                  console.log(s);
                   return {
                     id: s.id,
                     value: StringHelper.toFirstUpperCase(s.name),
