@@ -25,12 +25,12 @@ export function AddItemDialog(props: {
   const initialDfo: ItemDfo = {
     manufacturer: "",
     model: "",
-    location_id: "",
+    locationId: "",
     serial: "",
-    m_number: "",
+    mNumber: "",
     price: "",
-    category_id: "",
-    owner_id: "",
+    categoryId: "",
+    ownerId: "",
     notes: "",
   };
   const [dfo, setDfo] = useState<ItemDfo>(initialDfo);
@@ -51,12 +51,12 @@ export function AddItemDialog(props: {
       notNull: [
         "manufacturer",
         "model",
-        "location_id",
+        "locationId",
         "serial",
-        "m_number",
+        "mNumber",
         "price",
-        "category_id",
-        "owner_id",
+        "categoryId",
+        "ownerId",
       ],
       number: ["price"],
     });
@@ -141,10 +141,10 @@ export function AddItemDialog(props: {
             <CustomTextField
               width="w-60"
               placeholder="M-Number"
-              name="m_number"
-              defaultValue={dfo.m_number}
+              name="mNumber"
+              defaultValue={dfo.mNumber}
               validationObject={validationObject}
-              onChange={(v: string) => setDfo({ ...dfo, m_number: v })}
+              onChange={(v: string) => setDfo({ ...dfo, mNumber: v })}
             />
             <CustomSelect
               width="w-60"
@@ -155,10 +155,10 @@ export function AddItemDialog(props: {
                 };
               })}
               placeholder="Location"
-              name="location_id"
-              defaultValue={dfo.location_id}
+              name="locationId"
+              defaultValue={dfo.locationId}
               validationObject={validationObject}
-              onChange={(v: string) => setDfo({ ...dfo, location_id: v })}
+              onChange={(v: string) => setDfo({ ...dfo, locationId: v })}
             />
           </div>
           <div className="flex flex-row w-full justify-between">
@@ -171,11 +171,11 @@ export function AddItemDialog(props: {
                 };
               })}
               placeholder="Category"
-              name="category_id"
-              defaultValue={dfo.category_id}
+              name="categoryId"
+              defaultValue={dfo.categoryId}
               validationObject={validationObject}
               onChange={(v: string) => {
-                setDfo({ ...dfo, category_id: v });
+                setDfo({ ...dfo, categoryId: v });
               }}
             />
             <CustomSelect
@@ -187,10 +187,10 @@ export function AddItemDialog(props: {
                 };
               })}
               placeholder="Owner"
-              name="owner_id"
-              defaultValue={dfo.owner_id}
+              name="ownerId"
+              defaultValue={dfo.ownerId}
               validationObject={validationObject}
-              onChange={(v: string) => setDfo({ ...dfo, owner_id: v })}
+              onChange={(v: string) => setDfo({ ...dfo, ownerId: v })}
             />
           </div>
           <CustomTextField

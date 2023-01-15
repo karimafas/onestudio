@@ -54,12 +54,12 @@ export function ItemPage() {
     id: item.id,
     manufacturer: item.manufacturer,
     model: item.model,
-    location_id: item.locationId + "",
+    locationId: item.locationId + "",
     serial: item.serial,
-    m_number: item.mNumber,
+    mNumber: item.mNumber,
     price: item.price + "",
-    category_id: item.categoryId + "",
-    owner_id: item.ownerId + "",
+    categoryId: item.categoryId + "",
+    ownerId: item.ownerId + "",
     notes: item.notes,
   };
   const [dfo, setDfo] = useState<ItemDfo>(initialState);
@@ -122,12 +122,12 @@ export function ItemPage() {
       notNull: [
         "manufacturer",
         "model",
-        "location_id",
+        "locationId",
         "serial",
-        "m_number",
+        "mNumber",
         "price",
-        "category_id",
-        "owner_id",
+        "categoryId",
+        "ownerId",
       ],
       number: ["price"],
     });
@@ -217,6 +217,7 @@ export function ItemPage() {
                   };
                 })}
                 validationObject={ValidationObject.empty()}
+                centerText
               />
             </div>
           </div>
@@ -274,9 +275,9 @@ export function ItemPage() {
                   <CustomTextField
                     disabled={disabled}
                     validationObject={validationObject}
-                    defaultValue={`${dfo.m_number}`}
-                    name="m_number"
-                    onChange={(v: string) => setDfo({ ...dfo, m_number: v })}
+                    defaultValue={`${dfo.mNumber}`}
+                    name="mNumber"
+                    onChange={(v: string) => setDfo({ ...dfo, mNumber: v })}
                   />
                 </div>
                 <div className="flex flex-row justify-between items-start">
@@ -306,12 +307,12 @@ export function ItemPage() {
                     })}
                     disabled={disabled}
                     validationObject={validationObject}
-                    defaultValue={`${dfo.location_id}`}
-                    name="location_id"
+                    defaultValue={`${dfo.locationId}`}
+                    name="locationId"
                     onChange={(v: string) => {
-                      setDfo({ ...dfo, location_id: v });
+                      setDfo({ ...dfo, locationId: v });
                     }}
-                    key={`location-${dfo.location_id}`}
+                    key={`location-${dfo.locationId}`}
                   />
                 </div>
                 <div className="flex flex-row justify-between items-start">
@@ -327,12 +328,12 @@ export function ItemPage() {
                     })}
                     disabled={disabled}
                     validationObject={validationObject}
-                    defaultValue={`${dfo.category_id}`}
-                    name="category_id"
+                    defaultValue={`${dfo.categoryId}`}
+                    name="categoryId"
                     onChange={(v: string) => {
-                      setDfo({ ...dfo, category_id: v });
+                      setDfo({ ...dfo, categoryId: v });
                     }}
-                    key={`category-${dfo.location_id}`}
+                    key={`category-${dfo.categoryId}`}
                   />
                 </div>
                 <div className="flex flex-row justify-between items-start">
@@ -348,12 +349,12 @@ export function ItemPage() {
                     })}
                     disabled={disabled}
                     validationObject={validationObject}
-                    defaultValue={`${dfo.owner_id}`}
-                    name="owner_id"
+                    defaultValue={`${dfo.ownerId}`}
+                    name="ownerId"
                     onChange={(v: string) => {
-                      setDfo({ ...dfo, owner_id: v });
+                      setDfo({ ...dfo, ownerId: v });
                     }}
-                    key={`owner-${dfo.location_id}`}
+                    key={`owner-${dfo.ownerId}`}
                   />
                 </div>
               </div>

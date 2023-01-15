@@ -14,6 +14,6 @@ export class Status {
   }
 
   static fromJson(json: { [key: string]: any }) {
-    return new Status(json["id"], json["name"]);
+    return new Status(json.id, json.name);
   }
 }

@@ -18,7 +18,7 @@ export class AppConstants {
     new AppColumn("location", true),
     new AppColumn("category", true),
     new AppColumn("owner", true),
-    new AppColumn("m_number", true),
+    new AppColumn("mNumber", true),
     new AppColumn("serial", true),
     new AppColumn("notes", false),
   ];

@@ -21,11 +21,11 @@ export class StudioUser {
 
   static fromJson(json: { [key: string]: any }) {
     return new StudioUser(
-      json["id"],
-      json["first_name"],
-      json["last_name"],
-      json["email"],
-      json["owner"]
+      json.id,
+      json.firstName,
+      json.lastName,
+      json.email,
+      json.owner
     );
   }
 }

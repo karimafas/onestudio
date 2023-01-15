@@ -26,10 +26,10 @@ export class StudioActivity {
 
   static fromJson(json: { [key: string]: any }): StudioActivity {
     return new StudioActivity(
-      json["type"],
-      json["itemId"],
-      json["userId"],
-      json["createdAt"]
+      json.type,
+      json.itemId,
+      json.userId,
+      json.createdAt
     );
   }
 }

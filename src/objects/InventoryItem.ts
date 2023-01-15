@@ -20,7 +20,7 @@ export class InventoryItem {
   notes: string;
   createdAt: Date;
   updatedAt: Date;
-  createdBy: number;
+  userId: number;
 
   user?: StudioUser;
 
@@ -47,25 +47,25 @@ export class InventoryItem {
   }
 
   public async loadUser() {
-    this.user = await AuthRepository.getUser(this.createdBy);
+    this.user = await AuthRepository.getUser(this.userId);
   }
 
   static fromJson(json: { [key: string]: any }) {
     return new InventoryItem(
-      json["id"],
-      json["manufacturer"],
-      json["model"],
-      json["location_id"],
-      json["serial"],
-      json["m_number"],
-      json["price"],
-      json["category_id"],
-      json["owner_id"],
-      json["notes"],
-      moment(json["created_at"]).toDate(),
-      moment(json["updated_at"]).toDate(),
-      Status.fromJson(json["status"]),
-      json["created_by"]
+      json.id,
+      json.manufacturer,
+      json.model,
+      json.locationId,
+      json.serial,
+      json.mNumber,
+      json.price,
+      json.categoryId,
+      json.ownerId,
+      json.notes,
+      moment(json.createdAt).toDate(),
+      moment(json.updatedAt).toDate(),
+      Status.fromJson(json.status),
+      json.userId
     );
   }
 
@@ -83,7 +83,7 @@ export class InventoryItem {
     createdAt: Date,
     updatedAt: Date,
     status: Status,
-    createdBy: number
+    userId: number
   ) {
     this.id = id;
     this.manufacturer = manufacturer;
@@ -98,21 +98,21 @@ export class InventoryItem {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.status = status;
-    this.createdBy = createdBy;
+    this.userId = userId;
   }
 
   static fromDfo(i: ItemDfo): ItemDto {
     return {
       manufacturer: i.manufacturer,
       model: i.model,
-      location_id: parseInt(i.location_id),
+      locationId: parseInt(i.locationId),
       serial: i.serial,
-      m_number: i.m_number,
+      mNumber: i.mNumber,
       price: parseFloat(i.price),
-      category_id: parseInt(i.category_id),
-      owner_id: parseInt(i.owner_id),
+      categoryId: parseInt(i.categoryId),
+      ownerId: parseInt(i.ownerId),
       notes: i.notes,
-      updated_at: new Date(),
+      updatedAt: new Date(),
     };
   }
 
@@ -122,7 +122,7 @@ export class InventoryItem {
       model: i.model,
       location: i.location,
       serial: i.serial,
-      m_number: i.m_number,
+      mNumber: i.mNumber,
       price: parseFloat(i.price),
       category: i.category,
       owner: i.owner,
@@ -135,12 +135,12 @@ export interface ItemDfo {
   id?: number;
   manufacturer: string;
   model: string;
-  location_id: string;
+  locationId: string;
   serial: string;
-  m_number: string;
+  mNumber: string;
   price: string;
-  category_id: string;
-  owner_id: string;
+  categoryId: string;
+  ownerId: string;
   notes: string;
 }
 
@@ -149,7 +149,7 @@ export interface CsvItemDfo {
   model: string;
   location: string;
   serial: string;
-  m_number: string;
+  mNumber: string;
   price: string;
   category: string;
   owner: string;
@@ -161,7 +161,7 @@ export interface CsvItemDto {
   model?: string;
   location?: string;
   serial?: string;
-  m_number?: string;
+  mNumber?: string;
   price?: number;
   category?: string;
   owner?: string;
@@ -172,14 +172,14 @@ export interface ItemDto {
   id?: number;
   manufacturer?: string;
   model?: string;
-  location_id?: number;
+  locationId?: number;
   serial?: string;
-  m_number?: string;
+  mNumber?: string;
   price?: number;
-  category_id?: number;
-  owner_id?: number;
+  categoryId?: number;
+  ownerId?: number;
   notes?: string;
-  created_at?: Date;
-  updated_at?: Date;
-  created_by?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  userId?: number;
 }

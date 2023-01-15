@@ -52,13 +52,13 @@ export class TimelineEvent {
 
   static fromJson(json: { [key: string]: any }) {
     return new TimelineEvent(
-      json["id"],
-      json["user_id"],
-      json["user_name"],
-      moment(json["created_at"]).toDate(),
-      stringToType(json["type"]),
-      json["notes"] ?? "",
-      json["item_id"]
+      json.id,
+      json.userId,
+      json.userName,
+      moment(json.createdAt).toDate(),
+      stringToType(json.type),
+      json.notes ?? "",
+      json.itemId
     );
   }
 }

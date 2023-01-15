@@ -8,6 +8,6 @@ export class StudioLocation {
   }
 
   static fromJson(json: { [key: string]: any }) {
-    return new StudioLocation(json["id"], json["name"]);
+    return new StudioLocation(json.id, json.name);
   }
 }
