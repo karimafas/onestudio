@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../app/hooks";
+import { StringHelper } from "../helpers/StringHelper";
 import { PrimitiveStatuses } from "../objects/Status";
 
 export interface SelectElement {
@@ -39,7 +40,6 @@ export function StatusSelect(props: {
   useEffect(() => {
     if (hasChanged) {
       props.onChange(selectedId?.toString() ?? "");
-      debugger;
       setHasChanged(false);
     }
   }, [selectedId, hasChanged]);
@@ -87,7 +87,9 @@ export function StatusSelect(props: {
     }
 
     return {
-      title: filteredElements.filter((e) => e.id === id)[0].value,
+      title: StringHelper.toFirstUpperCase(
+        statuses.filter((s) => s.id === id)[0].displayName ?? ""
+      ),
       hasFlag: true,
       flagColor: color!,
     };

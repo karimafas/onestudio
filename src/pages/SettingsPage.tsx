@@ -215,7 +215,7 @@ export function SettingsPage() {
               />
               <div className="bg-white shadow-lg h-10 w-72 group-hover:translate-x-8 transition-all rounded-lg px-4 flex flex-col justify-center relative mt-[-1.8rem]">
                 <span className="font-medium text-sm text-dark_blue">
-                  {StringHelper.toFirstUpperCase(s.name)}
+                  {StringHelper.toFirstUpperCase(s.displayName ?? "")}
                 </span>
               </div>
             </div>

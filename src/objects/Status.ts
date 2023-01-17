@@ -7,11 +7,13 @@ export enum PrimitiveStatuses {
 export class Status {
   id: number;
   name: string;
+  displayName?: string;
   primitive: boolean;
 
   constructor(id: number, name: string, primitive: boolean) {
     this.id = id;
     this.name = name;
+    this.displayName = name === "repairing" ? "in repair" : name;
     this.primitive = primitive;
   }
 

@@ -73,7 +73,6 @@ export function CustomSelect(props: {
   useEffect(() => {
     if (hasChanged) {
       props.onChange(selectedId?.toString() ?? "");
-      debugger;
       setHasChanged(false);
     }
   }, [selectedId, hasChanged]);
