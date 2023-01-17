@@ -12,6 +12,7 @@ export enum RequestType {
   post = "POST",
   put = "PUT",
   delete = "DELETE",
+  patch = "PATCH",
 }
 
 export class RequestService {
@@ -61,21 +62,21 @@ async function performRequest(type: RequestType, url: string, body: any) {
       return await axios.get(baseUrl + url, {
         headers,
       });
-      break;
     case RequestType.post:
       return await axios.post(baseUrl + url, body, {
         headers,
       });
-      break;
     case RequestType.put:
       return await axios.put(baseUrl + url, body, {
         headers,
       });
-      break;
+    case RequestType.patch:
+      return await axios.patch(baseUrl + url, body, {
+        headers,
+      });
     case RequestType.delete:
       return await axios.delete(baseUrl + url, {
         headers,
       });
-      break;
   }
 }

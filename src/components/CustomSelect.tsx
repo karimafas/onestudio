@@ -25,6 +25,8 @@ export function CustomSelect(props: {
   style?: string;
   placeholder?: string;
   centerText?: boolean;
+  flag?: boolean;
+  flagColor?: string;
 }) {
   let valid = true;
 
@@ -61,7 +63,7 @@ export function CustomSelect(props: {
   const filteredElements = props.elements.filter((e) =>
     e.value.toLowerCase().includes(search.toLowerCase())
   );
-  const [changedResult, setChangedResult] = useState<number>(0);
+  const [hasChanged, setHasChanged] = useState<boolean>(false);
 
   const [selectedId, setSelectedId] = useState<number | undefined>(
     props.defaultValue ? parseInt(props.defaultValue) : undefined
@@ -69,8 +71,12 @@ export function CustomSelect(props: {
   let timeout: any;
 
   useEffect(() => {
-    props.onChange(selectedId?.toString() ?? "");
-  }, [selectedId, changedResult]);
+    if (hasChanged) {
+      props.onChange(selectedId?.toString() ?? "");
+      debugger;
+      setHasChanged(false);
+    }
+  }, [selectedId, hasChanged]);
 
   function getVal(): string {
     return !selectedId
@@ -107,6 +113,7 @@ export function CustomSelect(props: {
             onChange={(e) => {
               const v: string = e.target.value;
               setSelectedId(undefined);
+              setHasChanged(true);
               setSearch(v);
             }}
             name={props.name}
@@ -136,7 +143,7 @@ export function CustomSelect(props: {
           {filteredElements.map((e) => (
             <div
               onClick={() => {
-                setChangedResult(changedResult + 1);
+                setHasChanged(true);
                 setSelectedId(e.id);
               }}
               key={`${e.id}-${e.value}`}

@@ -30,12 +30,14 @@ export function CustomSnackBar() {
     }
   }
 
+  if (!open) return <></>;
+
   return (
     <div
       className={`w-full h-[100vh]
       } relative mt-[-100vh] flex flex-col justify-end align-start ${
         open ? "opacity-100" : "opacity-0"
-      } transition-all duration-500 ${
+      } transition-all duration-500 delay-500 ${
         open ? "translate-x-0" : "-translate-x-12"
       } pointer-events-none`}
     >

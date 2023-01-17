@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { deleteDataItem, reloadItem } from "../features/data/dataSlice";
+import {
+  deleteDataItem,
+  loadItemComments,
+  reloadItem,
+} from "../features/data/dataSlice";
 import { deleteItems, updateItem } from "../features/data/inventorySlice";
 import { ItemDfo } from "../objects/InventoryItem";
-import { Category } from "../objects/Category";
-import { StudioLocation } from "../objects/StudioLocation";
-import { StudioUser } from "../objects/StudioUser";
 import { Header } from "../components/Header";
-import { CustomTextField } from "../components/CustomTextField";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { SquareButton } from "../components/SquareButton";
 import { ValidationObject } from "../services/ValidationService";
@@ -20,6 +20,9 @@ import { openSnack, SnackType } from "../features/data/uiSlice";
 import { Status } from "../objects/Status";
 import { StringHelper } from "../helpers/StringHelper";
 import { StatusRepository } from "../repositories/StatusRepository";
+import { ItemForm } from "../components/ItemForm";
+import { CommentSection } from "../components/CommentSection";
+import { StatusSelect } from "../components/StatusSelect";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -37,15 +40,6 @@ export function ItemPage() {
   );
   const [disabled, setDisabled] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
-  const categories: Category[] = useAppSelector(
-    (state) => state.data.categories
-  );
-  const locations: StudioLocation[] = useAppSelector(
-    (state) => state.data.locations
-  );
-  const owners: StudioUser[] = useAppSelector((state) =>
-    state.data.studioUsers.filter((u) => u.owner)
-  );
   const statuses: Status[] = useAppSelector((state) => state.data.statuses);
   const [validationObject, setValidationObject] = useState<ValidationObject>(
     ValidationObject.empty()
@@ -64,6 +58,10 @@ export function ItemPage() {
   };
   const [dfo, setDfo] = useState<ItemDfo>(initialState);
   const [confirmDialog, setConfirmDialog] = useState<boolean>(false);
+
+  useEffect(() => {
+    dispatch(loadItemComments(item));
+  }, []);
 
   function hasChanged() {
     return JSON.stringify(initialState) !== JSON.stringify(dfo);
@@ -143,7 +141,7 @@ export function ItemPage() {
     return <div></div>;
   } else {
     return (
-      <div className="py-3 px-10 w-full h-[100vh]">
+      <div className="py-3 px-10 w-full h-[100vh] h-screen overflow-auto">
         <ConfirmDialog
           icon={<DeleteIcon className="mr-1" fontSize="small" />}
           title="Delete Item"
@@ -160,16 +158,6 @@ export function ItemPage() {
           setOpen={() => setConfirmDialog(!confirmDialog)}
           onConfirm={() => navigate("/inventory")}
         />
-        {/* <FaultFixModal
-          open={faultFixModal}
-          setOpen={setFaultFixModal}
-          callback={_createEvent}
-          type={
-            item.status === ItemStatus.working
-              ? FaultFixModalType.fault
-              : FaultFixModalType.fix
-          }
-        /> */}
         <Header />
         <div className="flex flex-col w-full h-[85vh] animate-fade">
           <div className="w-full flex flex-row justify-between mt-6 items-start">
@@ -204,10 +192,8 @@ export function ItemPage() {
                   onClick={() => handleSubmit()}
                 />
               </div>
-              <CustomSelect
+              <StatusSelect
                 style="mt-3 w-[10em]"
-                variant="filled"
-                disableTyping
                 onChange={(e: string) => _updateStatus(parseInt(e))}
                 defaultValue={item.status.id + ""}
                 elements={statuses.map((s) => {
@@ -216,149 +202,20 @@ export function ItemPage() {
                     value: StringHelper.toFirstUpperCase(s.name),
                   };
                 })}
-                validationObject={ValidationObject.empty()}
-                centerText
               />
             </div>
           </div>
-          <div className="flex flex-row h-full justify-between">
-            <div className="flex flex-col h-full">
-              <CustomTextField
-                placeholder="Manufacturer"
-                disabled={disabled}
-                validationObject={validationObject}
-                fontSize="text-xl"
-                height="h-10"
-                defaultValue={dfo.manufacturer}
-                name="manufacturer"
-                onChange={(v: string) => setDfo({ ...dfo, manufacturer: v })}
-              />
-              <CustomTextField
-                placeholder="Model"
-                disabled={disabled}
-                validationObject={validationObject}
-                fontSize="text-lg"
-                defaultValue={dfo.model}
-                name="model"
-                onChange={(v: string) => setDfo({ ...dfo, model: v })}
-              />
-              <div className="w-80 mt-4">
-                <div className="flex flex-row justify-between items-start">
-                  <span className="text-light_blue font-semibold ml-1 mt-[5px]">
-                    Price
-                  </span>
-                  <CustomTextField
-                    disabled={disabled}
-                    validationObject={validationObject}
-                    defaultValue={dfo.price}
-                    name="price"
-                    onChange={(v: string) => setDfo({ ...dfo, price: v })}
-                    prefix="£"
-                  />
-                </div>
-                <div className="flex flex-row justify-between items-start">
-                  <span className="text-light_blue font-semibold ml-1 mt-[5px]">
-                    Serial
-                  </span>
-                  <CustomTextField
-                    disabled={disabled}
-                    validationObject={validationObject}
-                    defaultValue={`${dfo.serial}`}
-                    name="serial"
-                    onChange={(v: string) => setDfo({ ...dfo, serial: v })}
-                  />
-                </div>
-                <div className="flex flex-row justify-between items-start">
-                  <span className="text-light_blue font-semibold ml-1 mt-[5px]">
-                    M-Number
-                  </span>
-                  <CustomTextField
-                    disabled={disabled}
-                    validationObject={validationObject}
-                    defaultValue={`${dfo.mNumber}`}
-                    name="mNumber"
-                    onChange={(v: string) => setDfo({ ...dfo, mNumber: v })}
-                  />
-                </div>
-                <div className="flex flex-row justify-between items-start">
-                  <span className="text-light_blue font-semibold ml-1 mt-[5px]">
-                    Notes
-                  </span>
-                  <CustomTextField
-                    disabled={disabled}
-                    validationObject={validationObject}
-                    name="notes"
-                    defaultValue={`${dfo.notes}`}
-                    onChange={(v: string) => setDfo({ ...dfo, notes: v })}
-                  />
-                </div>
-              </div>
-              <div className="w-80 mt-4">
-                <div className="flex flex-row justify-between items-start">
-                  <span className="text-light_blue font-semibold ml-1 mt-[5px]">
-                    Location
-                  </span>
-                  <CustomSelect
-                    elements={locations.map((l) => {
-                      return {
-                        id: l.id,
-                        value: l.name,
-                      };
-                    })}
-                    disabled={disabled}
-                    validationObject={validationObject}
-                    defaultValue={`${dfo.locationId}`}
-                    name="locationId"
-                    onChange={(v: string) => {
-                      setDfo({ ...dfo, locationId: v });
-                    }}
-                    key={`location-${dfo.locationId}`}
-                  />
-                </div>
-                <div className="flex flex-row justify-between items-start">
-                  <span className="text-light_blue font-semibold ml-1 mt-[5px]">
-                    Category
-                  </span>
-                  <CustomSelect
-                    elements={categories.map((c) => {
-                      return {
-                        id: c.id,
-                        value: c.name,
-                      };
-                    })}
-                    disabled={disabled}
-                    validationObject={validationObject}
-                    defaultValue={`${dfo.categoryId}`}
-                    name="categoryId"
-                    onChange={(v: string) => {
-                      setDfo({ ...dfo, categoryId: v });
-                    }}
-                    key={`category-${dfo.categoryId}`}
-                  />
-                </div>
-                <div className="flex flex-row justify-between items-start">
-                  <span className="text-light_blue font-semibold ml-1 mt-[5px]">
-                    Owner
-                  </span>
-                  <CustomSelect
-                    elements={owners.map((o) => {
-                      return {
-                        id: o.id,
-                        value: `${o.firstName} ${o.lastName}`,
-                      };
-                    })}
-                    disabled={disabled}
-                    validationObject={validationObject}
-                    defaultValue={`${dfo.ownerId}`}
-                    name="ownerId"
-                    onChange={(v: string) => {
-                      setDfo({ ...dfo, ownerId: v });
-                    }}
-                    key={`owner-${dfo.ownerId}`}
-                  />
-                </div>
-              </div>
-            </div>
+          <ItemForm
+            disabled={disabled}
+            validationObject={validationObject}
+            setDfo={setDfo}
+            dfo={dfo}
+          />
+          <div className="w-[30em] mt-10">
+            <span className="text-dark_blue text-sm font-semibold">
+              Activity
+            </span>
+            <CommentSection item={item} />
           </div>
         </div>
       </div>

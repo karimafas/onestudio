@@ -64,25 +64,29 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
   };
 });
 
-export const loadItemEvents = createAsyncThunk(
-  "users/loadItemEvents",
+export const loadItemComments = createAsyncThunk(
+  "data/loadItemComments",
   async (item: InventoryItem) => {
-    return item;
+    const i = item;
+    await i.loadComments();
+    return i;
   }
 );
 
 export const reloadItem = createAsyncThunk(
-  "users/reloadItem",
+  "data/reloadItem",
   async (itemId: number) => {
-    return await ItemRepository.getInventoryItem(itemId);
+    const i = await ItemRepository.getInventoryItem(itemId);
+    await i?.loadComments();
+    return i;
   }
 );
 
-export const reloadUsers = createAsyncThunk("users/reloadUsers", async () => {
+export const reloadUsers = createAsyncThunk("data/reloadUsers", async () => {
   return await AuthRepository.getStudioUsers();
 });
 
-export const reloadTypes = createAsyncThunk("users/reloadTypes", async () => {
+export const reloadTypes = createAsyncThunk("data/reloadTypes", async () => {
   const categories: Category[] = await CategoryRepository.getCategories();
   const locations: StudioLocation[] = await LocationRepository.getLocations();
   const statuses: Status[] = await StatusRepository.getStatuses();
@@ -105,57 +109,6 @@ export const counterSlice = createSlice({
       changedItems.splice(index, 1);
 
       Object.assign(state.items, changedItems);
-    },
-    replaceDataItem: (
-      state: DataState,
-      action: PayloadAction<InventoryItem>
-    ) => {
-      const item = action.payload;
-      const index = state.items.map((i) => i.id).indexOf(item.id);
-      Object.assign(state.items[index], item);
-      return {
-        ...state,
-        items: [...state.items],
-      };
-    },
-    selectItem: (
-      state: DataState,
-      action: PayloadAction<{
-        id?: number;
-        value?: boolean;
-        selectAll: boolean;
-      }>
-    ) => {
-      if (!action.payload.selectAll) {
-        const id = action.payload.id!;
-        const value = action.payload.value;
-
-        const changedItem = state.items.filter((i) => i.id === id)[0];
-        changedItem.selected = value!;
-
-        const index = state.items.map((i) => i.id).indexOf(id);
-        Object.assign(state.items[index], changedItem);
-        return {
-          ...state,
-          items: [...state.items],
-        };
-      } else {
-        const changedItems = state.items;
-        const allItemsAreSelected =
-          state.items.filter((i) => i.selected).length === state.items.length;
-
-        if (allItemsAreSelected) {
-          state.items.map((i) => (i.selected = false));
-        } else {
-          state.items.map((i) => (i.selected = true));
-        }
-
-        Object.assign(state.items, changedItems);
-        return {
-          ...state,
-          items: [...state.items],
-        };
-      }
     },
   },
   extraReducers: (builder) => {
@@ -184,10 +137,14 @@ export const counterSlice = createSlice({
         items: [...state.items],
       };
     });
-    builder.addCase(loadItemEvents.fulfilled, (state: DataState, action) => {
-      const payload: InventoryItem = action.payload;
-      const index = state.items.map((i) => i.id).indexOf(payload.id);
-      Object.assign(state.items[index], payload);
+    builder.addCase(loadItemComments.fulfilled, (state: DataState, action) => {
+      const payload: InventoryItem | undefined = action.payload;
+
+      if (payload) {
+        const index = state.items.map((i) => i.id).indexOf(payload.id);
+        Object.assign(state.items[index], payload);
+      }
+
       return {
         ...state,
         items: [...state.items],
@@ -210,7 +167,6 @@ export const counterSlice = createSlice({
   },
 });
 
-export const { selectItem, deleteDataItem, replaceDataItem } =
-  counterSlice.actions;
+export const { deleteDataItem } = counterSlice.actions;
 
 export default counterSlice.reducer;

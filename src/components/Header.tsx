@@ -2,6 +2,7 @@ import moment from "moment";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { unauthorise } from "../features/data/authSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { StringHelper } from "../helpers/StringHelper";
 import { AuthRepository } from "../repositories/AuthRepository";
 
 export function Header() {
@@ -13,10 +14,6 @@ export function Header() {
     if (success) dispatch(unauthorise());
   }
 
-  const initials = `${user?.firstName?.substring(0, 1) ?? ""}${
-    user?.lastName?.substring(0, 1) ?? ""
-  }`.toUpperCase();
-
   return (
     <div className="flex flex-col">
       <div className="w-full h-20 flex flex-row items-center justify-between">
@@ -27,7 +24,9 @@ export function Header() {
           </span>
         </div>
         <div className="group h-12 w-12 rounded-full bg-blue cursor-pointer flex flex-row items-center justify-center">
-          <span className="text-lg text-white font-medium">{initials}</span>
+          <span className="text-lg text-white font-medium">
+            {StringHelper.userInitials(user)}
+          </span>
           <div className="h-[9rem] w-28 flex flex-col justify-end absolute mr-10">
             <div
               onClick={() => _logout()}

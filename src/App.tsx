@@ -38,7 +38,7 @@ function AppBody() {
 
   return (
     <>
-      <div className="relative mt-[-100vh] flex flex-row overflow-hidden">
+      <div className="relative mt-[-100vh] flex flex-row overflow-hidden pointer-events-auto">
         <div>
           {AppConstants.hasSidebar(location.pathname) ? <Sidebar /> : <></>}
         </div>

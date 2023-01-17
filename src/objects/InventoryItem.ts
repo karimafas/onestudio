@@ -6,6 +6,8 @@ import { StudioUser } from "./StudioUser";
 import { EventRepository } from "../repositories/EventRepository";
 import { AuthRepository } from "../repositories/AuthRepository";
 import { Status } from "./Status";
+import { Comment } from "./Comment";
+import { CommentRepository } from "../repositories/CommentRepository";
 
 export class InventoryItem {
   id: number;
@@ -27,8 +29,8 @@ export class InventoryItem {
   status: Status;
 
   events: TimelineEvent[] = [];
+  comments: Comment[] = [];
 
-  // Internal properties.
   selected: boolean = false;
 
   public get createdAtStr(): string {
@@ -46,8 +48,9 @@ export class InventoryItem {
     this.events = await EventRepository.getItemEvents(this.id);
   }
 
-  public async loadUser() {
-    this.user = await AuthRepository.getUser(this.userId);
+  public async loadComments() {
+    LoggerService.log(`Loading comments for item ${this.id}`);
+    this.comments = await CommentRepository.getItemComments(this.id);
   }
 
   static fromJson(json: { [key: string]: any }) {
