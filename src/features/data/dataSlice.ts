@@ -244,10 +244,6 @@ export const counterSlice = createSlice({
   },
 });
 
-function insertItem() {
-
-}
-
 export const { deleteDataItem } = counterSlice.actions;
 
 export default counterSlice.reducer;
