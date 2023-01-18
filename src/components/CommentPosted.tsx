@@ -2,7 +2,8 @@ import { Tooltip } from "@mui/material";
 import moment from "moment";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { loadItemComments } from "../features/data/dataSlice";
+import { loadItemComments, updateComment } from "../features/data/dataSlice";
+import { openSnack, SnackType } from "../features/data/uiSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { Comment } from "../objects/Comment";
 import { InventoryItem } from "../objects/InventoryItem";
@@ -27,11 +28,20 @@ export function CommentPosted(props: {
   const [editing, setEditing] = useState<boolean>(false);
   const [body, setBody] = useState<string>(comment.body);
   const isPoster = loggedInUser && loggedInUser.id === user.id;
-  async function _save() {
-    const success = await CommentRepository.updateComment(comment.id, body);
-    if (!success) return;
+
+  async function _update() {
+    const result = await dispatch(
+      updateComment({ commentId: comment.id, body: body })
+    ).unwrap();
+
+    if (!result.success)
+      return dispatch(
+        openSnack({
+          message: "There was an issue updating comment.",
+          type: SnackType.error,
+        })
+      );
     setEditing(false);
-    dispatch(loadItemComments(props.item));
   }
 
   return (
@@ -110,7 +120,7 @@ export function CommentPosted(props: {
                 />
                 <PrimaryButton
                   size="small"
-                  onClick={_save}
+                  onClick={_update}
                   text="Save"
                   backgroundColor="bg-blue"
                   textColor="text-white"

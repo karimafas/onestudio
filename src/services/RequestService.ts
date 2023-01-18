@@ -29,16 +29,13 @@ export class RequestService {
     try {
       response = await performRequest(type, url, body);
     } catch (e: any) {
-      const status: number = e.response.status;
-      if (status === 403 || status === 401) {
-        LoggerService.log("Token seems expired, refreshing auth token.");
-        retried = true;
-        const success = await AuthRepository.refreshToken();
-        if (success) {
-          response = await performRequest(type, url, body);
-        } else {
-          window.location.reload();
-        }
+      if (url.includes("refreshToken")) return;
+
+      LoggerService.log("Token seems expired, refreshing auth token.");
+      retried = true;
+      const success = await AuthRepository.refreshToken();
+      if (success) {
+        response = await performRequest(type, url, body);
       }
     }
 

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { ActivityType, StudioActivity } from "../objects/StudioActivity";
-import { TimelineEvent } from "../objects/TimelineEvent";
 
 export enum RecentActivityType {
   dashboard,
@@ -50,7 +49,7 @@ export function RecentActivity(props: {
               ? "an inventory"
               : "this"
           }  item.`,
-          image: ImageHelper.image(Images.edit),
+          image: ImageHelper.image(Images.duplicateWhite),
         };
       case ActivityType.comment:
         return {
@@ -59,7 +58,7 @@ export function RecentActivity(props: {
               ? "an inventory"
               : "this"
           }  item.`,
-          image: ImageHelper.image(Images.edit),
+          image: ImageHelper.image(Images.commentWhite),
         };
       case ActivityType.statusChange:
         return {
@@ -68,7 +67,7 @@ export function RecentActivity(props: {
               ? "an inventory"
               : "this"
           }  item.`,
-          image: ImageHelper.image(Images.edit),
+          image: ImageHelper.image(Images.changeWhite),
         };
     }
   }
@@ -102,14 +101,14 @@ export function RecentActivity(props: {
                 : "cursor-default"
             }`}
           >
-            <div className="min-h-[33px] min-w-[33px] bg-light_blue rounded-lg flex flex-col justify-center items-center">
+            <div className="min-h-[33px] min-w-[33px] bg-light_blue rounded-xl flex flex-col justify-center items-center">
               <img className="w-[14px]" src={eventData(a).image} />
             </div>
             <div className="flex flex-col ml-4 justify-center">
               <span className="text-[11px] font-medium text-light_blue mb-1">
                 {moment(a.createdAt).format("DD/MM/YY, HH:mm")}
               </span>
-              <span className="text-sm font-medium text-light_purple">
+              <span className="text-xs font-medium text-light_purple">
                 {getUser(a)} {eventData(a).text}
               </span>
             </div>

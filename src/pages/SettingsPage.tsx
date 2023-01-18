@@ -14,6 +14,8 @@ import { StringHelper } from "../helpers/StringHelper";
 import { StatusRepository } from "../repositories/StatusRepository";
 import { CategoryRepository } from "../repositories/CategoryRepository";
 import { LocationRepository } from "../repositories/LocationRepository";
+import { openSnack, SnackType } from "../features/data/uiSlice";
+import { InventoryItem } from "../objects/InventoryItem";
 
 export interface TypesSubmittedData {
   name: string;
@@ -24,6 +26,7 @@ export function SettingsPage() {
   const [dialogType, setDialogType] = useState<TypesDialogType>(
     TypesDialogType.category
   );
+  const items: InventoryItem[] = useAppSelector((state) => state.data.items);
   const categories: Category[] = useAppSelector(
     (state) => state.data.categories
   );
@@ -77,8 +80,26 @@ export function SettingsPage() {
     if (!type) return;
     let success = false;
 
-    switch (dialogType) {
+    const blockDelete = isTypeReferenced();
+    debugger;
+    if (blockDelete)
+      return dispatch(
+        openSnack({
+          message: `Can't delete a ${deleteOpen.data?.type} in use.`,
+          type: SnackType.error,
+        })
+      );
+
+    switch (deleteOpen.data?.type) {
       case TypesDialogType.status:
+        const isPrimitive = statuses.filter((s) => s.id === id)[0].primitive;
+        if (isPrimitive)
+          dispatch(
+            openSnack({
+              message: "Can't delete a default status.",
+              type: SnackType.error,
+            })
+          );
         success = await StatusRepository.deleteStatus(id);
         break;
       case TypesDialogType.category:
@@ -92,6 +113,30 @@ export function SettingsPage() {
     if (success) {
       await dispatch(reloadTypes());
     }
+  }
+
+  function isTypeReferenced(): boolean {
+    debugger;
+    let count = 0;
+    switch (deleteOpen.data?.type) {
+      case TypesDialogType.status:
+        count = items.filter((i) => i.status.id === deleteOpen.data?.id).length;
+        break;
+      case TypesDialogType.category:
+        debugger;
+        count = items.filter(
+          (i) => i.categoryId === deleteOpen.data?.id
+        ).length;
+        debugger;
+        break;
+      case TypesDialogType.location:
+        count = items.filter(
+          (i) => i.locationId === deleteOpen.data?.id
+        ).length;
+        break;
+    }
+
+    return count > 0;
   }
 
   return (

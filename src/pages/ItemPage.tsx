@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   deleteDataItem,
+  getLastUserActivity,
   loadItemComments,
   reloadItem,
 } from "../features/data/dataSlice";
@@ -97,13 +98,15 @@ export function ItemPage() {
     const success = await StatusRepository.changeStatus(newStatusId, item.id);
 
     if (!success) {
-      dispatch(
+      return dispatch(
         openSnack({
           type: SnackType.error,
           message: "Error updating item status.",
         })
       );
     }
+
+    dispatch(getLastUserActivity());
   }
 
   async function _delete() {

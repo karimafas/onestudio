@@ -25,4 +25,29 @@ export class ActivityRepository {
 
     return activity;
   }
+
+  public static async lastUserActivity(
+    userId: number
+  ): Promise<{ activity: StudioActivity | undefined; success: boolean }> {
+    let activity: StudioActivity | undefined;
+    let success: boolean = false;
+
+    try {
+      const resp = await RequestService.request(
+        `activity/user/${userId}`,
+        RequestType.get
+      );
+
+      LoggerService.log("Loaded last user activity.");
+
+      if (resp.status === 200) {
+        success = true;
+        activity = StudioActivity.fromJson(resp.data);
+      }
+    } catch (e) {
+      LoggerService.log(`Couldn't load last user event.`);
+    }
+
+    return { activity: activity, success: success };
+  }
 }

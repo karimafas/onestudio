@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { reloadItem } from "../features/data/dataSlice";
+import { deleteComment, reloadItem } from "../features/data/dataSlice";
 import { Comment } from "../objects/Comment";
 import { InventoryItem } from "../objects/InventoryItem";
 import { CommentRepository } from "../repositories/CommentRepository";
 import ConfirmDialog from "./ConfirmDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CommentPosted } from "./CommentPosted";
+import { openSnack, SnackType } from "../features/data/uiSlice";
 
 export function CommentsList(props: {
   comments: Comment[];
@@ -18,9 +19,17 @@ export function CommentsList(props: {
 
   async function _delete() {
     if (!selectedId) return;
-    const success = await CommentRepository.deleteComment(selectedId);
-    if (!success) return;
-    dispatch(reloadItem(props.item.id));
+    const result = await dispatch(
+      deleteComment({ commentId: selectedId, itemId: props.item.id })
+    ).unwrap();
+
+    if (!result.success)
+      return dispatch(
+        openSnack({
+          message: "There was an issue deleting comment.",
+          type: SnackType.error,
+        })
+      );
   }
 
   return (
@@ -35,6 +44,7 @@ export function CommentsList(props: {
       />
       {props.comments.map((c) => (
         <CommentPosted
+          key={`comment-${c.id}-${c.createdAt}`}
           comment={c}
           setSelectedId={setSelectedId}
           setDeleteConfirm={setDeleteConfirm}

@@ -9,10 +9,27 @@ import { TimelineEvent } from "../../objects/TimelineEvent";
 import { ActivityRepository } from "../../repositories/ActivityRepository";
 import { AuthRepository } from "../../repositories/AuthRepository";
 import { CategoryRepository } from "../../repositories/CategoryRepository";
+import { CommentRepository } from "../../repositories/CommentRepository";
 import { EventRepository } from "../../repositories/EventRepository";
 import { ItemRepository } from "../../repositories/ItemRepository";
 import { LocationRepository } from "../../repositories/LocationRepository";
 import { StatusRepository } from "../../repositories/StatusRepository";
+import { Comment } from "../../objects/Comment";
+
+export interface CreateCommentPayload {
+  itemId: number;
+  body: string;
+}
+
+export interface DeleteCommentPayload {
+  itemId: number;
+  commentId: number;
+}
+
+export interface UpdateCommentPayload {
+  commentId: number;
+  body: string;
+}
 
 // Define a type for the slice state
 interface DataState {
@@ -70,12 +87,7 @@ export const createItem = createAsyncThunk(
     // Creates item.
     const result = await ItemRepository.createItem(dfo);
 
-    // Reloads events.
-    let events: TimelineEvent[] = [];
-    if (result.success && result.item)
-      events = await EventRepository.getStudioEvents();
-
-    return { item: result.item, events: events, success: result.success };
+    return { item: result.item, success: result.success };
   }
 );
 
@@ -85,12 +97,65 @@ export const duplicateItem = createAsyncThunk(
     // Creates item.
     const result = await ItemRepository.duplicateItem(id);
 
-    // Reloads events.
-    let events: TimelineEvent[] = [];
-    if (result.success && result.item)
-      events = await EventRepository.getStudioEvents();
+    return { item: result.item, success: result.success };
+  }
+);
 
-    return { item: result.item, events: events, success: result.success };
+export const createComment = createAsyncThunk(
+  "data/createComment",
+  async (payload: CreateCommentPayload) => {
+    // Creates comment.
+    const result = await CommentRepository.createComment(
+      payload.itemId,
+      payload.body
+    );
+
+    return { comment: result.comment, success: result.success };
+  }
+);
+
+export const deleteComment = createAsyncThunk(
+  "data/deleteComment",
+  async (payload: DeleteCommentPayload) => {
+    // Deletes comment.
+    const result = await CommentRepository.deleteComment(payload.commentId);
+
+    return {
+      success: result,
+      commentId: payload.commentId,
+      itemId: payload.itemId,
+    };
+  }
+);
+
+export const updateComment = createAsyncThunk(
+  "data/updateComment",
+  async (payload: UpdateCommentPayload) => {
+    // Updates comment.
+    const result = await CommentRepository.updateComment(
+      payload.commentId,
+      payload.body
+    );
+
+    return {
+      success: result,
+      comment: result.comment,
+    };
+  }
+);
+
+export const getLastUserActivity = createAsyncThunk(
+  "data/getLastUserActivity",
+  async (_, thunkAPI) => {
+    const state: any = thunkAPI.getState();
+    const data = state.data as DataState;
+    if (!data.user) return;
+    const userId = data.user?.id;
+
+    // Gets last activity for the current user.
+    const result = await ActivityRepository.lastUserActivity(userId);
+
+    return { activity: result.activity, success: result.success };
   }
 );
 
@@ -205,9 +270,9 @@ export const counterSlice = createSlice({
     });
     builder.addCase(createItem.fulfilled, (state: DataState, action) => {
       if (!action.payload) return;
+      if (!action.payload.success) return;
 
       const payload = action.payload;
-      const events = payload.events;
       const item = payload.item;
       if (!item) return;
 
@@ -219,14 +284,13 @@ export const counterSlice = createSlice({
       return {
         ...state,
         items: currentItems,
-        events,
       };
     });
     builder.addCase(duplicateItem.fulfilled, (state: DataState, action) => {
       if (!action.payload) return;
+      if (!action.payload.success) return;
 
       const payload = action.payload;
-      const events = payload.events;
       const item = payload.item;
       if (!item) return;
 
@@ -238,7 +302,81 @@ export const counterSlice = createSlice({
       return {
         ...state,
         items: currentItems,
-        events,
+      };
+    });
+    builder.addCase(
+      getLastUserActivity.fulfilled,
+      (state: DataState, action) => {
+        if (!action.payload) return;
+        if (!action.payload.success) return;
+        const activity = action.payload.activity;
+        if (!activity) return;
+
+        const _activity: StudioActivity[] = [activity, ...state.activity];
+
+        return {
+          ...state,
+          activity: _activity,
+        };
+      }
+    );
+    builder.addCase(createComment.fulfilled, (state: DataState, action) => {
+      if (!action.payload) return;
+      if (!action.payload.success) return;
+      const comment = action.payload.comment;
+      if (!comment) return;
+
+      const item = state.items.filter((i) => i.id === comment.itemId)[0];
+      const _comments: Comment[] = [comment, ...item.comments];
+      item.comments = _comments;
+
+      const items = [...state.items];
+      const index = items.map((i) => i.id).indexOf(item.id);
+      items[index] = item;
+
+      return {
+        ...state,
+        items: items,
+      };
+    });
+    builder.addCase(deleteComment.fulfilled, (state: DataState, action) => {
+      if (!action.payload) return;
+      if (!action.payload.success) return;
+      const itemId = action.payload.itemId;
+      const commentId = action.payload.commentId;
+
+      const item = state.items.filter((i) => i.id === itemId)[0];
+      const _comments: Comment[] = [...item.comments];
+      const index = _comments.map((c) => c.id).indexOf(commentId);
+      _comments.splice(index, 1);
+      item.comments = _comments;
+
+      const items = [...state.items];
+
+      return {
+        ...state,
+        items: items,
+      };
+    });
+    builder.addCase(updateComment.fulfilled, (state: DataState, action) => {
+      if (!action.payload) return;
+      if (!action.payload.success) return;
+      const comment = action.payload.comment;
+      if (!comment) return;
+
+      const item = state.items.filter((i) => i.id === comment.itemId)[0];
+      const _comments: Comment[] = [...item.comments];
+      const commentIndex = _comments.map((c) => c.id).indexOf(comment.id);
+      _comments[commentIndex] = comment;
+      item.comments = _comments;
+
+      const items = [...state.items];
+      const index = items.map((i) => i.id).indexOf(item.id);
+      items[index] = item;
+
+      return {
+        ...state,
+        items: items,
       };
     });
   },

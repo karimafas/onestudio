@@ -30,8 +30,9 @@ export class CommentRepository {
   public static async createComment(
     itemId: number,
     body: string
-  ): Promise<boolean> {
+  ): Promise<{ comment: Comment | undefined; success: boolean }> {
     let success = false;
+    let comment: Comment | undefined;
 
     try {
       const payload = {
@@ -47,20 +48,22 @@ export class CommentRepository {
 
       if (resp.status === 201) {
         success = true;
+        comment = Comment.fromJson(resp.data);
         LoggerService.log("Created comment.", resp.data);
       }
     } catch (e) {
       LoggerService.log("Couldn't create comment.");
-    }
+  }
 
-    return success;
+    return { comment, success };
   }
 
   public static async updateComment(
     id: number,
     body: string
-  ): Promise<boolean> {
+  ): Promise<{ comment: Comment | undefined; success: boolean }> {
     let success = false;
+    let comment: Comment | undefined;
 
     try {
       const payload = { body: body };
@@ -73,13 +76,14 @@ export class CommentRepository {
 
       if (resp.status === 200) {
         success = true;
+        comment = Comment.fromJson(resp.data);
         LoggerService.log("Updated comment.", resp.data);
       }
     } catch (e) {
       LoggerService.log("Couldn't update comment.");
     }
 
-    return success;
+    return { success, comment };
   }
 
   public static async deleteComment(id: number): Promise<boolean> {

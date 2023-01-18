@@ -47,11 +47,11 @@ export class StatusRepository {
 
   public static async deleteStatus(id: number): Promise<boolean> {
     let success: boolean = false;
+    let deletingPrimitive: boolean = false;
+
+    let resp;
     try {
-      const resp = await RequestService.request(
-        `status/${id}`,
-        RequestType.delete
-      );
+      resp = await RequestService.request(`status/${id}`, RequestType.delete);
 
       if (resp.status === 200) {
         success = true;
@@ -59,6 +59,7 @@ export class StatusRepository {
       }
     } catch (e) {
       LoggerService.log(`Couldn't delete status.`);
+      deletingPrimitive = resp.data.code === "deleting-primitive-status";
     }
 
     return success;

@@ -3,9 +3,7 @@ import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
 
 export class EventRepository {
-  public static async getItemEvents(
-    itemId: number
-  ): Promise<TimelineEvent[]> {
+  public static async getItemEvents(itemId: number): Promise<TimelineEvent[]> {
     let events: TimelineEvent[] = [];
 
     try {

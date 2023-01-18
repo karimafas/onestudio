@@ -1,10 +1,9 @@
-import { TextareaAutosize } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { loadItemComments } from "../features/data/dataSlice";
+import { createComment, getLastUserActivity } from "../features/data/dataSlice";
+import { openSnack, SnackType } from "../features/data/uiSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { InventoryItem } from "../objects/InventoryItem";
-import { CommentRepository } from "../repositories/CommentRepository";
 import { CommentEditorField } from "./CommentEditorField";
 import { PrimaryButton } from "./PrimaryButton";
 import { UserTag } from "./UserTag";
@@ -16,9 +15,21 @@ export function CommentEditor(props: { item: InventoryItem }) {
   const [body, setBody] = useState<string>("");
 
   async function _comment() {
-    const success = await CommentRepository.createComment(props.item.id, body);
-    if (!success) return;
-    dispatch(loadItemComments(props.item));
+    const result = await dispatch(
+      createComment({ itemId: props.item.id, body: body })
+    ).unwrap();
+
+    if (!result.success) {
+      return dispatch(
+        openSnack({
+          message: "There was an issue posting comment.",
+          type: SnackType.error,
+        })
+      );
+    }
+
+    dispatch(getLastUserActivity());
+
     setBody("");
   }
 

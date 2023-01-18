@@ -1,6 +1,10 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { deleteItems } from "../features/data/inventorySlice";
-import { deleteDataItem, duplicateItem } from "../features/data/dataSlice";
+import {
+  deleteDataItem,
+  duplicateItem,
+  getLastUserActivity,
+} from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { Header } from "../components/Header";
 import { SearchBar } from "../components/SearchBar";
@@ -28,7 +32,7 @@ export function InventoryPage() {
   async function _delete(ids: number[]) {
     const success = await dispatch(deleteItems(ids));
 
-    if (success) {
+  if (success) {
       for (const id of ids) {
         dispatch(deleteDataItem(id));
       }
@@ -41,6 +45,7 @@ export function InventoryPage() {
     const result = await dispatch(duplicateItem(id)).unwrap();
 
     if (result.success) {
+      dispatch(getLastUserActivity());
       dispatch(
         openSnack({
           type: SnackType.success,

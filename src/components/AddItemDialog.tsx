@@ -1,7 +1,7 @@
 import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { createItem } from "../features/data/dataSlice";
+import { createItem, getLastUserActivity } from "../features/data/dataSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { Category } from "../objects/Category";
 import { ItemDfo } from "../objects/InventoryItem";
@@ -72,6 +72,7 @@ export function AddItemDialog(props: {
     const result = await dispatch(createItem(dfo)).unwrap();
 
     if (result.success) {
+      dispatch(getLastUserActivity());
       props.callback(true);
       setDfo(initialDfo);
     } else {
