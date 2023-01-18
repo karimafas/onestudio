@@ -14,10 +14,11 @@ export function InventoryTable(props: {
   setSelected: Function;
   itemsPerPage: number;
   width: number;
+  items: InventoryItem[];
 }) {
+  const items = props.items;
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(0);
-  const items = useAppSelector((state) => state.data.items);
   const locations = useAppSelector((state) => state.data.locations);
   const categories = useAppSelector((state) => state.data.categories);
   const owners = useAppSelector((state) => state.data.studioUsers);

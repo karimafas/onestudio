@@ -56,8 +56,8 @@ export class ItemRepository {
 
   public static async createItem(
     i: ItemDfo
-  ): Promise<{ success: boolean; id: any }> {
-    let id;
+  ): Promise<{ success: boolean; item: InventoryItem | undefined }> {
+    let item;
     let success: boolean = false;
 
     try {
@@ -71,14 +71,14 @@ export class ItemRepository {
         success = true;
       }
 
-      id = parseInt(resp.data.id);
+      item = InventoryItem.fromJson(resp.data);
 
       LoggerService.log("Added new item.", success);
     } catch (e: any) {
       LoggerService.log(e.toString());
     }
 
-    return { success: success, id: id };
+    return { success: success, item: item };
   }
 
   public static async createItemsList(items: CsvItemDfo[]): Promise<boolean> {

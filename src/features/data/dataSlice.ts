@@ -1,6 +1,11 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  PayloadAction,
+  current,
+} from "@reduxjs/toolkit";
 import { Category } from "../../objects/Category";
-import { InventoryItem } from "../../objects/InventoryItem";
+import { InventoryItem, ItemDfo } from "../../objects/InventoryItem";
 import { Status } from "../../objects/Status";
 import { StudioActivity } from "../../objects/StudioActivity";
 import { StudioLocation } from "../../objects/StudioLocation";
@@ -13,6 +18,12 @@ import { EventRepository } from "../../repositories/EventRepository";
 import { ItemRepository } from "../../repositories/ItemRepository";
 import { LocationRepository } from "../../repositories/LocationRepository";
 import { StatusRepository } from "../../repositories/StatusRepository";
+
+export interface CreateItemThunkPayload {
+  item?: InventoryItem;
+  events: TimelineEvent[];
+  success: boolean;
+}
 
 // Define a type for the slice state
 interface DataState {
@@ -64,6 +75,21 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
   };
 });
 
+export const createItem = createAsyncThunk(
+  "data/createItem",
+  async (dfo: ItemDfo) => {
+    // Creates item.
+    const item = await ItemRepository.createItem(dfo);
+
+    // Reloads events.
+    let events: TimelineEvent[] = [];
+    if (item.success && item.item)
+      events = await EventRepository.getStudioEvents();
+
+    return { item: item.item, events: events, success: item.success };
+  }
+);
+
 export const loadItemComments = createAsyncThunk(
   "data/loadItemComments",
   async (item: InventoryItem) => {
@@ -81,6 +107,11 @@ export const reloadItem = createAsyncThunk(
     return i;
   }
 );
+
+export const reloadEvents = createAsyncThunk("data/reloadEvents", async () => {
+  const events = await EventRepository.getStudioEvents();
+  return events;
+});
 
 export const reloadUsers = createAsyncThunk("data/reloadUsers", async () => {
   return await AuthRepository.getStudioUsers();
@@ -163,6 +194,29 @@ export const counterSlice = createSlice({
     builder.addCase(reloadUsers.fulfilled, (state: DataState, action) => {
       const payload = action.payload;
       Object.assign(state.studioUsers, payload);
+    });
+    builder.addCase(reloadEvents.fulfilled, (state: DataState, action) => {
+      const payload = action.payload;
+      Object.assign(state.events, payload);
+    });
+    builder.addCase(createItem.fulfilled, (state: DataState, action) => {
+      if (!action.payload) return;
+
+      const payload = action.payload;
+      const events = payload.events;
+      const item = payload.item;
+      if (!item) return;
+
+      const currentItems = [...state.items, item];
+
+      // Sort alphabetically
+      currentItems.sort((a, b) => (a.manufacturer > b.manufacturer ? 1 : -1));
+
+      return {
+        ...state,
+        items: currentItems,
+        events,
+      };
     });
   },
 });

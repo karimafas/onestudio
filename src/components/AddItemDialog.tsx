@@ -1,7 +1,11 @@
 import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { initialLoad } from "../features/data/dataSlice";
+import {
+  createItem,
+  CreateItemThunkPayload,
+  initialLoad,
+} from "../features/data/dataSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { Category } from "../objects/Category";
 import { ItemDfo } from "../objects/InventoryItem";
@@ -69,10 +73,9 @@ export function AddItemDialog(props: {
   };
 
   async function _createItem(dfo: ItemDfo) {
-    const result = await ItemRepository.createItem(dfo);
+    const result = await dispatch(createItem(dfo)).unwrap();
 
     if (result.success) {
-      dispatch(initialLoad());
       props.callback(true);
       setDfo(initialDfo);
     } else {

@@ -1,4 +1,4 @@
-import { useAppDispatch } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { deleteItems } from "../features/data/inventorySlice";
 import { deleteDataItem } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
@@ -8,7 +8,7 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { InventoryTable } from "../components/InventoryTable";
 import { SquareButton } from "../components/SquareButton";
 import { AddItemDialog } from "../components/AddItemDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CopyIcon from "@mui/icons-material/ContentCopyTwoTone";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
@@ -25,6 +25,7 @@ export function InventoryPage() {
   const [selected, setSelected] = useState<number[]>([]);
   const [addDialog, setAddDialog] = useState<boolean>(false);
   const [width, height] = useWindowSize();
+  const items = useAppSelector((state) => state.data.items);
 
   async function _delete(ids: number[]) {
     const success = await dispatch(deleteItems(ids));
@@ -84,14 +85,16 @@ export function InventoryPage() {
       <AddItemDialog
         open={addDialog}
         setOpen={setAddDialog}
-        callback={(success: boolean) =>
+        callback={(success: boolean) => {
           dispatch(
             openSnack({
-              type: SnackType.success,
-              message: "Item created successfully.",
+              type: success ? SnackType.success : SnackType.error,
+              message: success
+                ? "Item created successfully."
+                : "There was an error creating item.",
             })
-          )
-        }
+          );
+        }}
       />
       <Header />
       <div className="animate-fade grow flex flex-col">
@@ -135,6 +138,7 @@ export function InventoryPage() {
           setSelected={setSelected}
           searchQuery={search}
           width={width}
+          items={items}
         />
       </div>
     </div>

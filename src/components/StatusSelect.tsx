@@ -126,7 +126,7 @@ export function StatusSelect(props: {
         }`}
       >
         <div className="h-6"></div>
-        <div className={`rounded bg-light_purple2 py-2 overflow-auto`}>
+        <div className={`rounded-lg bg-light_purple2 py-2 overflow-auto`}>
           {filteredElements.map((e) => (
             <div
               onClick={() => {
