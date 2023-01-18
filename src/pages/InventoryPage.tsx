@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { deleteItems } from "../features/data/inventorySlice";
-import { deleteDataItem } from "../features/data/dataSlice";
+import { deleteDataItem, duplicateItem } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { Header } from "../components/Header";
 import { SearchBar } from "../components/SearchBar";
@@ -8,13 +8,11 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { InventoryTable } from "../components/InventoryTable";
 import { SquareButton } from "../components/SquareButton";
 import { AddItemDialog } from "../components/AddItemDialog";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CopyIcon from "@mui/icons-material/ContentCopyTwoTone";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { useWindowSize } from "@react-hook/window-size";
-import { initialLoad } from "../features/data/dataSlice";
-import { ItemRepository } from "../repositories/ItemRepository";
 import { openSnack, SnackType } from "../features/data/uiSlice";
 
 export function InventoryPage() {
@@ -40,10 +38,9 @@ export function InventoryPage() {
   async function _duplicate(ids: number[]) {
     const id = ids[0];
 
-    const success = await ItemRepository.duplicateItem(id);
+    const result = await dispatch(duplicateItem(id)).unwrap();
 
-    if (success) {
-      dispatch(initialLoad());
+    if (result.success) {
       dispatch(
         openSnack({
           type: SnackType.success,

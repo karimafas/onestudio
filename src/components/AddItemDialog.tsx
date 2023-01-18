@@ -1,11 +1,7 @@
 import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import {
-  createItem,
-  CreateItemThunkPayload,
-  initialLoad,
-} from "../features/data/dataSlice";
+import { createItem } from "../features/data/dataSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { Category } from "../objects/Category";
 import { ItemDfo } from "../objects/InventoryItem";

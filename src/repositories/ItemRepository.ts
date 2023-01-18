@@ -134,8 +134,12 @@ export class ItemRepository {
     return success;
   }
 
-  public static async duplicateItem(id: number): Promise<boolean> {
+  public static async duplicateItem(
+    id: number
+  ): Promise<{ item: InventoryItem | undefined; success: boolean }> {
     let success: boolean = false;
+    let item: InventoryItem | undefined;
+
     try {
       const resp = await RequestService.request(
         `item/duplicate/${id}`,
@@ -144,13 +148,16 @@ export class ItemRepository {
 
       if (resp.status === 201) {
         success = true;
+
+        item = InventoryItem.fromJson(resp.data);
+
         LoggerService.log("Duplicated item.", resp.data);
       }
     } catch (e) {
       LoggerService.log("Couldn't duplicate item.", e);
     }
 
-    return success;
+    return { item: item, success: success };
   }
 
   public static async deleteItems(ids: number[]): Promise<boolean> {

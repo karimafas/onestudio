@@ -1,9 +1,4 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  PayloadAction,
-  current,
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Category } from "../../objects/Category";
 import { InventoryItem, ItemDfo } from "../../objects/InventoryItem";
 import { Status } from "../../objects/Status";
@@ -18,12 +13,6 @@ import { EventRepository } from "../../repositories/EventRepository";
 import { ItemRepository } from "../../repositories/ItemRepository";
 import { LocationRepository } from "../../repositories/LocationRepository";
 import { StatusRepository } from "../../repositories/StatusRepository";
-
-export interface CreateItemThunkPayload {
-  item?: InventoryItem;
-  events: TimelineEvent[];
-  success: boolean;
-}
 
 // Define a type for the slice state
 interface DataState {
@@ -79,14 +68,29 @@ export const createItem = createAsyncThunk(
   "data/createItem",
   async (dfo: ItemDfo) => {
     // Creates item.
-    const item = await ItemRepository.createItem(dfo);
+    const result = await ItemRepository.createItem(dfo);
 
     // Reloads events.
     let events: TimelineEvent[] = [];
-    if (item.success && item.item)
+    if (result.success && result.item)
       events = await EventRepository.getStudioEvents();
 
-    return { item: item.item, events: events, success: item.success };
+    return { item: result.item, events: events, success: result.success };
+  }
+);
+
+export const duplicateItem = createAsyncThunk(
+  "data/duplicateItem",
+  async (id: number) => {
+    // Creates item.
+    const result = await ItemRepository.duplicateItem(id);
+
+    // Reloads events.
+    let events: TimelineEvent[] = [];
+    if (result.success && result.item)
+      events = await EventRepository.getStudioEvents();
+
+    return { item: result.item, events: events, success: result.success };
   }
 );
 
@@ -218,8 +222,31 @@ export const counterSlice = createSlice({
         events,
       };
     });
+    builder.addCase(duplicateItem.fulfilled, (state: DataState, action) => {
+      if (!action.payload) return;
+
+      const payload = action.payload;
+      const events = payload.events;
+      const item = payload.item;
+      if (!item) return;
+
+      const currentItems = [...state.items, item];
+
+      // Sort alphabetically
+      currentItems.sort((a, b) => (a.manufacturer > b.manufacturer ? 1 : -1));
+
+      return {
+        ...state,
+        items: currentItems,
+        events,
+      };
+    });
   },
 });
+
+function insertItem() {
+
+}
 
 export const { deleteDataItem } = counterSlice.actions;
 
