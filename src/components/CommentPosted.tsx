@@ -2,12 +2,11 @@ import { Tooltip } from "@mui/material";
 import moment from "moment";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { loadItemComments, updateComment } from "../features/data/dataSlice";
+import { updateComment } from "../features/data/dataSlice";
 import { openSnack, SnackType } from "../features/data/uiSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { Comment } from "../objects/Comment";
 import { InventoryItem } from "../objects/InventoryItem";
-import { CommentRepository } from "../repositories/CommentRepository";
 import { CommentEditorField } from "./CommentEditorField";
 import { PrimaryButton } from "./PrimaryButton";
 import { UserTag } from "./UserTag";
@@ -72,12 +71,16 @@ export function CommentPosted(props: {
           </span>
           {!editing ? (
             <div>
-              <span className="text-sm text-dark_blue text-xs break-words">
-                {comment.body}
-              </span>
+              <CommentEditorField
+                style="text-dark_blue text-xs break-words"
+                body={comment.body}
+                setBody={() => {}}
+                setEditing={() => {}}
+                editing={false}
+                viewing
+              />
               {isPoster ? (
                 <div className="flex flex-row mt-1">
-                  {" "}
                   <span
                     className="text-xs font-medium text-dark_blue cursor-pointer hover:underline"
                     onClick={() => setEditing(true)}
