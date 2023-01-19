@@ -1,11 +1,10 @@
+import { AppConstants } from "../config/AppConstants";
 import { AuthRepository } from "../repositories/AuthRepository";
 import { LoggerService } from "./LoggerService";
 import { TokenService } from "./TokenService";
 const axios = require("axios");
 
 const baseUrl = `${process.env.API_URL}/`;
-
-const unauthorisedRoutes = ["reset-password"];
 
 export enum RequestType {
   get = "GET",
@@ -43,7 +42,8 @@ export class RequestService {
   }
 
   public static needsAuth(route: string) {
-    if (unauthorisedRoutes.includes(route.replace("/", ""))) return false;
+    if (AppConstants.unauthorisedRoutes.includes(route.replace("/", "")))
+      return false;
     return true;
   }
 }

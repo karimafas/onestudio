@@ -33,7 +33,7 @@ export function ResetPasswordForm(props: { token: string }) {
       // Reset password endpoint.
       const success = await AuthRepository.resetPassword(token, dfo.password);
 
-      if (success) navigate("/login?reset=true");
+      if (success) navigate("/?reset=true");
     }
   }
 
