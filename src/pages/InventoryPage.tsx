@@ -32,10 +32,12 @@ export function InventoryPage() {
   async function _delete(ids: number[]) {
     const success = await dispatch(deleteItems(ids));
 
-  if (success) {
+    if (success) {
       for (const id of ids) {
         dispatch(deleteDataItem(id));
       }
+
+      setSelected([]);
     }
   }
 
