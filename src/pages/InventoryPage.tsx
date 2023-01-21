@@ -1,5 +1,4 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { deleteItems } from "../features/data/inventorySlice";
 import {
   deleteDataItem,
   duplicateItem,
@@ -12,15 +11,25 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { InventoryTable } from "../components/InventoryTable";
 import { SquareButton } from "../components/SquareButton";
 import { AddItemDialog } from "../components/AddItemDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CopyIcon from "@mui/icons-material/ContentCopyTwoTone";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { useWindowSize } from "@react-hook/window-size";
 import { openSnack, SnackType } from "../features/data/uiSlice";
+import { FilterButton } from "../components/FilterButton";
+import { FilterSection } from "../components/FilterSection";
+import { ItemRepository } from "../repositories/ItemRepository";
+import { FilterService } from "../services/FilterService";
+
+function useForceUpdate() {
+  const [value, setValue] = useState(0);
+  return () => setValue((value) => value + 1);
+}
 
 export function InventoryPage() {
   const dispatch = useAppDispatch();
+  const filterState = useAppSelector((state) => state.filter);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [duplicateOpen, setDuplicateOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
@@ -28,9 +37,25 @@ export function InventoryPage() {
   const [addDialog, setAddDialog] = useState<boolean>(false);
   const [width, height] = useWindowSize();
   const items = useAppSelector((state) => state.data.items);
+  const [page, setPage] = useState<number>(0);
+  const itemsPerPage = Math.round(height / 175);
+  const searchedItems = items.filter(
+    (i) =>
+      i.manufacturer.toLowerCase().includes(search.toLowerCase()) ||
+      i.model.toLowerCase().includes(search.toLowerCase()) ||
+      i.price.toString().toLowerCase().includes(search.toLowerCase()) ||
+      i.serial.toLowerCase().includes(search.toLowerCase()) ||
+      i.notes.toLowerCase().includes(search.toLowerCase())
+  );
+  const processedItems = FilterService.filter(filterState, searchedItems);
+  const filteredItems = processedItems.slice(
+    page * itemsPerPage,
+    itemsPerPage * (page + 1)
+  );
+  const totalPages = Math.ceil(processedItems.length / itemsPerPage);
 
   async function _delete(ids: number[]) {
-    const success = await dispatch(deleteItems(ids));
+    const success = await ItemRepository.deleteItems(ids);
 
     if (success) {
       for (const id of ids) {
@@ -43,25 +68,14 @@ export function InventoryPage() {
 
   async function _duplicate(ids: number[]) {
     const id = ids[0];
-
     const result = await dispatch(duplicateItem(id)).unwrap();
-
-    if (result.success) {
-      dispatch(getLastUserActivity());
-      dispatch(
-        openSnack({
-          type: SnackType.success,
-          message: "Item duplicated successfully.",
-        })
-      );
-    } else {
-      dispatch(
-        openSnack({
-          type: SnackType.error,
-          message: "Error duplicating item.",
-        })
-      );
-    }
+    if (result.success) return dispatch(getLastUserActivity());
+    dispatch(
+      openSnack({
+        type: SnackType.error,
+        message: "Error duplicating item.",
+      })
+    );
   }
 
   return (
@@ -134,8 +148,10 @@ export function InventoryPage() {
               text="Add an item"
               onClick={() => setAddDialog(true)}
             />
+            <FilterButton />
           </div>
         </div>
+        <FilterSection items={searchedItems} />
         <InventoryTable
           itemsPerPage={Math.round(height / 175)}
           selected={selected}
@@ -143,6 +159,10 @@ export function InventoryPage() {
           searchQuery={search}
           width={width}
           items={items}
+          filteredItems={filteredItems}
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
         />
       </div>
     </div>

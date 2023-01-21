@@ -43,13 +43,10 @@ export class NotificationRepository {
         body
       );
 
-      debugger;
-
       LoggerService.log("Updated notification to 'viewed'.", resp);
 
       notification = Notification.fromJson(resp.data);
       success = true;
-      debugger;
     } catch (e) {
       LoggerService.log(`Couldn't update notification to 'viewed'.`);
     }

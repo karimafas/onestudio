@@ -23,6 +23,8 @@ export enum Images {
   exit = "exit.png",
   faultBlue = "fault-blue.png",
   fault = "fault.png",
+  filterLight = "filter-light.png",
+  filterDark = "filter-dark.png",
   fixBlue = "fix-blue.png",
   fix = "fix.png",
   forwardBlue = "forward-blue.png",

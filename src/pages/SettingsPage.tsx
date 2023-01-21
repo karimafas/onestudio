@@ -81,7 +81,6 @@ export function SettingsPage() {
     let success = false;
 
     const blockDelete = isTypeReferenced();
-    debugger;
     if (blockDelete)
       return dispatch(
         openSnack({
@@ -116,18 +115,15 @@ export function SettingsPage() {
   }
 
   function isTypeReferenced(): boolean {
-    debugger;
     let count = 0;
     switch (deleteOpen.data?.type) {
       case TypesDialogType.status:
         count = items.filter((i) => i.status.id === deleteOpen.data?.id).length;
         break;
       case TypesDialogType.category:
-        debugger;
         count = items.filter(
           (i) => i.categoryId === deleteOpen.data?.id
         ).length;
-        debugger;
         break;
       case TypesDialogType.location:
         count = items.filter(

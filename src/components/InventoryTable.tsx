@@ -15,29 +15,16 @@ export function InventoryTable(props: {
   itemsPerPage: number;
   width: number;
   items: InventoryItem[];
+  filteredItems: InventoryItem[];
+  page: number;
+  setPage: Function;
+  totalPages: number;
 }) {
-  const items = props.items;
+  const { items, filteredItems, page, setPage, totalPages } = props;
   const navigate = useNavigate();
-  const [page, setPage] = useState<number>(0);
   const locations = useAppSelector((state) => state.data.locations);
   const categories = useAppSelector((state) => state.data.categories);
   const owners = useAppSelector((state) => state.data.studioUsers);
-  const totalPages = Math.ceil(items.length / props.itemsPerPage);
-  const filteredItems = items
-    .filter(
-      (i) =>
-        i.manufacturer
-          .toLowerCase()
-          .includes(props.searchQuery.toLowerCase()) ||
-        i.model.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
-        i.price
-          .toString()
-          .toLowerCase()
-          .includes(props.searchQuery.toLowerCase()) ||
-        i.serial.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
-        i.notes.toLowerCase().includes(props.searchQuery.toLowerCase())
-    )
-    .slice(page * props.itemsPerPage, props.itemsPerPage * (page + 1));
   const filteredColumns =
     props.width > 1070
       ? AppConstants.tableColumns

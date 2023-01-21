@@ -8,11 +8,6 @@ import {
   loadItemComments,
   reloadItem,
 } from "../features/data/dataSlice";
-import {
-  deleteItems,
-  search,
-  updateItem,
-} from "../features/data/inventorySlice";
 import { ItemDfo } from "../objects/InventoryItem";
 import { Header } from "../components/Header";
 import { PrimaryButton } from "../components/PrimaryButton";
@@ -28,6 +23,7 @@ import { StatusRepository } from "../repositories/StatusRepository";
 import { ItemForm } from "../components/ItemForm";
 import { CommentSection } from "../components/CommentSection";
 import { StatusSelect } from "../components/StatusSelect";
+import { ItemRepository } from "../repositories/ItemRepository";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -84,8 +80,8 @@ export function ItemPage() {
   async function _updateItem(data: ItemDfo) {
     if (!hasChanged()) setDisabled(true);
 
-    const result = await dispatch(updateItem(data));
-    if (result.payload) {
+    const result = await ItemRepository.updateItem(data);
+    if (result) {
       await dispatch(reloadItem(item.id));
       await item.initEvents();
       forceUpdate();
@@ -125,8 +121,8 @@ export function ItemPage() {
   }
 
   async function _delete() {
-    const success = await dispatch(deleteItems([id]));
-    if (success.payload) {
+    const success = await ItemRepository.deleteItems([id]);
+    if (success) {
       dispatch(deleteDataItem(id));
       navigate("/inventory");
     }
