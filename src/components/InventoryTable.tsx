@@ -103,6 +103,15 @@ export function InventoryTable(props: {
             />
           </div>
         );
+      case "status":
+        return (
+          <div className="flex flex-row items-center">
+            <div
+              className={`h-2 w-2 ${i.status.backgroundColor} rounded-[100%] mr-3`}
+            ></div>
+            <span>{i.status.displayName}</span>
+          </div>
+        );
       default:
         return (
           <span

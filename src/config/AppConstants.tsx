@@ -20,6 +20,7 @@ export class AppConstants {
     new AppColumn("owner", true),
     new AppColumn("serial", true),
     new AppColumn("notes", false),
+    new AppColumn("status", false),
   ];
 
   static tableColumns = [
@@ -31,6 +32,7 @@ export class AppConstants {
     new TableColumn("owner", "Owner", true, 10, 0),
     new TableColumn("serial", "Serial", true, 10, 0),
     new TableColumn("notes", "Notes", true, 10, 1),
+    new TableColumn("status", "Status", false, 10, 0),
   ];
 
   static routesWithoutSidebar: string[] = ["login", "import", "reset-password"];

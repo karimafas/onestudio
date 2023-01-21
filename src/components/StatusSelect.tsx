@@ -73,36 +73,12 @@ export function StatusSelect(props: {
       };
     }
 
-    let color: string;
-
-    const workingId = primitiveStatuses.filter(
-      (s) => s.primitive && s.name === PrimitiveStatuses.working
-    )[0].id;
-    const faultyId = primitiveStatuses.filter(
-      (s) => s.primitive && s.name === PrimitiveStatuses.faulty
-    )[0].id;
-    const repairingId = primitiveStatuses.filter(
-      (s) => s.primitive && s.name === PrimitiveStatuses.repairing
-    )[0].id;
-
-    switch (id) {
-      case workingId:
-        color = "bg-green";
-        break;
-      case faultyId:
-        color = "bg-red";
-        break;
-      case repairingId:
-        color = "bg-grey";
-        break;
-    }
-
     return {
       title: StringHelper.toFirstUpperCase(
-        statuses.filter((s) => s.id === id)[0].displayName ?? ""
+        statuses.filter((s) => s.id === id)[0].displayName
       ),
       hasFlag: true,
-      flagColor: color!,
+      flagColor: statuses.filter((s) => s.id == id)[0].backgroundColor,
     };
   }
 
