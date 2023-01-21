@@ -15,14 +15,13 @@ export function FilterSection(props: { items: InventoryItem[] }) {
   const statuses = useAppSelector((state) => state.data.statuses);
 
   const height = visible ? "h-[4em]" : "h-0";
-  const border = "border-lightest_purple2 border-[2px]";
   const margin = visible ? "mt-4" : "";
   const opacity = visible ? "opacity-100" : "opacity-0";
   const itemsOpacity = visible ? "opacity-100" : "opacity-0";
 
   return (
     <div
-      className={`transition-all duration-300 ${height} ${border} ${margin} ${opacity} rounded-lg`}
+      className={`transition-all duration-300 ${height} ${margin} ${opacity} rounded-lg bg-lightest_purple2`}
     >
       <div
         className={`w-full h-full ${itemsOpacity} transition-all duration-700 delay-200 flex flex-row items-center px-5 justify-around`}
@@ -56,7 +55,7 @@ export function FilterSection(props: { items: InventoryItem[] }) {
           selected={FilterService.getArray(filterState, FilterType.statuses)}
         />
         <span
-          className="text-sm font-semibold text-dark_blue hover:underline cursor-pointer"
+          className={`text-sm font-semibold text-light_purple hover:underline cursor-pointer`}
           onClick={() => dispatch(clearAllFilters())}
         >
           Clear all filters

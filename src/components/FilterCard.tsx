@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppDispatch } from "../app/hooks";
-import { clearFilter, FilterType, selectOption } from "../features/data/filterSlice";
+import {
+  clearFilter,
+  FilterType,
+  selectOption,
+} from "../features/data/filterSlice";
 
 export interface FilterOption {
   id: number;
@@ -37,7 +41,7 @@ export function FilterCard(props: {
   return (
     <div ref={ref}>
       <div
-        className={`w-[7em] h-[2em] ${background} ${border} rounded-md flex flex-row items-center justify-center cursor-pointer`}
+        className={`w-[7em] h-[2em] ${background} ${border} rounded-lg flex flex-row items-center justify-center cursor-pointer`}
         onClick={() => setShowBox(!showBox)}
       >
         <span className={`font-medium ${textColor} text-xs`}>{title}</span>
@@ -52,18 +56,27 @@ export function FilterCard(props: {
         <></>
       )}
       {showBox ? (
-        <div className="w-[15em] h-[12em] shadow-xl absolute mt-3 rounded p-4 bg-white">
-          <div className="w-full flex flex-row justify-end mb-2 h-[10%]">
-            <span
-              className="text-[10px] font-medium text-dark_blue cursor-pointer hover:underline"
-              onClick={() => {
-                dispatch(clearFilter(options[0].type));
-              }}
-            >
-              Clear filter
-            </span>
-          </div>
-          <div className="grow flex flex-col overflow-auto px-3 py-3 bg-lightest_purple2 rounded-lg h-[90%]">
+        <div className="w-[15em] h-[12em] shadow-xl absolute mt-3 rounded-lg p-4 bg-white">
+          {hasFilters ? (
+            <div className="w-full flex flex-row justify-end mb-2 h-[10%]">
+              <span
+                className="text-[10px] font-medium text-dark_blue cursor-pointer hover:underline"
+                onClick={() => {
+                  dispatch(clearFilter(options[0].type));
+                  setShowBox(false);
+                }}
+              >
+                Clear filter
+              </span>
+            </div>
+          ) : (
+            <></>
+          )}
+          <div
+            className={`grow flex flex-col overflow-auto px-3 py-3 bg-lightest_purple2 rounded-lg ${
+              hasFilters ? "h-[90%]" : "h-full"
+            }`}
+          >
             {options.map((o) => (
               <FilterOptionCard
                 option={o}
