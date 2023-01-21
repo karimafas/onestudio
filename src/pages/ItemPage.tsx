@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
+  changeStatus,
   deleteDataItem,
   getLastUserActivity,
   loadItemComments,
@@ -107,9 +108,11 @@ export function ItemPage() {
   }
 
   async function _updateStatus(newStatusId: number) {
-    const success = await StatusRepository.changeStatus(newStatusId, item.id);
+    const result = await dispatch(
+      changeStatus({ statusId: newStatusId, itemId: item.id })
+    ).unwrap();
 
-    if (!success) {
+    if (!result.success) {
       return dispatch(
         openSnack({
           type: SnackType.error,

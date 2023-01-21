@@ -1,3 +1,4 @@
+import { InventoryItem } from "../objects/InventoryItem";
 import { Status } from "../objects/Status";
 import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
@@ -68,8 +69,9 @@ export class StatusRepository {
   public static async changeStatus(
     newStatusId: number,
     itemId: number
-  ): Promise<boolean> {
+  ): Promise<{ success: boolean; item: InventoryItem | undefined }> {
     let success = false;
+    let item: InventoryItem | undefined;
 
     try {
       const body = {
@@ -78,13 +80,14 @@ export class StatusRepository {
       };
 
       const resp = await RequestService.request(
-        "status/changeStatus",
+        "status/change",
         RequestType.post,
         body
       );
 
       if (resp.status === 201) {
         success = true;
+        item = InventoryItem.fromJson(resp.data);
         LoggerService.log("Changed item status.", resp.data);
       }
     } catch (e) {
@@ -92,6 +95,6 @@ export class StatusRepository {
       LoggerService.log("Couldn't change item status.");
     }
 
-    return success;
+    return { success, item };
   }
 }

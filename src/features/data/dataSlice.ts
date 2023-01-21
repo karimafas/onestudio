@@ -33,6 +33,11 @@ export interface UpdateCommentPayload {
   body: string;
 }
 
+export interface ChangeStatusPayload {
+  itemId: number;
+  statusId: number;
+}
+
 // Define a type for the slice state
 interface DataState {
   loading: boolean;
@@ -181,6 +186,18 @@ export const reloadItem = createAsyncThunk(
     const i = await ItemRepository.getInventoryItem(itemId);
     await i?.loadComments();
     return i;
+  }
+);
+
+export const changeStatus = createAsyncThunk(
+  "data/changeStatus",
+  async (payload: ChangeStatusPayload) => {
+    const result = await StatusRepository.changeStatus(
+      payload.statusId,
+      payload.itemId
+    );
+
+    return { success: result.success, item: result.item };
   }
 );
 
@@ -411,6 +428,21 @@ export const counterSlice = createSlice({
       return {
         ...state,
         notifications: _notifications,
+      };
+    });
+    builder.addCase(changeStatus.fulfilled, (state: DataState, action) => {
+      if (!action.payload) return;
+      if (!action.payload.success) return;
+      const item = action.payload.item;
+      if (!item) return;
+
+      const _items = [...state.items];
+      const index = _items.map((i) => i.id).indexOf(item.id);
+      _items[index].status = item.status;
+
+      return {
+        ...state,
+        items: _items,
       };
     });
   },
