@@ -49,7 +49,9 @@ export function CommentPosted(props: {
         className="flex flex-row w-full items-start"
         key={`${comment.id}-${comment.createdAt}`}
       >
-        <UserTag user={user} />
+        <div className="h-[2em] min-w-[2em] mt-2">
+          <UserTag user={user} />
+        </div>
         <div className="rounded px-4 grow flex flex-col w-full">
           <span>
             <span className="text-[11px] font-medium text-dark_blue">

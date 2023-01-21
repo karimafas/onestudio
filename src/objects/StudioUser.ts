@@ -28,4 +28,8 @@ export class StudioUser {
       json.owner
     );
   }
+
+  public get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
 }

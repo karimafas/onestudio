@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   deleteDataItem,
@@ -7,14 +7,17 @@ import {
   loadItemComments,
   reloadItem,
 } from "../features/data/dataSlice";
-import { deleteItems, updateItem } from "../features/data/inventorySlice";
+import {
+  deleteItems,
+  search,
+  updateItem,
+} from "../features/data/inventorySlice";
 import { ItemDfo } from "../objects/InventoryItem";
 import { Header } from "../components/Header";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { SquareButton } from "../components/SquareButton";
 import { ValidationObject } from "../services/ValidationService";
 import ConfirmDialog from "../components/ConfirmDialog";
-import { CustomSelect } from "../components/CustomSelect";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { openSnack, SnackType } from "../features/data/uiSlice";
@@ -59,10 +62,20 @@ export function ItemPage() {
   };
   const [dfo, setDfo] = useState<ItemDfo>(initialState);
   const [confirmDialog, setConfirmDialog] = useState<boolean>(false);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     dispatch(loadItemComments(item));
+    scrollToComments();
   }, []);
+
+  function scrollToComments() {
+    if (!searchParams.get("comments")) return;
+    setTimeout(() => {
+      const section = document.querySelector("#comments");
+      section!.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 200);
+  }
 
   function hasChanged() {
     return JSON.stringify(initialState) !== JSON.stringify(dfo);
@@ -144,7 +157,7 @@ export function ItemPage() {
     return <div></div>;
   } else {
     return (
-      <div className="py-3 px-10 w-full h-[100vh] h-screen overflow-auto">
+      <div className="py-3 px-10 w-full h-screen overflow-auto">
         <ConfirmDialog
           icon={<DeleteIcon className="mr-1" fontSize="small" />}
           title="Delete Item"
@@ -214,7 +227,7 @@ export function ItemPage() {
             setDfo={setDfo}
             dfo={dfo}
           />
-          <div className="w-[30em] mt-10">
+          <div className="w-[30em] mt-10" id="comments">
             <span className="text-dark_blue text-sm font-semibold">
               Activity
             </span>

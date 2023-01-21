@@ -11,7 +11,7 @@ import { ImportPage } from "./pages/ImportPage";
 import { AppConstants } from "./config/AppConstants";
 import { CustomSnackBar } from "./components/CustomSnackBar";
 import { LoadingOverlay } from "./components/LoadingOverlay";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { initialLoad } from "./features/data/dataSlice";
 import { CircularProgress } from "@mui/material";
@@ -38,7 +38,7 @@ function AppBody() {
 
   return (
     <>
-      <div className="relative mt-[-100vh] flex flex-row overflow-hidden pointer-events-auto">
+      <div className="relative mt-[-100vh] flex flex-row pointer-events-auto overflow-hidden">
         <div>
           {AppConstants.hasSidebar(location.pathname) ? <Sidebar /> : <></>}
         </div>

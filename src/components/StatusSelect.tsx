@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../app/hooks";
 import { StringHelper } from "../helpers/StringHelper";
 import { PrimitiveStatuses } from "../objects/Status";
@@ -36,12 +36,23 @@ export function StatusSelect(props: {
     props.defaultValue ? parseInt(props.defaultValue) : undefined
   );
   const statuses = useAppSelector((state) => state.data.statuses);
+  const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (hasChanged) {
       props.onChange(selectedId?.toString() ?? "");
       setHasChanged(false);
     }
+
+    const handleClickOutside = (event: any) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setFocus(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
   }, [selectedId, hasChanged]);
 
   function getId(): number | undefined {
@@ -99,6 +110,7 @@ export function StatusSelect(props: {
     <div
       className="flex flex-col cursor-pointer"
       onClick={() => setFocus(!focus)}
+      ref={ref}
     >
       <div
         className={`flex flex-row ${

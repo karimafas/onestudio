@@ -36,7 +36,9 @@ export function CommentEditor(props: { item: InventoryItem }) {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row w-full items-start mt-4">
-        <UserTag user={user} />
+        <div className="h-[2em] min-w-[2em]">
+          <UserTag user={user} comment />
+        </div>
         <CommentEditorField
           body={body}
           setBody={setBody}
