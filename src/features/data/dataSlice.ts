@@ -201,6 +201,15 @@ export const changeStatus = createAsyncThunk(
   }
 );
 
+export const reloadStatus = createAsyncThunk(
+  "data/reloadStatus",
+  async (itemId: number) => {
+    const result = await StatusRepository.getItemStatus(itemId);
+
+    return { success: result.success, status: result.status, itemId: itemId };
+  }
+);
+
 export const reloadEvents = createAsyncThunk("data/reloadEvents", async () => {
   const events = await EventRepository.getStudioEvents();
   return events;
@@ -439,6 +448,23 @@ export const counterSlice = createSlice({
       const _items = [...state.items];
       const index = _items.map((i) => i.id).indexOf(item.id);
       _items[index].status = item.status;
+
+      return {
+        ...state,
+        items: _items,
+      };
+    });
+    builder.addCase(reloadStatus.fulfilled, (state: DataState, action) => {
+      if (!action.payload) return;
+      if (!action.payload.success) return;
+      const status = action.payload.status;
+      if (!status) return;
+
+      const _items = [...state.items];
+      const index = _items.map((i) => i.id).indexOf(action.payload.itemId);
+      _items[index].status = status;
+
+      debugger;
 
       return {
         ...state,

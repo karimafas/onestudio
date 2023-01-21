@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../app/hooks";
 import { StringHelper } from "../helpers/StringHelper";
-import { PrimitiveStatuses } from "../objects/Status";
 
 export interface SelectElement {
   id: number;
@@ -17,11 +16,15 @@ interface StatusSelectOption {
 export function StatusSelect(props: {
   onChange: Function;
   elements: SelectElement[];
-  defaultValue: string;
+  itemId: number;
   width?: string;
   height?: string;
   style?: string;
 }) {
+  const defaultValue = useAppSelector(
+    (state) =>
+      state.data.items.filter((i) => i.id === props.itemId)[0].status.id
+  );
   const width: string = props.width ?? "w-48";
   const height: string = props.height ?? "h-8";
   const drawerTopMargin: string = height.replace("h-", "mt-");
@@ -33,7 +36,7 @@ export function StatusSelect(props: {
   );
   const [hasChanged, setHasChanged] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<number | undefined>(
-    props.defaultValue ? parseInt(props.defaultValue) : undefined
+    defaultValue
   );
   const statuses = useAppSelector((state) => state.data.statuses);
   const ref = useRef<HTMLInputElement>(null);
@@ -44,6 +47,9 @@ export function StatusSelect(props: {
       setHasChanged(false);
     }
 
+    setSelectedId(defaultValue);
+    props.onChange(selectedId + "");
+
     const handleClickOutside = (event: any) => {
       if (ref.current && !ref.current.contains(event.target)) {
         setFocus(false);
@@ -53,7 +59,7 @@ export function StatusSelect(props: {
     return () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
-  }, [selectedId, hasChanged]);
+  }, [selectedId, hasChanged, defaultValue]);
 
   function getId(): number | undefined {
     return !selectedId

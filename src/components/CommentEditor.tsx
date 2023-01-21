@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { createComment, getLastUserActivity } from "../features/data/dataSlice";
+import { createComment, getLastUserActivity, reloadStatus } from "../features/data/dataSlice";
 import { openSnack, SnackType } from "../features/data/uiSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { InventoryItem } from "../objects/InventoryItem";
@@ -29,6 +29,10 @@ export function CommentEditor(props: { item: InventoryItem }) {
     }
 
     dispatch(getLastUserActivity());
+
+    setTimeout(() => {
+      dispatch(reloadStatus(props.item.id))
+    }, 1500);
 
     setBody("");
   }

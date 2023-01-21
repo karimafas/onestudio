@@ -208,7 +208,7 @@ export function ItemPage() {
               <StatusSelect
                 style="mt-3 w-[10em]"
                 onChange={(e: string) => _updateStatus(parseInt(e))}
-                defaultValue={item.status.id + ""}
+                itemId={item.id}
                 elements={statuses.map((s) => {
                   return {
                     id: s.id,

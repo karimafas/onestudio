@@ -26,6 +26,30 @@ export class StatusRepository {
     return statuses;
   }
 
+  public static async getItemStatus(itemId: number): Promise<{
+    success: boolean;
+    status: Status | undefined;
+  }> {
+    let status: Status | undefined;
+    let success = false;
+
+    try {
+      const resp = await RequestService.request(
+        `status/item/${itemId}`,
+        RequestType.get
+      );
+
+      LoggerService.log("Reloaded item status.", resp);
+
+      success = true;
+      status = Status.fromJson(resp.data);
+    } catch (e) {
+      LoggerService.log("Couldn't reload item status.");
+    }
+
+    return { success, status };
+  }
+
   public static async createStatus(name: string): Promise<boolean> {
     let success: boolean = false;
 
