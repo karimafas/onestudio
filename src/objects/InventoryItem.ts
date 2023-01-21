@@ -4,7 +4,6 @@ import { Constants } from "../utils/Constants";
 import { TimelineEvent } from "./TimelineEvent";
 import { StudioUser } from "./StudioUser";
 import { EventRepository } from "../repositories/EventRepository";
-import { AuthRepository } from "../repositories/AuthRepository";
 import { Status } from "./Status";
 import { Comment } from "./Comment";
 import { CommentRepository } from "../repositories/CommentRepository";
@@ -15,7 +14,6 @@ export class InventoryItem {
   model: string;
   locationId: number;
   serial: string;
-  mNumber: string;
   price: number;
   categoryId: number;
   ownerId: number;
@@ -60,7 +58,6 @@ export class InventoryItem {
       json.model,
       json.locationId,
       json.serial,
-      json.mNumber,
       json.price,
       json.categoryId,
       json.ownerId,
@@ -78,7 +75,6 @@ export class InventoryItem {
     model: string,
     locationId: number,
     serial: string,
-    mNumber: string,
     price: number,
     categoryId: number,
     ownerId: number,
@@ -93,7 +89,6 @@ export class InventoryItem {
     this.model = model;
     this.locationId = locationId;
     this.serial = serial;
-    this.mNumber = mNumber;
     this.price = price;
     this.categoryId = categoryId;
     this.ownerId = ownerId;
@@ -110,7 +105,6 @@ export class InventoryItem {
       model: i.model,
       locationId: parseInt(i.locationId),
       serial: i.serial,
-      mNumber: i.mNumber,
       price: parseFloat(i.price),
       categoryId: parseInt(i.categoryId),
       ownerId: parseInt(i.ownerId),
@@ -125,7 +119,6 @@ export class InventoryItem {
       model: i.model,
       location: i.location,
       serial: i.serial,
-      mNumber: i.mNumber,
       price: parseFloat(i.price),
       category: i.category,
       owner: i.owner,
@@ -140,7 +133,6 @@ export interface ItemDfo {
   model: string;
   locationId: string;
   serial: string;
-  mNumber: string;
   price: string;
   categoryId: string;
   ownerId: string;
@@ -152,7 +144,6 @@ export interface CsvItemDfo {
   model: string;
   location: string;
   serial: string;
-  mNumber: string;
   price: string;
   category: string;
   owner: string;
@@ -164,7 +155,6 @@ export interface CsvItemDto {
   model?: string;
   location?: string;
   serial?: string;
-  mNumber?: string;
   price?: number;
   category?: string;
   owner?: string;
@@ -177,7 +167,6 @@ export interface ItemDto {
   model?: string;
   locationId?: number;
   serial?: string;
-  mNumber?: string;
   price?: number;
   categoryId?: number;
   ownerId?: number;

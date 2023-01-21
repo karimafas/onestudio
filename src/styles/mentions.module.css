@@ -34,9 +34,9 @@
 }
 
 .mentions__suggestions__item {
-  padding: 3px;
+  padding: 10px;
   color: #120F9C;
-  /* border-bottom: 1px solid rgba(0, 0, 0, 0.15); */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .mentions__suggestions__item--focused {

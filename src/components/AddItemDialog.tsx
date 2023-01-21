@@ -27,7 +27,6 @@ export function AddItemDialog(props: {
     model: "",
     locationId: "",
     serial: "",
-    mNumber: "",
     price: "",
     categoryId: "",
     ownerId: "",
@@ -53,7 +52,6 @@ export function AddItemDialog(props: {
         "model",
         "locationId",
         "serial",
-        "mNumber",
         "price",
         "categoryId",
         "ownerId",
@@ -138,14 +136,6 @@ export function AddItemDialog(props: {
             />
           </div>
           <div className="flex flex-row w-full justify-between">
-            <CustomTextField
-              width="w-60"
-              placeholder="M-Number"
-              name="mNumber"
-              defaultValue={dfo.mNumber}
-              validationObject={validationObject}
-              onChange={(v: string) => setDfo({ ...dfo, mNumber: v })}
-            />
             <CustomSelect
               width="w-60"
               elements={locations.map((l) => {
@@ -160,8 +150,6 @@ export function AddItemDialog(props: {
               validationObject={validationObject}
               onChange={(v: string) => setDfo({ ...dfo, locationId: v })}
             />
-          </div>
-          <div className="flex flex-row w-full justify-between">
             <CustomSelect
               width="w-60"
               elements={categories.map((c) => {
@@ -178,6 +166,8 @@ export function AddItemDialog(props: {
                 setDfo({ ...dfo, categoryId: v });
               }}
             />
+          </div>
+          <div className="flex flex-row w-full justify-between">
             <CustomSelect
               width="w-60"
               elements={owners.map((o) => {

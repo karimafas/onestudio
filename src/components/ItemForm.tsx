@@ -75,18 +75,6 @@ export function ItemForm(props: {
           </div>
           <div className="flex flex-row justify-between items-start">
             <span className="text-light_blue font-semibold ml-1 mt-[5px]">
-              M-Number
-            </span>
-            <CustomTextField
-              disabled={disabled}
-              validationObject={validationObject}
-              defaultValue={`${dfo.mNumber}`}
-              name="mNumber"
-              onChange={(v: string) => setDfo({ ...dfo, mNumber: v })}
-            />
-          </div>
-          <div className="flex flex-row justify-between items-start">
-            <span className="text-light_blue font-semibold ml-1 mt-[5px]">
               Notes
             </span>
             <CustomTextField

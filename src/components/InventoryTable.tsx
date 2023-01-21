@@ -34,7 +34,6 @@ export function InventoryTable(props: {
           .toString()
           .toLowerCase()
           .includes(props.searchQuery.toLowerCase()) ||
-        i.mNumber.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
         i.serial.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
         i.notes.toLowerCase().includes(props.searchQuery.toLowerCase())
     )
@@ -55,8 +54,6 @@ export function InventoryTable(props: {
       case "owner":
         const owner = owners.filter((o) => o.id == i.ownerId)[0];
         return `${owner.firstName} ${owner.lastName}`;
-      case "mNumber":
-        return i.mNumber;
       case "serial":
         return i.serial;
       case "notes":

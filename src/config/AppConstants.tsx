@@ -18,7 +18,6 @@ export class AppConstants {
     new AppColumn("location", true),
     new AppColumn("category", true),
     new AppColumn("owner", true),
-    new AppColumn("mNumber", true),
     new AppColumn("serial", true),
     new AppColumn("notes", false),
   ];
@@ -30,7 +29,6 @@ export class AppConstants {
     new TableColumn("location", "Location", true, 10, 0),
     new TableColumn("category", "Category", true, 10, 0),
     new TableColumn("owner", "Owner", true, 10, 0),
-    new TableColumn("mNumber", "M-Number", true, 15, 0),
     new TableColumn("serial", "Serial", true, 10, 0),
     new TableColumn("notes", "Notes", true, 10, 1),
   ];

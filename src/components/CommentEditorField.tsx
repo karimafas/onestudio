@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { MentionsInput, Mention } from "react-mentions";
 import { useAppSelector } from "../app/hooks";
 import classNames from "../styles/mentions.module.css";
+import { UserTag } from "./UserTag";
 
 export function CommentEditorField(props: {
   body: string;
@@ -15,11 +17,12 @@ export function CommentEditorField(props: {
   const marginLeft = viewing ? "" : editing ? "" : "ml-4";
   const marginTop = viewing || editing ? "mt-2" : "";
 
-  const users = useAppSelector((state) =>
-    state.data.studioUsers.map((u) => {
-      return { id: u.id, display: `${u.firstName} ${u.lastName}` };
-    })
-  );
+  const rawUsers = useAppSelector((state) => state.data.studioUsers);
+  const users = rawUsers.map((u) => {
+    return { id: u.id, display: `${u.firstName} ${u.lastName}` };
+  });
+
+  const [showPreview, setShowPreview] = useState<boolean>(false);
 
   return (
     <div
@@ -48,7 +51,18 @@ export function CommentEditorField(props: {
           data={users}
           displayTransform={(_, display) => ` @${display} `}
           renderSuggestion={(suggestion, search, highlightedDisplay) => (
-            <div>{highlightedDisplay}</div>
+            <div
+              className="flex flex-row items-center px-2"
+              onMouseEnter={() => setShowPreview(true)}
+              onMouseLeave={() => setShowPreview(false)}
+            >
+              <div className="h-[2em] w-[2em] mr-2">
+                <UserTag
+                  user={rawUsers.filter((u) => u.id === suggestion.id)[0]}
+                />
+              </div>
+              <span>{highlightedDisplay}</span>
+            </div>
           )}
           appendSpaceOnAdd
         />
