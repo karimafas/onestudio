@@ -43,6 +43,7 @@ export enum Images {
   settingsFocused = "settings-focused.png",
   settingsUnfocused = "settings-unfocused.png",
   settings = "settings.png",
+  spinner = "spinner.png",
   uploadCloud = "upload-cloud.png",
   uploadFile = "upload-file.png",
 }

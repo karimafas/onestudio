@@ -21,10 +21,10 @@ export function FilterSection(props: { items: InventoryItem[] }) {
 
   return (
     <div
-      className={`transition-all duration-300 ${height} ${margin} ${opacity} rounded-lg bg-lightest_purple2`}
+      className={`transition-all duration-300 ${height} ${margin} rounded-lg bg-lightest_purple2`}
     >
       <div
-        className={`w-full h-full ${itemsOpacity} transition-all duration-700 delay-200 flex flex-row items-center px-5 justify-around`}
+        className={`w-full h-full ${itemsOpacity} transition-all flex flex-row items-center px-5 justify-around`}
       >
         <FilterCard
           title="Manufacturer"
@@ -33,26 +33,36 @@ export function FilterSection(props: { items: InventoryItem[] }) {
             filterState,
             FilterType.manufacturers
           )}
+          index={1}
+          visible={visible}
         />
         <FilterCard
           title="Location"
           options={FilterService.getLocations(items, locations)}
           selected={FilterService.getArray(filterState, FilterType.locations)}
+          index={2}
+          visible={visible}
         />
         <FilterCard
           title="Category"
           options={FilterService.getCategories(items, categories)}
           selected={FilterService.getArray(filterState, FilterType.categories)}
+          index={3}
+          visible={visible}
         />
         <FilterCard
           title="Owner"
           options={FilterService.getOwners(items, owners)}
           selected={FilterService.getArray(filterState, FilterType.owners)}
+          index={4}
+          visible={visible}
         />
         <FilterCard
           title="Status"
           options={FilterService.getStatuses(items, statuses)}
           selected={FilterService.getArray(filterState, FilterType.statuses)}
+          index={5}
+          visible={visible}
         />
         <span
           className={`text-sm font-semibold text-light_purple hover:underline cursor-pointer`}

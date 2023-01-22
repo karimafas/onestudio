@@ -50,7 +50,10 @@ interface DataState {
   events: TimelineEvent[];
   statuses: Status[];
   activity: StudioActivity[];
+  activityCount: number;
+  skipActivity: number;
   notifications: Notification[];
+  forceUpdate: number;
 }
 
 // Define the initial state using that type
@@ -65,7 +68,10 @@ const initialState: DataState = {
   events: [],
   statuses: [],
   activity: [],
+  activityCount: 0,
+  skipActivity: 10,
   notifications: [],
+  forceUpdate: 0,
 };
 
 export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
@@ -77,6 +83,7 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
   const events = await EventRepository.getStudioEvents();
   const statuses = await StatusRepository.getStatuses();
   const activity = await ActivityRepository.getStudioActivity();
+  const activityCount = await ActivityRepository.getStudioActivityCount();
   const notifications = await NotificationRepository.getNotifications();
   notifications.map((n) => n.initialise(studioUsers, items));
 
@@ -89,6 +96,7 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
     events,
     statuses,
     activity,
+    activityCount,
     notifications,
   };
 });
@@ -219,6 +227,15 @@ export const reloadUsers = createAsyncThunk("data/reloadUsers", async () => {
   return await AuthRepository.getStudioUsers();
 });
 
+export const loadMoreActivity = createAsyncThunk(
+  "data/loadMoreActivity",
+  async (_, thunkAPI) => {
+    const state: any = thunkAPI.getState();
+    const data = state.data as DataState;
+    return await ActivityRepository.getStudioActivity(data.skipActivity);
+  }
+);
+
 export const reloadTypes = createAsyncThunk("data/reloadTypes", async () => {
   const categories: Category[] = await CategoryRepository.getCategories();
   const locations: StudioLocation[] = await LocationRepository.getLocations();
@@ -265,6 +282,8 @@ export const counterSlice = createSlice({
       state.statuses = payload.statuses;
       state.activity = payload.activity;
       state.notifications = payload.notifications;
+      state.skipActivity = payload.activity.length;
+      if (payload.activityCount) state.activityCount = payload.activityCount;
       state.loading = false;
     });
     builder.addCase(reloadItem.fulfilled, (state: DataState, action) => {
@@ -464,11 +483,22 @@ export const counterSlice = createSlice({
       const index = _items.map((i) => i.id).indexOf(action.payload.itemId);
       _items[index].status = status;
 
-      debugger;
-
       return {
         ...state,
         items: _items,
+        forceUpdate: state.forceUpdate + 1,
+      };
+    });
+    builder.addCase(loadMoreActivity.fulfilled, (state: DataState, action) => {
+      if (!action.payload) return;
+      const activity = action.payload;
+
+      const _activity = [...state.activity, ...activity];
+
+      return {
+        ...state,
+        activity: _activity,
+        skipActivity: state.skipActivity + 10,
       };
     });
   },

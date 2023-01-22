@@ -104,6 +104,7 @@ export function ItemPage() {
   }
 
   async function _updateStatus(newStatusId: number) {
+    debugger
     const result = await dispatch(
       changeStatus({ statusId: newStatusId, itemId: item.id })
     ).unwrap();

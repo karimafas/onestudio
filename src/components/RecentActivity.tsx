@@ -1,8 +1,10 @@
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { loadMoreActivity } from "../features/data/dataSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { ActivityType, StudioActivity } from "../objects/StudioActivity";
+import { PrimaryButton } from "./PrimaryButton";
 
 export enum RecentActivityType {
   dashboard,
@@ -19,8 +21,11 @@ export function RecentActivity(props: {
   activity: StudioActivity[];
   style?: string;
 }) {
-  const users = useAppSelector((state) => state.data.studioUsers);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const users = useAppSelector((state) => state.data.studioUsers);
+  const activityCount = useAppSelector((state) => state.data.activityCount);
+  const loadedActivity = useAppSelector((state) => state.data.activity);
 
   function eventData(e: StudioActivity): DashboardEventData {
     switch (e.type) {
@@ -118,6 +123,19 @@ export function RecentActivity(props: {
             </div>
           </div>
         ))}
+        {loadedActivity.length < activityCount ? (
+          <div className="flex flex-row w-full justify-center mt-4">
+            <PrimaryButton
+              text="Load more"
+              onClick={() => dispatch(loadMoreActivity())}
+              size="small"
+              icon={ImageHelper.image(Images.spinner)}
+              iconStyle="w-[12px]"
+            />
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

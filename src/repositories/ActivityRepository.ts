@@ -1,14 +1,17 @@
 import { StudioActivity } from "../objects/StudioActivity";
-import { StudioLocation } from "../objects/StudioLocation";
 import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
 
 export class ActivityRepository {
-  public static async getStudioActivity(): Promise<StudioActivity[]> {
+  public static async getStudioActivity(
+    skip?: number
+  ): Promise<StudioActivity[]> {
     let activity: StudioActivity[] = [];
 
     try {
-      const resp = await RequestService.request("activity", RequestType.get);
+      let url = "activity";
+      if (skip) url += `/?skip=${skip}`;
+      const resp = await RequestService.request(url, RequestType.get);
 
       LoggerService.log("Loaded studio activity from API.", resp);
 
@@ -24,6 +27,23 @@ export class ActivityRepository {
     }
 
     return activity;
+  }
+
+  public static async getStudioActivityCount(): Promise<number | undefined> {
+    let count: number | undefined;
+
+    try {
+      const resp = await RequestService.request(
+        "activity/count",
+        RequestType.get
+      );
+      count = parseInt(resp.data.count);
+      LoggerService.log("Loaded studio activity count from API.", resp);
+    } catch (e) {
+      LoggerService.log(`Couldn't load studio activity count.`);
+    }
+
+    return count;
   }
 
   public static async lastUserActivity(

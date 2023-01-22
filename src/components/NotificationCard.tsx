@@ -10,19 +10,19 @@ export function NotificationCard(props: { notification: Notification }) {
   const navigate = useNavigate();
   const { notification } = props;
 
-  const unseen = "bg-lightest_purple rounded-lg h-full w-full px-3";
-  const seen = "rounded-lg h-full w-full px-3";
+  const unseen = "bg-lightest_purple h-full w-full";
+  const seen = "h-full w-full";
 
   return (
     <div
-      className="w-full h-[6em] p-3 cursor-pointer min-h-[6em]"
+      className="w-full cursor-pointer min-h-[4em] border-b-[1px] border-b-light_grey"
       onClick={() => {
         if (!notification.seen) dispatch(viewNotification(notification.id));
         navigate(`/inventory/${notification.itemId}/?comments=true`);
       }}
     >
       <div className={notification.seen ? seen : unseen}>
-        <div className="flex flex-row w-full h-full items-center">
+        <div className="flex flex-row w-full h-full items-center px-5">
           <div className="h-[2em] w-[2em]">
             <UserTag user={notification.user} />
           </div>

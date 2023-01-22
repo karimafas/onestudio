@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { getLastUserActivity } from "../features/data/dataSlice";
 import { StringHelper } from "../helpers/StringHelper";
 
 export interface SelectElement {
@@ -21,6 +22,7 @@ export function StatusSelect(props: {
   height?: string;
   style?: string;
 }) {
+  const dispatch = useAppDispatch();
   const defaultValue = useAppSelector(
     (state) =>
       state.data.items.filter((i) => i.id === props.itemId)[0].status.id
@@ -40,26 +42,30 @@ export function StatusSelect(props: {
   );
   const statuses = useAppSelector((state) => state.data.statuses);
   const ref = useRef<HTMLInputElement>(null);
+  const dataUpdate = useAppSelector((state) => state.data.forceUpdate);
 
   useEffect(() => {
-    if (hasChanged) {
+    if (dataUpdate) {
+      setSelectedId(defaultValue);
+      setHasChanged(true);
+      dispatch(getLastUserActivity());
+      return;
+    } else if (hasChanged) {
       props.onChange(selectedId?.toString() ?? "");
       setHasChanged(false);
+      return;
+    } else {
+      const handleClickOutside = (event: any) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setFocus(false);
+        }
+      };
+      document.addEventListener("click", handleClickOutside, true);
+      return () => {
+        document.removeEventListener("click", handleClickOutside, true);
+      };
     }
-
-    setSelectedId(defaultValue);
-    props.onChange(selectedId + "");
-
-    const handleClickOutside = (event: any) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        setFocus(false);
-      }
-    };
-    document.addEventListener("click", handleClickOutside, true);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, true);
-    };
-  }, [selectedId, hasChanged, defaultValue]);
+  }, [selectedId, hasChanged, dataUpdate]);
 
   function getId(): number | undefined {
     return !selectedId

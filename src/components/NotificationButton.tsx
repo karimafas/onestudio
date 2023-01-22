@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../app/hooks";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
-import { NotificationCard } from "./NotificationCard";
+import { NotificationTray } from "./NotificationTray";
 
 export function NotificationButton() {
-  const [notificationBox, setNotificationBox] = useState<boolean>(false);
   const notifications = useAppSelector((state) => state.data.notifications);
+  const [notificationBox, setNotificationBox] = useState<boolean>(false);
+
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -40,21 +41,7 @@ export function NotificationButton() {
       ) : (
         <></>
       )}
-      {notificationBox ? (
-        <div className="absolute h-[80%] w-[23em] bg-white shadow-2xl rounded-md ml-[-20em] mt-2 flex flex-col overflow-auto">
-          <span className="mt-4 ml-4 text-dark_blue font-semibold text-lg">
-            Notifications
-          </span>
-          {notifications.map((n) => (
-            <NotificationCard
-              notification={n}
-              key={`notification-${n.id}-${n.createdAt}`}
-            />
-          ))}
-        </div>
-      ) : (
-        <></>
-      )}
+      {notificationBox ? <NotificationTray /> : <></>}
     </div>
   );
 }
