@@ -19,11 +19,11 @@ import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { openSnack, SnackType } from "../features/data/uiSlice";
 import { Status } from "../objects/Status";
 import { StringHelper } from "../helpers/StringHelper";
-import { StatusRepository } from "../repositories/StatusRepository";
 import { ItemForm } from "../components/ItemForm";
 import { CommentSection } from "../components/CommentSection";
 import { StatusSelect } from "../components/StatusSelect";
 import { ItemRepository } from "../repositories/ItemRepository";
+import { CustomSelect } from "../components/CustomSelect";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -59,6 +59,7 @@ export function ItemPage() {
   const [dfo, setDfo] = useState<ItemDfo>(initialState);
   const [confirmDialog, setConfirmDialog] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
+  const owners = useAppSelector((state) => state.data.studioUsers);
 
   useEffect(() => {
     dispatch(loadItemComments(item));
@@ -104,7 +105,7 @@ export function ItemPage() {
   }
 
   async function _updateStatus(newStatusId: number) {
-    debugger
+    debugger;
     const result = await dispatch(
       changeStatus({ statusId: newStatusId, itemId: item.id })
     ).unwrap();
@@ -173,8 +174,8 @@ export function ItemPage() {
           onConfirm={() => navigate("/inventory")}
         />
         <Header />
-        <div className="flex flex-col w-full h-[85vh] animate-fade">
-          <div className="w-full flex flex-row justify-between mt-6 items-start">
+        <div className="flex flex-row w-full h-full animate-fade pt-8">
+          <div className="w-1/2">
             <div
               onClick={() => {
                 if (hasChanged()) {
@@ -183,7 +184,7 @@ export function ItemPage() {
                   navigate("/inventory");
                 }
               }}
-              className="w-48 flex flex-row ml-1 items-center cursor-pointer mt-3"
+              className="w-48 flex flex-row ml-1 items-center cursor-pointer mb-6"
             >
               <img
                 className="h-[8.5px] mr-3"
@@ -193,43 +194,61 @@ export function ItemPage() {
                 Back to inventory
               </span>
             </div>
-            <div>
-              <div className="flex flex-row justify-end w-[10em]">
-                <SquareButton
-                  icon={ImageHelper.image(Images.delete)}
-                  onClick={() => setDeleteOpen(true)}
-                />
-                <PrimaryButton
-                  style="ml-4"
-                  icon={ImageHelper.image(Images.save)}
-                  text="Save"
-                  onClick={() => handleSubmit()}
-                />
-              </div>
-              <StatusSelect
-                style="mt-3 w-[10em]"
-                onChange={(e: string) => _updateStatus(parseInt(e))}
-                itemId={item.id}
-                elements={statuses.map((s) => {
-                  return {
-                    id: s.id,
-                    value: StringHelper.toFirstUpperCase(s.name),
-                  };
-                })}
-              />
+            <ItemForm
+              disabled={disabled}
+              validationObject={validationObject}
+              setDfo={setDfo}
+              dfo={dfo}
+            />
+            <div className="w-[30em] mt-10" id="comments">
+              <span className="text-dark_blue text-sm font-semibold">
+                Activity
+              </span>
+              <CommentSection item={item} />
             </div>
           </div>
-          <ItemForm
-            disabled={disabled}
-            validationObject={validationObject}
-            setDfo={setDfo}
-            dfo={dfo}
-          />
-          <div className="w-[30em] mt-10" id="comments">
-            <span className="text-dark_blue text-sm font-semibold">
-              Activity
-            </span>
-            <CommentSection item={item} />
+          <div className="w-1/2 flex flex-col items-end">
+            <div className="flex flex-row justify-end w-[10em]">
+              <SquareButton
+                icon={ImageHelper.image(Images.delete)}
+                onClick={() => setDeleteOpen(true)}
+              />
+              <PrimaryButton
+                style="ml-4"
+                icon={ImageHelper.image(Images.save)}
+                text="Save"
+                onClick={() => handleSubmit()}
+              />
+            </div>
+            <StatusSelect
+              style="mt-5 w-[10em]"
+              onChange={(e: string) => _updateStatus(parseInt(e))}
+              itemId={item.id}
+              elements={statuses.map((s) => {
+                return {
+                  id: s.id,
+                  value: StringHelper.toFirstUpperCase(s.name),
+                };
+              })}
+            />
+            <CustomSelect
+              variant="filled"
+              style="w-[10em] mt-1"
+              elements={owners.map((o) => {
+                return {
+                  id: o.id,
+                  value: `${o.firstName} ${o.lastName}`,
+                };
+              })}
+              disabled={disabled}
+              validationObject={validationObject}
+              defaultValue={`${dfo.ownerId}`}
+              name="ownerId"
+              onChange={(v: string) => {
+                setDfo({ ...dfo, ownerId: v });
+              }}
+              key={`owner-${dfo.ownerId}`}
+            />
           </div>
         </div>
       </div>

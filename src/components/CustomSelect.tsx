@@ -49,12 +49,12 @@ export function CustomSelect(props: {
   const height: string = props.height ?? "h-8";
   const drawerTopMargin: string = height.replace("h-", "mt-");
 
-  const validClass = `p-1 h-full w-full hover:bg-lightest_purple rounded-lg font-semibold text-dark_blue ${
+  const validClass = `p-1 h-full w-full hover:bg-lightest_purple rounded-lg font-medium text-dark_blue ${
     props.fontSize ?? "text-base"
   } border-[2px] focus-within:border-lightest_purple border-transparent ${
     props.disabled ? "opacity-60 pointer-events-none" : ""
   }`;
-  const invalidClass = `p-1 h-full w-full bg-lightest_red rounded-lg font-semibold text-dark_blue ${props.fontSize} border-[2px] border-red`;
+  const invalidClass = `p-1 h-full w-full bg-lightest_red rounded-lg font-medium text-dark_blue ${props.fontSize} border-[2px] border-red`;
   const variantClass = props.variant === "filled" ? "bg-lightest_purple" : "";
   const extraClass = props.disableTyping ? "cursor-pointer" : "";
 

@@ -19,17 +19,17 @@ export function FilterCard(props: {
   visible: boolean;
   index: number;
 }) {
-  const dispatch = useAppDispatch();
   const { options, title, selected, index, visible } = props;
+  const dispatch = useAppDispatch();
+
   const hasFilters = selected.length > 0;
   const border = hasFilters ? "" : "border-lightest_purple border-[3px]";
   const background = hasFilters ? "bg-blue" : "";
   const textColor = hasFilters ? "text-white" : "text-dark_blue";
   const ref = useRef<HTMLInputElement>(null);
-  const [showBox, setShowBox] = useState<boolean>(false);
-
   const delay = `delay-${index * 200}`;
-  const translation = visible ? "translate-x-0" : "-translate-x-5";
+
+  const [showBox, setShowBox] = useState<boolean>(false);
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -46,7 +46,7 @@ export function FilterCard(props: {
   return (
     <div ref={ref}>
       <div
-        className={`w-[7em] h-[2em] ${background} ${border} rounded-lg flex flex-row items-center justify-center cursor-pointer transition-all duration-700 ${delay} ${translation}`}
+        className={`w-[7em] h-[2em] ${background} ${border} rounded-lg flex flex-row items-center justify-center cursor-pointer transition-all duration-700 ${delay}`}
         onClick={() => setShowBox(!showBox)}
       >
         <span className={`font-medium ${textColor} text-xs`}>{title}</span>

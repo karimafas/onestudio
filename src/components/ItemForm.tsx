@@ -86,7 +86,7 @@ export function ItemForm(props: {
             />
           </div>
         </div>
-        <div className="w-80 mt-4">
+        <div className="w-80">
           <div className="flex flex-row justify-between items-start">
             <span className="text-light_blue font-semibold ml-1 mt-[5px]">
               Location
@@ -127,27 +127,6 @@ export function ItemForm(props: {
                 setDfo({ ...dfo, categoryId: v });
               }}
               key={`category-${dfo.categoryId}`}
-            />
-          </div>
-          <div className="flex flex-row justify-between items-start">
-            <span className="text-light_blue font-semibold ml-1 mt-[5px]">
-              Owner
-            </span>
-            <CustomSelect
-              elements={owners.map((o) => {
-                return {
-                  id: o.id,
-                  value: `${o.firstName} ${o.lastName}`,
-                };
-              })}
-              disabled={disabled}
-              validationObject={validationObject}
-              defaultValue={`${dfo.ownerId}`}
-              name="ownerId"
-              onChange={(v: string) => {
-                setDfo({ ...dfo, ownerId: v });
-              }}
-              key={`owner-${dfo.ownerId}`}
             />
           </div>
         </div>
