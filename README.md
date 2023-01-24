@@ -1,8 +1,3 @@
-todos 
-
-1. responsive website
-5. stats date ranges finish
-6. import wizard from csv
-7. error handling throughout site (auth especially)
-10. invite users
-11. your studio page for admins
+# Running the dockerised app
+1. run `docker build -t appname`
+2. copy the app id from terminal and run `docker run -p 3002:3002 [appid]`

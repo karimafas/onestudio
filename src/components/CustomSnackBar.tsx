@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { closeSnack, SnackType } from "../features/data/uiSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
@@ -8,6 +8,7 @@ export function CustomSnackBar() {
   const open = useAppSelector((state) => state.ui.snackOpen);
   const type = useAppSelector((state) => state.ui.snackType);
   const message = useAppSelector((state) => state.ui.snackMessage);
+  const [visible, setVisible] = useState<boolean>(false);
   let timeout: any;
 
   useEffect(() => {
@@ -16,9 +17,15 @@ export function CustomSnackBar() {
       timeout = null;
     }
 
-    if (open) {
-      setTimeout(() => {}, 5000);
-    }
+    setTimeout(() => {
+      setVisible(open);
+
+      if (open) {
+        setTimeout(() => {
+          _close();
+        }, 3000);
+      }
+    }, 100);
   }, [open]);
 
   function indicatorColor() {
@@ -30,15 +37,22 @@ export function CustomSnackBar() {
     }
   }
 
+  function _close() {
+    setVisible(false);
+    setTimeout(() => {
+      dispatch(closeSnack());
+    }, 400);
+  }
+
   if (!open) return <></>;
 
   return (
     <div
       className={`w-full h-[100vh]
       } relative mt-[-100vh] flex flex-col justify-end align-start ${
-        open ? "opacity-100" : "opacity-0"
-      } transition-all duration-500 delay-500 ${
-        open ? "translate-x-0" : "-translate-x-12"
+        visible ? "opacity-100" : "opacity-0"
+      } transition-all duration-500 ${
+        visible ? "translate-x-0" : "-translate-x-12"
       } pointer-events-none`}
     >
       <div className="pointer-events-auto h-12 w-80 bg-blue -translate-y-12 translate-x-20 rounded-xl shadow-xl flex flex-row justify-between p-4 items-center">
@@ -47,7 +61,7 @@ export function CustomSnackBar() {
           <span className="text-xs text-white font-semibold">{message}</span>
         </div>
         <img
-          onClick={() => dispatch(closeSnack())}
+          onClick={_close}
           className="w-3 opacity-50 cursor-pointer"
           src={ImageHelper.image(Images.closeWhite)}
         />
