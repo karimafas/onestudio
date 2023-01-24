@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { AppConstants } from "../config/AppConstants";
@@ -7,6 +6,7 @@ import { InventoryItem } from "../objects/InventoryItem";
 import { TableColumn } from "../objects/TableColumn";
 import { CheckBox } from "./CheckBox";
 import { HeaderCheckBox } from "./HeaderCheckBox";
+import { UserTag } from "./UserTag";
 
 export function InventoryTable(props: {
   searchQuery: string;
@@ -97,6 +97,18 @@ export function InventoryTable(props: {
               className={`h-2 w-2 ${i.status.backgroundColor} rounded-[100%] mr-3`}
             ></div>
             <span>{i.status.displayName}</span>
+          </div>
+        );
+      case "owner":
+        return (
+          <div className="flex flex-row" style={style}>
+            <div className="h-[2.5em] w-[2.5em]">
+              <UserTag
+                user={owners.filter((o) => o.id === i.ownerId)[0]}
+                pointer
+                tooltip
+              />
+            </div>
           </div>
         );
       default:
