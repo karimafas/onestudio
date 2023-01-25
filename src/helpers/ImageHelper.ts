@@ -4,6 +4,7 @@ export enum Images {
   addPurple = "add-purple.png",
   addWhite = "add-white.png",
   arrowRight = "arrow-right.png",
+  attachDark = "attach-dark.png",
   backBlue = "back-blue.png",
   bellWhite = "bell-white.png",
   calendar = "calendar.png",

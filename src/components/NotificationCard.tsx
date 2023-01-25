@@ -15,7 +15,7 @@ export function NotificationCard(props: { notification: Notification }) {
 
   return (
     <div
-      className="w-full cursor-pointer min-h-[4em] border-b-[1px] border-b-light_grey"
+      className="w-full cursor-pointer min-h-[4em] border-b-[1px] border-b-light_grey hover:bg-lightest_purple2"
       onClick={() => {
         if (!notification.seen) dispatch(viewNotification(notification.id));
         navigate(`/inventory/${notification.itemId}/?comments=true`);
