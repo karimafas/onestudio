@@ -4,11 +4,9 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { updateComment } from "../features/data/dataSlice";
 import { openSnack, SnackType } from "../features/data/uiSlice";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { Comment } from "../objects/Comment";
 import { InventoryItem } from "../objects/InventoryItem";
 import { CommentEditorField } from "./CommentEditorField";
-import { PrimaryButton } from "./PrimaryButton";
 import { UserTag } from "./UserTag";
 
 export function CommentPosted(props: {
@@ -17,7 +15,7 @@ export function CommentPosted(props: {
   setDeleteConfirm: Function;
   item: InventoryItem;
 }) {
-  const { comment, setSelectedId, setDeleteConfirm } = props;
+  const { comment, setSelectedId, setDeleteConfirm, item } = props;
   const dispatch = useAppDispatch();
   const user = useAppSelector(
     (state) =>
@@ -26,7 +24,7 @@ export function CommentPosted(props: {
   const loggedInUser = useAppSelector((state) => state.data.user);
   const [editing, setEditing] = useState<boolean>(false);
   const [body, setBody] = useState<string>(comment.body);
-  const isPoster = loggedInUser && loggedInUser.id === user.id;
+  const isAuthor = loggedInUser && loggedInUser.id === user.id;
 
   async function _update() {
     const result = await dispatch(
@@ -75,65 +73,19 @@ export function CommentPosted(props: {
             <div>
               <CommentEditorField
                 style="text-dark_blue text-xs break-words"
-                body={comment.body}
-                setBody={() => {}}
-                setEditing={() => {}}
-                editing={false}
+                item={props.item}
+                comment={comment}
                 viewing
+                deleteComment={() => {
+                  setSelectedId(comment.id);
+                  setDeleteConfirm(true);
+                }}
+                isAuthor={isAuthor}
               />
-              {isPoster ? (
-                <div className="flex flex-row mt-1">
-                  <span
-                    className="text-xs font-medium text-dark_blue cursor-pointer hover:underline"
-                    onClick={() => setEditing(true)}
-                  >
-                    Edit
-                  </span>
-                  <span className="text-xs font-medium text-dark_blue mx-2">
-                    •
-                  </span>
-                  <span
-                    className="text-xs font-medium text-dark_blue cursor-pointer hover:underline"
-                    onClick={() => {
-                      setSelectedId(comment.id);
-                      setDeleteConfirm(true);
-                    }}
-                  >
-                    Delete
-                  </span>
-                </div>
-              ) : (
-                <></>
-              )}
             </div>
           ) : (
             <div className="w-[27rem]">
-              <CommentEditorField
-                body={body}
-                setBody={setBody}
-                setEditing={() => {}}
-                editing
-              />
-              <div className="w-full flex flex-row justify-end mt-3">
-                <PrimaryButton
-                  size="small"
-                  onClick={() => setEditing(false)}
-                  text="Cancel"
-                  style="mr-3"
-                  icon={ImageHelper.image(Images.closePurple)}
-                  iconStyle="w-[10px]"
-                />
-                <PrimaryButton
-                  size="small"
-                  onClick={_update}
-                  text="Save"
-                  backgroundColor="bg-blue"
-                  textColor="text-white"
-                  disabled={body.trim() === ""}
-                  icon={ImageHelper.image(Images.check)}
-                  iconStyle="w-[13px]"
-                />
-              </div>
+              <CommentEditorField comment={comment} item={item} />
             </div>
           )}
         </div>

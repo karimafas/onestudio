@@ -51,6 +51,8 @@ export function InventoryTable(props: {
   }
 
   function getRowContent(c: TableColumn, i: InventoryItem) {
+    const onClick = () => navigate(`${i.id}`);
+
     const style = {
       width: `${100 / filteredColumns.length}%`,
       paddingRight: 30,
@@ -92,7 +94,7 @@ export function InventoryTable(props: {
         );
       case "status":
         return (
-          <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center" onClick={onClick}>
             <div
               className={`h-2 w-2 ${i.status.backgroundColor} rounded-[100%] mr-3`}
             ></div>
@@ -101,7 +103,7 @@ export function InventoryTable(props: {
         );
       case "owner":
         return (
-          <div className="flex flex-row" style={style}>
+          <div className="flex flex-row" style={style} onClick={onClick}>
             <div className="h-[2.5em] w-[2.5em]">
               <UserTag
                 user={owners.filter((o) => o.id === i.ownerId)[0]}
@@ -116,7 +118,7 @@ export function InventoryTable(props: {
           <span
             key={`txt-${c.id}-${i.id}-${columnToItemText(c, i)}`}
             className="h-full flex flex-col justify-center"
-            onClick={() => navigate(`${i.id}`)}
+            onClick={onClick}
             style={style}
           >
             {columnToItemText(c, i)}
