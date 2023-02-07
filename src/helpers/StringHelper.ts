@@ -11,4 +11,10 @@ export class StringHelper {
       user?.lastName?.substring(0, 1) ?? ""
     }`.toUpperCase();
   }
+
+  static collapseString(text: string, maxCharacters?: number) {
+    const limit = maxCharacters || 20;
+    const ellipsis = text.length > limit ? "..." : "";
+    return `${text.substring(0, limit)}${ellipsis}`;
+  }
 }

@@ -17,10 +17,14 @@ import { StatusRepository } from "../../repositories/StatusRepository";
 import { Comment } from "../../objects/Comment";
 import { NotificationRepository } from "../../repositories/NotificationRepository";
 import { Notification } from "../../objects/Notification";
+import { FileRepository } from "../../repositories/FileRepository";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import storage from "../../firebaseConfig";
 
 export interface CreateCommentPayload {
   itemId: number;
   body: string;
+  attachments: any[];
 }
 
 export interface DeleteCommentPayload {
@@ -29,8 +33,11 @@ export interface DeleteCommentPayload {
 }
 
 export interface UpdateCommentPayload {
+  itemId: number;
   commentId: number;
   body: string;
+  deletedAttachmentIds: number[];
+  attachments: any[];
 }
 
 export interface ChangeStatusPayload {
@@ -121,6 +128,59 @@ export const duplicateItem = createAsyncThunk(
   }
 );
 
+async function uploadTaskPromise(
+  itemId: number,
+  attachment: File
+): Promise<string | undefined> {
+  if (!attachment) return;
+
+  return new Promise(function (resolve, reject) {
+    const storageRef = ref(
+      storage,
+      `/attachments/${itemId}_${attachment.name}_${new Date().getTime()}`
+    );
+    const uploadTask = uploadBytesResumable(storageRef, attachment);
+    uploadTask.on(
+      "state_changed",
+      (_) => {},
+      (err) => reject(err),
+      () => {
+        // download url
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          resolve(url);
+        });
+      }
+    );
+  });
+}
+
+async function uploadAttachments(
+  attachments: any,
+  itemId: number,
+  commentId: number
+) {
+  // Creates attachment records on db.
+  for (const attachment of attachments) {
+    if (!attachment.id) {
+      // Uploads attachment to Google Storage.
+      const url: string | undefined = await uploadTaskPromise(
+        itemId,
+        attachment
+      );
+
+      if (url) {
+        // Create db record for attachment.
+        await FileRepository.createFile(
+          attachment.name,
+          url,
+          itemId,
+          commentId
+        );
+      }
+    }
+  }
+}
+
 export const createComment = createAsyncThunk(
   "data/createComment",
   async (payload: CreateCommentPayload) => {
@@ -130,7 +190,26 @@ export const createComment = createAsyncThunk(
       payload.body
     );
 
-    return { comment: result.comment, success: result.success };
+    if (!result?.comment) return { succes: false };
+
+    try {
+      await uploadAttachments(
+        payload.attachments,
+        payload.itemId,
+        result.comment.id
+      );
+    } catch (e) {
+      console.error("Error uploading attachments", e);
+    }
+
+    const commentWithAttachments = await CommentRepository.getComment(
+      result.comment.id
+    );
+
+    return {
+      comment: commentWithAttachments.comment,
+      success: commentWithAttachments.success,
+    };
   }
 );
 
@@ -157,9 +236,26 @@ export const updateComment = createAsyncThunk(
       payload.body
     );
 
+    if (!result.success) return { result: false };
+    if (!result.comment) return { result: false };
+
+    // Delete attachments if required.
+    if (payload.deletedAttachmentIds.length > 0)
+      await FileRepository.deleteAttachments(payload.deletedAttachmentIds);
+
+    await uploadAttachments(
+      payload.attachments,
+      payload.itemId,
+      result.comment.id
+    );
+
+    const commentWithAttachments = await CommentRepository.getComment(
+      result.comment.id
+    );
+
     return {
-      success: result,
-      comment: result.comment,
+      success: commentWithAttachments.success,
+      comment: commentWithAttachments.comment,
     };
   }
 );

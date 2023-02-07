@@ -1,8 +1,11 @@
+import { FileUpload } from "./FileUpload";
+
 export class Comment {
   id: number;
   userId: number;
   itemId: number;
   body: string;
+  attachments: FileUpload[];
   createdAt: Date;
   updatedAt: Date;
 
@@ -11,6 +14,7 @@ export class Comment {
     userId: number,
     itemId: number,
     body: string,
+    attachments: FileUpload[],
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -18,6 +22,7 @@ export class Comment {
     this.userId = userId;
     this.itemId = itemId;
     this.body = body;
+    this.attachments = attachments;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -28,6 +33,7 @@ export class Comment {
       json.userId,
       json.itemId,
       json.body,
+      FileUpload.fromJsonArray(json.file),
       json.createdAt,
       json.updatedAt
     );

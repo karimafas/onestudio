@@ -2,8 +2,6 @@ import { Tooltip } from "@mui/material";
 import moment from "moment";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { updateComment } from "../features/data/dataSlice";
-import { openSnack, SnackType } from "../features/data/uiSlice";
 import { Comment } from "../objects/Comment";
 import { InventoryItem } from "../objects/InventoryItem";
 import { CommentEditorField } from "./CommentEditorField";
@@ -23,23 +21,7 @@ export function CommentPosted(props: {
   );
   const loggedInUser = useAppSelector((state) => state.data.user);
   const [editing, setEditing] = useState<boolean>(false);
-  const [body, setBody] = useState<string>(comment.body);
   const isAuthor = loggedInUser && loggedInUser.id === user.id;
-
-  async function _update() {
-    const result = await dispatch(
-      updateComment({ commentId: comment.id, body: body })
-    ).unwrap();
-
-    if (!result.success)
-      return dispatch(
-        openSnack({
-          message: "There was an issue updating comment.",
-          type: SnackType.error,
-        })
-      );
-    setEditing(false);
-  }
 
   return (
     <div className="w-[30rem]">

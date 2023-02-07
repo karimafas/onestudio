@@ -27,25 +27,45 @@ export class CommentRepository {
     return comments;
   }
 
+  public static async getComment(
+    commentId: number
+  ): Promise<{ success: boolean; comment: Comment | undefined }> {
+    let success: boolean = false;
+    let comment: Comment | undefined;
+
+    try {
+      const resp = await RequestService.request(
+        `comment/${commentId}`,
+        RequestType.get
+      );
+
+      if (resp.status === 200) {
+        comment = Comment.fromJson(resp.data);
+        success = true;
+      }
+    } catch (e) {
+      LoggerService.log(`Couldn't load comments.`);
+    }
+
+    return { comment, success };
+  }
+
   public static async createComment(
     itemId: number,
     body: string
   ): Promise<{ comment: Comment | undefined; success: boolean }> {
     let success = false;
     let comment: Comment | undefined;
-
     try {
       const payload = {
         itemId: itemId,
         body: body,
       };
-
       const resp = await RequestService.request(
         "comment",
         RequestType.post,
         payload
       );
-
       if (resp.status === 201) {
         success = true;
         comment = Comment.fromJson(resp.data);
@@ -53,7 +73,7 @@ export class CommentRepository {
       }
     } catch (e) {
       LoggerService.log("Couldn't create comment.");
-  }
+    }
 
     return { comment, success };
   }

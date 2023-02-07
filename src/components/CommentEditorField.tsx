@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MentionsInput, Mention } from "react-mentions";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
@@ -12,6 +12,7 @@ import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { Comment } from "../objects/Comment";
 import { InventoryItem } from "../objects/InventoryItem";
 import classNames from "../styles/mentions.module.css";
+import { AttachedFiles } from "./AttachedFiles";
 import { PrimaryButton } from "./PrimaryButton";
 import { UserTag } from "./UserTag";
 
@@ -36,8 +37,18 @@ export function CommentEditorField(props: {
     return { id: u.id, display: `${u.firstName} ${u.lastName}` };
   });
 
+  const inputFile = useRef<HTMLInputElement | null>(null);
+  let [originalAttachments, setOriginalAttachments] = useState<any[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
+  const [deletedAttachmentIds, setDeletedAttachmentIds] = useState<number[]>(
+    []
+  );
+
   useEffect(() => {
     if (comment) setBody(comment.body);
+    const attachments = comment?.attachments ?? [];
+    setOriginalAttachments([...attachments]);
+    setUploadedFiles(attachments);
   }, []);
 
   async function _comment() {
@@ -45,7 +56,13 @@ export function CommentEditorField(props: {
       if (!comment?.id) return;
 
       const result = await dispatch(
-        updateComment({ commentId: comment.id, body: body })
+        updateComment({
+          itemId: item.id,
+          commentId: comment.id,
+          body: body,
+          deletedAttachmentIds: deletedAttachmentIds,
+          attachments: uploadedFiles,
+        })
       ).unwrap();
 
       if (!result.success)
@@ -60,7 +77,7 @@ export function CommentEditorField(props: {
     }
 
     const result = await dispatch(
-      createComment({ itemId: item.id, body: body })
+      createComment({ itemId: item.id, body: body, attachments: uploadedFiles })
     ).unwrap();
 
     if (!result.success) {
@@ -79,10 +96,35 @@ export function CommentEditorField(props: {
     }, 1500);
 
     setBody("");
+    setUploadedFiles([]);
+  }
+
+  function _addAttachmentClick() {
+    if (!inputFile?.current) return;
+    inputFile.current.click();
+  }
+
+  async function _handleFileChange(event: any) {
+    const fileObject = event.target.files[0];
+    if (!fileObject) return;
+    setUploadedFiles([...uploadedFiles, fileObject]);
+  }
+
+  function _cancel() {
+    if (!viewing) setBody("");
+    setEditing(false);
+    setUploadedFiles(originalAttachments);
   }
 
   return (
     <div className="flex flex-col">
+      <input
+        type="file"
+        id="file"
+        ref={inputFile}
+        style={{ display: "none" }}
+        onChange={_handleFileChange}
+      />
       <div
         className={
           !editing && viewing
@@ -98,12 +140,9 @@ export function CommentEditorField(props: {
           placeholder={viewing ? "Edit comment..." : "Add a comment..."}
           value={body}
           onChange={(e) => setBody(e.target.value)}
-          onBlur={() =>
-            setTimeout(() => {
-              setEditing(false);
-            }, 100)
-          }
-          onFocus={() => setEditing(true)}
+          onFocus={() => {
+            if (!viewing || isAuthor) setEditing(true);
+          }}
           className="mentions"
           classNames={classNames}
         >
@@ -125,6 +164,14 @@ export function CommentEditorField(props: {
             appendSpaceOnAdd
           />
         </MentionsInput>
+        <AttachedFiles
+          uploadedFiles={uploadedFiles}
+          setUploadedFiles={setUploadedFiles}
+          deleteId={(id: number) =>
+            setDeletedAttachmentIds([...deletedAttachmentIds, id])
+          }
+          viewing={!editing && (viewing ?? false)}
+        />
       </div>
       {viewing && isAuthor && !editing ? (
         <div className="flex flex-row mt-1">
@@ -154,13 +201,18 @@ export function CommentEditorField(props: {
         <div className="w-full flex flex-row justify-end mt-3">
           <PrimaryButton
             size="small"
-            onClick={() => {
-              if (!viewing) return setBody("");
-              setEditing(false);
-            }}
+            onClick={_cancel}
             text="Cancel"
             style="mr-3"
             icon={ImageHelper.image(Images.closePurple)}
+            iconStyle="w-[10px]"
+          />
+          <PrimaryButton
+            size="small"
+            onClick={_addAttachmentClick}
+            text="Attach a file"
+            style="mr-3"
+            icon={ImageHelper.image(Images.attachDark)}
             iconStyle="w-[10px]"
           />
           <PrimaryButton
