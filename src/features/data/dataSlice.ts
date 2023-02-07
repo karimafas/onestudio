@@ -20,6 +20,7 @@ import { Notification } from "../../objects/Notification";
 import { FileRepository } from "../../repositories/FileRepository";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import storage from "../../firebaseConfig";
+import { FileUpload } from "../../objects/FileUpload";
 
 export interface CreateCommentPayload {
   itemId: number;
@@ -36,7 +37,7 @@ export interface UpdateCommentPayload {
   itemId: number;
   commentId: number;
   body: string;
-  deletedAttachmentIds: number[];
+  deletedAttachments: FileUpload[];
   attachments: any[];
 }
 
@@ -129,16 +130,14 @@ export const duplicateItem = createAsyncThunk(
 );
 
 async function uploadTaskPromise(
+  path: string,
   itemId: number,
   attachment: File
 ): Promise<string | undefined> {
   if (!attachment) return;
 
   return new Promise(function (resolve, reject) {
-    const storageRef = ref(
-      storage,
-      `/attachments/${itemId}_${attachment.name}_${new Date().getTime()}`
-    );
+    const storageRef = ref(storage, path);
     const uploadTask = uploadBytesResumable(storageRef, attachment);
     uploadTask.on(
       "state_changed",
@@ -162,8 +161,13 @@ async function uploadAttachments(
   // Creates attachment records on db.
   for (const attachment of attachments) {
     if (!attachment.id) {
+      const path = `/attachments/${itemId}_${
+        attachment.name
+      }_${new Date().getTime()}`;
+
       // Uploads attachment to Google Storage.
       const url: string | undefined = await uploadTaskPromise(
+        path,
         itemId,
         attachment
       );
@@ -172,9 +176,10 @@ async function uploadAttachments(
         // Create db record for attachment.
         await FileRepository.createFile(
           attachment.name,
+          path,
           url,
-          itemId,
-          commentId
+          commentId,
+          itemId
         );
       }
     }
@@ -240,8 +245,8 @@ export const updateComment = createAsyncThunk(
     if (!result.comment) return { result: false };
 
     // Delete attachments if required.
-    if (payload.deletedAttachmentIds.length > 0)
-      await FileRepository.deleteAttachments(payload.deletedAttachmentIds);
+    if (payload.deletedAttachments.length > 0)
+      await FileRepository.deleteAttachments(payload.deletedAttachments);
 
     await uploadAttachments(
       payload.attachments,

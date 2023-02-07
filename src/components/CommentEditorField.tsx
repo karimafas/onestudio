@@ -10,6 +10,7 @@ import {
 import { openSnack, SnackType } from "../features/data/uiSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { Comment } from "../objects/Comment";
+import { FileUpload } from "../objects/FileUpload";
 import { InventoryItem } from "../objects/InventoryItem";
 import classNames from "../styles/mentions.module.css";
 import { AttachedFiles } from "./AttachedFiles";
@@ -40,7 +41,7 @@ export function CommentEditorField(props: {
   const inputFile = useRef<HTMLInputElement | null>(null);
   let [originalAttachments, setOriginalAttachments] = useState<any[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
-  const [deletedAttachmentIds, setDeletedAttachmentIds] = useState<number[]>(
+  const [deletedAttachments, setDeletedAttachments] = useState<FileUpload[]>(
     []
   );
 
@@ -60,7 +61,7 @@ export function CommentEditorField(props: {
           itemId: item.id,
           commentId: comment.id,
           body: body,
-          deletedAttachmentIds: deletedAttachmentIds,
+          deletedAttachments: deletedAttachments,
           attachments: uploadedFiles,
         })
       ).unwrap();
@@ -168,7 +169,10 @@ export function CommentEditorField(props: {
           uploadedFiles={uploadedFiles}
           setUploadedFiles={setUploadedFiles}
           deleteId={(id: number) =>
-            setDeletedAttachmentIds([...deletedAttachmentIds, id])
+            setDeletedAttachments([
+              ...deletedAttachments,
+              uploadedFiles.filter((a) => a.id === id)[0],
+            ])
           }
           viewing={!editing && (viewing ?? false)}
         />
