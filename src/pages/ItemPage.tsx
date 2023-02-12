@@ -83,15 +83,13 @@ export function ItemPage() {
 
     const result = await ItemRepository.updateItem(data);
     if (result) {
-      await dispatch(reloadItem(item.id));
-      await item.initEvents();
-      forceUpdate();
       dispatch(
         openSnack({
           type: SnackType.success,
           message: "Item was updated successfully.",
         })
       );
+      dispatch(getLastUserActivity());
     } else {
       dispatch(
         openSnack({

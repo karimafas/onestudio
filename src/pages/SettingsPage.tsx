@@ -177,7 +177,7 @@ export function SettingsPage() {
           <AddUserCard onClick={() => setInviteUserDialog(true)} />
         </div>
         <div className="flex flex-row mt-14 items-start">
-          <div className="flex flex-col w-[22rem] h-80 overflow-auto pl-3">
+          <div className="flex flex-col w-[22rem] max-h-80 overflow-auto pl-3">
             <div className="flex flex-row items-center justify-between w-full mb-8 pr-4">
               <span className="text-dark_blue font-bold text-xl">
                 Categories
@@ -211,7 +211,7 @@ export function SettingsPage() {
               </div>
             ))}
           </div>
-          <div className="flex flex-col w-[22rem] h-80 ml-40 overflow-auto pl-3">
+          <div className="flex flex-col w-[22rem] max-h-80 ml-40 overflow-auto pl-3">
             <div className="flex flex-row items-center justify-between w-full mb-8 pr-4">
               <span className="text-dark_blue font-bold text-xl">
                 Locations

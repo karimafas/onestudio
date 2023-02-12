@@ -6,6 +6,7 @@ import { InventoryItem } from "../objects/InventoryItem";
 import { TableColumn } from "../objects/TableColumn";
 import { CheckBox } from "./CheckBox";
 import { HeaderCheckBox } from "./HeaderCheckBox";
+import { PrimaryButton } from "./PrimaryButton";
 import { UserTag } from "./UserTag";
 
 export function InventoryTable(props: {
@@ -19,8 +20,10 @@ export function InventoryTable(props: {
   page: number;
   setPage: Function;
   totalPages: number;
+  addItemCallback: Function;
 }) {
-  const { items, filteredItems, page, setPage, totalPages } = props;
+  const { items, filteredItems, page, setPage, totalPages, addItemCallback } =
+    props;
   const navigate = useNavigate();
   const locations = useAppSelector((state) => state.data.locations);
   const categories = useAppSelector((state) => state.data.categories);
@@ -163,6 +166,29 @@ export function InventoryTable(props: {
           </span>
         );
     }
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center">
+        <img className="w-[50%]" src={ImageHelper.image(Images.placeholder1)} />
+        <div className="absolute flex flex-col items-center">
+          <span className="font-medium text-dark_blue text-sm">
+            Don't be shy...
+          </span>
+          <div className="w-[15em]">
+            <PrimaryButton
+              text="Add your first item"
+              style="mt-5"
+              backgroundColor="bg-blue"
+              textColor="text-white"
+              icon={ImageHelper.image(Images.addWhite)}
+              onClick={() => addItemCallback()}
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -368,15 +368,27 @@ export const counterSlice = createSlice({
   initialState,
   reducers: {
     deleteDataItem: (state: DataState, action: PayloadAction<number>) => {
-      const changedItems = state.items;
+      const changedItems = [...state.items];
       const id = action.payload;
       const index = changedItems.map((i) => i.id).indexOf(id);
       changedItems.splice(index, 1);
+      let changedActivity = [...state.activity];
+      changedActivity = changedActivity.filter((a) => a.itemId !== id);
 
-      Object.assign(state.items, changedItems);
+      return { ...state, items: changedItems, activity: changedActivity };
     },
     stopLoading(state: DataState) {
       state.loading = false;
+    },
+    deleteItemEvents(state: DataState, action: PayloadAction<number[]>) {
+      let newActivity = [...state.activity];
+      for (const id of action.payload) {
+        newActivity = newActivity.filter((a) => a.itemId !== id);
+      }
+      return {
+        ...state,
+        activity: newActivity,
+      };
     },
   },
   extraReducers: (builder) => {

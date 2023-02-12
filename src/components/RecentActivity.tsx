@@ -98,6 +98,20 @@ export function RecentActivity(props: {
         <span className="font-bold text-xl text-dark_blue mb-6">
           Recent activity
         </span>
+        {props.activity.length === 0 ? (
+          <div className="w-full h-full flex flex-col items-center pt-20">
+            <img
+              className="w-1/3"
+              src={ImageHelper.image(Images.threeCircles)}
+            />
+            <span className="text-xs text-dark_blue text-center px-8">
+              As you start working with your inventory, this is where you'll
+              be able to track your actions and progress.
+            </span>
+          </div>
+        ) : (
+          <></>
+        )}
         {props.activity.map((a) => (
           <div
             key={`${a.type}-${a.createdAt}-${a.itemId}`}

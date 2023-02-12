@@ -173,6 +173,7 @@ export function InventoryPage() {
           page={page}
           setPage={setPage}
           totalPages={totalPages}
+          addItemCallback={() => setAddDialog(true)}
         />
       </div>
     </div>

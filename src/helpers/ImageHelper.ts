@@ -7,6 +7,7 @@ export enum Images {
   attachDark = "attach-dark.png",
   backBlue = "back-blue.png",
   bellWhite = "bell-white.png",
+  bellPurple = "bell-purple.png",
   calendar = "calendar.png",
   changeWhite = "change-white.png",
   check = "check.png",
@@ -40,6 +41,7 @@ export enum Images {
   logoTyped = "logo-typed.png",
   logo = "logo.png",
   person = "person.png",
+  placeholder1 = "placeholder1.png",
   save = "save.png",
   settingsFocused = "settings-focused.png",
   settingsUnfocused = "settings-unfocused.png",
@@ -49,6 +51,7 @@ export enum Images {
   uploadFile = "upload-file.png",
   users = "users.png",
   usersWhite = "users-white.png",
+  threeCircles = "three-circles.png",
 }
 
 export class ImageHelper {
