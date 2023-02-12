@@ -1,5 +1,3 @@
-import { ItemDfo } from "../objects/InventoryItem";
-
 function isNotNumber(value: string | number): value is string {
   return Number.isNaN(Number(value));
 }

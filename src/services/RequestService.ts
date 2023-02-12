@@ -1,3 +1,4 @@
+import { AxiosError, AxiosResponse } from "axios";
 import { AppConstants } from "../config/AppConstants";
 import { AuthRepository } from "../repositories/AuthRepository";
 import { LoggerService } from "./LoggerService";
@@ -28,6 +29,7 @@ export class RequestService {
     try {
       response = await performRequest(type, url, body);
     } catch (e: any) {
+      response = e;
       if (url.includes("refreshToken")) return;
 
       LoggerService.log("Token seems expired, refreshing auth token.");

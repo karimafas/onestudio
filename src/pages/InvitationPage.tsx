@@ -36,6 +36,7 @@ export function InvitationPage() {
     RetrievedInvitationDto | undefined
   >();
   const [error, setError] = useState<boolean>(false);
+  const [alreadyRegistered, setAlreadyRegistered] = useState<boolean>(false);
 
   useEffect(() => {
     _retrieveInvitation();
@@ -45,6 +46,7 @@ export function InvitationPage() {
     const token = searchParams.get("id");
     if (!token) return;
     const invitation = await InvitationRepository.retrieveInvitation(token);
+    setAlreadyRegistered(invitation.userAlreadyRegistered);
     setLoading(false);
 
     if (!invitation.success) {
@@ -88,12 +90,16 @@ export function InvitationPage() {
       </div>
     );
 
-  if (error)
+  if (alreadyRegistered || error)
     return (
       <div className="w-screen h-screen flex flex-col justify-center items-center">
         <AppAlert
           type={AppAlertType.error}
-          message="This link is invalid or expired. Please request a new link."
+          message={
+            alreadyRegistered
+              ? "A OneStudio account already exists with this email. Please login instead."
+              : "This link is invalid or expired. Please request a new link."
+          }
         />
       </div>
     );

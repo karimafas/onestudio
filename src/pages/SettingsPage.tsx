@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Category } from "../objects/Category";
 import { StudioLocation } from "../objects/StudioLocation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { reloadTypes } from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { Header } from "../components/Header";
@@ -18,12 +18,14 @@ import { openSnack, SnackType } from "../features/data/uiSlice";
 import { InventoryItem } from "../objects/InventoryItem";
 import { AddUserCard } from "../components/AddUserCard";
 import InviteUserDialog from "../components/InviteUserDialog";
+import { useSearchParams } from "react-router-dom";
 
 export interface TypesSubmittedData {
   name: string;
 }
 
 export function SettingsPage() {
+  const [searchParams] = useSearchParams();
   const [dialog, setDialog] = useState<boolean>(false);
   const [dialogType, setDialogType] = useState<TypesDialogType>(
     TypesDialogType.category
@@ -45,6 +47,14 @@ export function SettingsPage() {
   });
   const [inviteUserDialog, setInviteUserDialog] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const inviteUser = searchParams.get("inviteUser");
+    if (inviteUser)
+      setTimeout(() => {
+        setInviteUserDialog(true);
+      }, 200);
+  }, []);
 
   function _openDrawer(type: TypesDialogType) {
     setDialogType(type);

@@ -21,6 +21,7 @@ import { FilterButton } from "../components/FilterButton";
 import { FilterSection } from "../components/FilterSection";
 import { ItemRepository } from "../repositories/ItemRepository";
 import { FilterService } from "../services/FilterService";
+import { useSearchParams } from "react-router-dom";
 
 function useForceUpdate() {
   const [value, setValue] = useState(0);
@@ -29,6 +30,7 @@ function useForceUpdate() {
 
 export function InventoryPage() {
   const dispatch = useAppDispatch();
+  const [searchParams] = useSearchParams();
   const filterState = useAppSelector((state) => state.filter);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [duplicateOpen, setDuplicateOpen] = useState<boolean>(false);
@@ -53,6 +55,14 @@ export function InventoryPage() {
     itemsPerPage * (page + 1)
   );
   const totalPages = Math.ceil(processedItems.length / itemsPerPage);
+
+  useEffect(() => {
+    const createItem = searchParams.get("createItem");
+    if (createItem)
+      setTimeout(() => {
+        setAddDialog(true);
+      }, 200);
+  }, []);
 
   async function _delete(ids: number[]) {
     const success = await ItemRepository.deleteItems(ids);

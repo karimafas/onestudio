@@ -103,6 +103,7 @@ export function RecentActivity(props: {
             key={`${a.type}-${a.createdAt}-${a.itemId}`}
             onClick={() => {
               if (props.type === RecentActivityType.item) return;
+              if (!a.itemId) return;
               navigate(
                 `inventory/${a.itemId}${
                   a.type === ActivityType.comment ? "/?comments=true" : ""
@@ -110,7 +111,7 @@ export function RecentActivity(props: {
               );
             }}
             className={`flex flex-row items-center w-full mb-4 ${
-              props.type === RecentActivityType.dashboard
+              props.type === RecentActivityType.dashboard && a.itemId
                 ? "cursor-pointer"
                 : "cursor-default"
             }`}

@@ -1,6 +1,6 @@
 import { Dialog } from "@mui/material";
 import { useState } from "react";
-import { useAppDispatch } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { getLastUserActivity } from "../features/data/dataSlice";
 import { openSnack, SnackType } from "../features/data/uiSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
@@ -16,6 +16,9 @@ interface InviteDfo {
 const InviteUserDialog = (props: { open: boolean; setOpen: Function }) => {
   const { open, setOpen } = props;
   const dispatch = useAppDispatch();
+  const userEmails = useAppSelector((state) => state.data.studioUsers).map(
+    (u) => u.email
+  );
   const [dfo, setDfo] = useState<InviteDfo>({ email: "" });
   const [validationObject, setValidationObject] = useState<ValidationObject>(
     ValidationObject.empty()
@@ -56,7 +59,7 @@ const InviteUserDialog = (props: { open: boolean; setOpen: Function }) => {
           <img className="h-6 mr-3" src={ImageHelper.image(Images.users)} />
           <span className="text-lg font-semibold">Invite a user</span>
         </div>
-        <span className="text-light_blue font-medium text-sm">
+        <span className="text-dark_blue font-medium text-sm">
           We'll email them with steps on how to join the team.
         </span>
         <CustomTextField

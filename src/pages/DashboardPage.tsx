@@ -33,23 +33,21 @@ export function DashboardPage() {
             {width > 1330 ? <StudioInfoCard collapsed={false} /> : <></>}
             <InventoryInfoCard />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col mt-6">
             <DashboardButton
+              key="create-item"
               type={DashboardButtonType.inventory}
-              onClick={() => navigate("inventory")}
+              onClick={() => navigate("inventory?createItem=true")}
               image={ImageHelper.image(Images.addCircle)}
             />
             <DashboardButton
+              key="invite-user"
               type={DashboardButtonType.addUser}
-              onClick={() => navigate("inventory")}
+              onClick={() => navigate("settings?inviteUser=true")}
               image={ImageHelper.image(Images.person)}
             />
             <DashboardButton
-              type={DashboardButtonType.viewProfile}
-              onClick={() => navigate("inventory")}
-              image={ImageHelper.image(Images.infoPurple)}
-            />
-            <DashboardButton
+              key="settings"
               type={DashboardButtonType.studioSettings}
               onClick={() => navigate("settings")}
               image={ImageHelper.image(Images.settings)}

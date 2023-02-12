@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { RetrievedInvitationDto } from "../objects/RetrievedInvitationDto";
 import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
@@ -29,6 +29,7 @@ export class InvitationRepository {
 
   static async retrieveInvitation(token: string) {
     let success = false;
+    let userAlreadyRegistered = false;
     let invitation: RetrievedInvitationDto | undefined;
 
     try {
@@ -36,17 +37,24 @@ export class InvitationRepository {
         `invitation/${token}`,
         RequestType.get
       );
-
-      if (resp.data) {
-        invitation = RetrievedInvitationDto.fromJson(resp.data);
-        success = true;
+      if (resp instanceof AxiosError) {
+        success = false;
+        userAlreadyRegistered =
+          resp.response?.data?.code === "user-already-registered";
+          debugger
+      } else {
+        if (resp.data) {
+          invitation = RetrievedInvitationDto.fromJson(resp.data);
+          success = true;
+        }
       }
 
       LoggerService.log("Loaded retrieved invitation.");
     } catch (e) {
-      LoggerService.log("Could not send invitation.");
+      debugger;
+      LoggerService.log("Could not retrieve invitation.");
     }
 
-    return { success, invitation };
+    return { success, invitation, userAlreadyRegistered };
   }
 }
