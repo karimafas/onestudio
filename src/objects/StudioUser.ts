@@ -1,24 +1,25 @@
-import { Studio } from "./Studio";
-
 export class StudioUser {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
   owner: boolean;
+  avatarColor: string;
 
   constructor(
     id: number,
     firstName: string,
     lastName: string,
     email: string,
-    owner: boolean
+    owner: boolean,
+    avatarColor: string
   ) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.owner = owner;
+    this.avatarColor = avatarColor;
   }
 
   static fromJson(json: { [key: string]: any }) {
@@ -27,7 +28,8 @@ export class StudioUser {
       json.firstName,
       json.lastName,
       json.email,
-      json.owner
+      json.owner,
+      json.avatarColor
     );
   }
 

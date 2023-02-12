@@ -41,7 +41,7 @@ export class InventoryItem {
     return moment(this.updatedAt).format(Constants.dateTimeFormat);
   }
 
-  public async initEvents() {
+  public async loadActivity() {
     LoggerService.log(`Initialising event for item ${this.id}`);
     this.events = await EventRepository.getItemEvents(this.id);
   }

@@ -10,7 +10,10 @@ function tag(
 ): ReactElement {
   return (
     <div
-      className={`h-full w-full bg-blue rounded-[100%] flex flex-col items-center justify-center ${
+      style={{
+        backgroundColor: `#${user?.avatarColor}`,
+      }}
+      className={`h-full w-full rounded-[100%] flex flex-col items-center justify-center ${
         comment ? "mt-2" : ""
       } ${pointer ? "cursor-pointer" : "cursor-default"}`}
     >

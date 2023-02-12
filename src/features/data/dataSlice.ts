@@ -47,6 +47,10 @@ export interface ChangeStatusPayload {
   statusId: number;
 }
 
+export interface UpdateItemPayload {
+  dfo: ItemDfo;
+}
+
 // Define a type for the slice state
 interface DataState {
   loading: boolean;
@@ -190,6 +194,19 @@ async function uploadAttachments(
     }
   }
 }
+
+export const updateItem = createAsyncThunk(
+  "data/updateItem",
+  async (payload: UpdateItemPayload) => {
+    // Updates the item.
+    const result = await ItemRepository.updateItem(payload.dfo);
+
+    return {
+      success: result.success,
+      item: result.item,
+    };
+  }
+);
 
 export const createComment = createAsyncThunk(
   "data/createComment",
@@ -621,6 +638,25 @@ export const counterSlice = createSlice({
         ...state,
         activity: _activity,
         skipActivity: state.skipActivity + 10,
+      };
+    });
+    builder.addCase(updateItem.fulfilled, (state: DataState, action) => {
+      if (!action.payload) return;
+      if (!action.payload.success) return;
+      const item = action.payload.item;
+      if (!item) return;
+
+      let newItems = [...state.items];
+      const index = newItems.map((ni) => ni.id).indexOf(item.id);
+      const comments = [...newItems[index].comments];
+      const events = [...newItems[index].events];
+      newItems[index] = item;
+      newItems[index].comments = comments;
+      newItems[index].events = events;
+
+      return {
+        ...state,
+        items: newItems,
       };
     });
   },

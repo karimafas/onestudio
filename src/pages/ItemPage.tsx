@@ -7,6 +7,7 @@ import {
   getLastUserActivity,
   loadItemComments,
   reloadItem,
+  updateItem,
 } from "../features/data/dataSlice";
 import { ItemDfo } from "../objects/InventoryItem";
 import { Header } from "../components/Header";
@@ -45,7 +46,7 @@ export function ItemPage() {
   const [validationObject, setValidationObject] = useState<ValidationObject>(
     ValidationObject.empty()
   );
-  const initialState: ItemDfo = {
+  const [initialState, setInitialState] = useState<ItemDfo>({
     id: item.id,
     manufacturer: item.manufacturer,
     model: item.model,
@@ -55,7 +56,7 @@ export function ItemPage() {
     categoryId: item.categoryId + "",
     ownerId: item.ownerId + "",
     notes: item.notes,
-  };
+  });
   const [dfo, setDfo] = useState<ItemDfo>(initialState);
   const [confirmDialog, setConfirmDialog] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
@@ -64,7 +65,7 @@ export function ItemPage() {
   useEffect(() => {
     dispatch(loadItemComments(item));
     scrollToComments();
-  }, []);
+  }, [item.id]);
 
   function scrollToComments() {
     if (!searchParams.get("comments")) return;
@@ -75,14 +76,16 @@ export function ItemPage() {
   }
 
   function hasChanged() {
+    console.log("initial", JSON.stringify(initialState));
+    console.log("changed", JSON.stringify(dfo));
     return JSON.stringify(initialState) !== JSON.stringify(dfo);
   }
 
   async function _updateItem(data: ItemDfo) {
     if (!hasChanged()) setDisabled(true);
 
-    const result = await ItemRepository.updateItem(data);
-    if (result) {
+    const result = await dispatch(updateItem({ dfo })).unwrap();
+    if (result.success) {
       dispatch(
         openSnack({
           type: SnackType.success,
@@ -90,6 +93,7 @@ export function ItemPage() {
         })
       );
       dispatch(getLastUserActivity());
+      setInitialState(dfo);
     } else {
       dispatch(
         openSnack({

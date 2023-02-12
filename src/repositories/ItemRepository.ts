@@ -112,8 +112,11 @@ export class ItemRepository {
     return success;
   }
 
-  public static async updateItem(i: ItemDfo): Promise<boolean> {
+  public static async updateItem(
+    i: ItemDfo
+  ): Promise<{ success: boolean; item: InventoryItem | undefined }> {
     let success: boolean = false;
+    let updatedItem: InventoryItem | undefined;
     try {
       const item: ItemDto = InventoryItem.fromDfo(i);
 
@@ -125,13 +128,14 @@ export class ItemRepository {
 
       if (resp.status === 200) {
         success = true;
+        updatedItem = InventoryItem.fromJson(resp.data);
         LoggerService.log("Updated item.", resp.data);
       }
     } catch (e) {
       LoggerService.log("Couldn't update item.", e);
     }
 
-    return success;
+    return { success, item: updatedItem };
   }
 
   public static async duplicateItem(
