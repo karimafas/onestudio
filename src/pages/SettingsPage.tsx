@@ -17,6 +17,7 @@ import { LocationRepository } from "../repositories/LocationRepository";
 import { openSnack, SnackType } from "../features/data/uiSlice";
 import { InventoryItem } from "../objects/InventoryItem";
 import { AddUserCard } from "../components/AddUserCard";
+import InviteUserDialog from "../components/InviteUserDialog";
 
 export interface TypesSubmittedData {
   name: string;
@@ -42,6 +43,7 @@ export function SettingsPage() {
     open: false,
     data: undefined,
   });
+  const [inviteUserDialog, setInviteUserDialog] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
   function _openDrawer(type: TypesDialogType) {
@@ -156,12 +158,13 @@ export function SettingsPage() {
         type={dialogType}
         callback={_submit}
       />
+      <InviteUserDialog open={inviteUserDialog} setOpen={setInviteUserDialog} />
       <Header />
       <div className="animate-fade">
         <div className="h-4"></div>
         <div className="flex flex-row w-full">
           <StudioInfoCard collapsed />
-          <AddUserCard />
+          <AddUserCard onClick={() => setInviteUserDialog(true)} />
         </div>
         <div className="flex flex-row mt-14 items-start">
           <div className="flex flex-col w-[22rem] h-80 overflow-auto pl-3">

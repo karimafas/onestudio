@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { DelayHelper } from "../helpers/DelayHelper";
 import { Studio } from "../objects/Studio";
 import { StudioUser } from "../objects/StudioUser";
+import { RegistrationDfo } from "../pages/InvitationPage";
 import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
 import { TokenService } from "../services/TokenService";
@@ -30,9 +31,7 @@ export class AuthRepository {
         const rt = (resp as AxiosResponse).data.refreshToken;
         const at = (resp as AxiosResponse).data.accessToken;
 
-        window.localStorage.removeItem("rt");
-        window.localStorage.setItem("rt", rt);
-        TokenService.token = at;
+        TokenService.setTokens(rt, at);
       }
     } catch (e) {
       LoggerService.log("Couldn't login user.");
@@ -76,10 +75,7 @@ export class AuthRepository {
         const rt = (resp as AxiosResponse).data.refreshToken;
         const at = (resp as AxiosResponse).data.accessToken;
 
-        window.localStorage.removeItem("rt");
-        window.localStorage.setItem("rt", rt);
-
-        TokenService.token = at;
+        TokenService.setTokens(rt, at);
       }
     } catch (e) {
       LoggerService.log("Could not refresh token.");
@@ -262,5 +258,37 @@ export class AuthRepository {
     }
 
     return { success, studio };
+  }
+
+  public static async registerFrominvitation(
+    invitationId: number,
+    dfo: RegistrationDfo
+  ): Promise<boolean> {
+    let success = false;
+
+    try {
+      if (!dfo.studioId) throw "No studioId was provided.";
+
+      const resp = await RequestService.request(
+        `auth/register/invitation/${invitationId}`,
+        RequestType.post,
+        dfo
+      );
+
+      if (resp.status === 201) {
+        success = true;
+        LoggerService.log("Registered user from invitation.", resp.data);
+
+        const rt = (resp as AxiosResponse).data.refreshToken;
+        const at = (resp as AxiosResponse).data.accessToken;
+
+        TokenService.setTokens(rt, at);
+        success = true;
+      }
+    } catch (e) {
+      LoggerService.log("Could not register user from invitation.");
+    }
+
+    return success;
   }
 }

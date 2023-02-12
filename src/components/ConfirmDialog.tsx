@@ -11,6 +11,7 @@ const ConfirmDialog = (props: {
   onConfirm: Function;
 }) => {
   const { title, body, open, setOpen, onConfirm } = props;
+  
   return (
     <Dialog
       PaperProps={{

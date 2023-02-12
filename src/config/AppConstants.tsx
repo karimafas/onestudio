@@ -35,8 +35,13 @@ export class AppConstants {
     new TableColumn("status", "Status", false, 10, 0),
   ];
 
-  static routesWithoutSidebar: string[] = ["login", "import", "reset-password"];
-  static unauthorisedRoutes: string[] = ["reset-password"];
+  static routesWithoutSidebar: string[] = [
+    "login",
+    "import",
+    "reset-password",
+    "invitation",
+  ];
+  static unauthorisedRoutes: string[] = ["reset-password", "invitation"];
 
   static hasSidebar(location: string) {
     if (this.routesWithoutSidebar.includes(location.replace("/", "")))

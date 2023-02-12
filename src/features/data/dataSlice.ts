@@ -375,6 +375,9 @@ export const counterSlice = createSlice({
 
       Object.assign(state.items, changedItems);
     },
+    stopLoading(state: DataState) {
+      state.loading = false;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(initialLoad.fulfilled, (state: DataState, action) => {
@@ -611,6 +614,6 @@ export const counterSlice = createSlice({
   },
 });
 
-export const { deleteDataItem } = counterSlice.actions;
+export const { deleteDataItem, stopLoading } = counterSlice.actions;
 
 export default counterSlice.reducer;

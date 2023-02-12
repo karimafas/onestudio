@@ -25,5 +25,5 @@ export function AppAuth() {
 
   if (!authorised && !unauthorisedRoute) return <LoginPage />;
 
-  return <App />;
+  return <App loadData={!unauthorisedRoute} />;
 }

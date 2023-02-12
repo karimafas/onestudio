@@ -15,14 +15,20 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { initialLoad } from "./features/data/dataSlice";
 import { CircularProgress } from "@mui/material";
+import { InvitationPage } from "./pages/InvitationPage";
+import { stopLoading } from "./features/data/dataSlice";
 
-export default function App() {
+export default function App(props: { loadData: boolean }) {
   const dispatch = useAppDispatch();
 
   const loadingData = useAppSelector((state) => state.data.loading);
 
   useEffect(() => {
-    dispatch(initialLoad());
+    if (props.loadData) {
+      dispatch(initialLoad());
+    } else {
+      dispatch(stopLoading());
+    }
   }, []);
 
   return (
@@ -54,6 +60,7 @@ function AppBody() {
             <Route path="/inventory/:id" element={<ItemPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/invitation" element={<InvitationPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
@@ -64,7 +71,7 @@ function AppBody() {
   );
 }
 
-function AppLoader() {
+export function AppLoader() {
   return (
     <div className="w-screen h-screen flex flex-col justify-center items-center relative mt-[-100vh]">
       <CircularProgress size="2rem" sx={{ color: "#120F9C" }} />
