@@ -47,6 +47,7 @@ export enum Images {
   spinner = "spinner.png",
   uploadCloud = "upload-cloud.png",
   uploadFile = "upload-file.png",
+  users = "users.png",
 }
 
 export class ImageHelper {

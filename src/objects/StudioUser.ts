@@ -1,3 +1,5 @@
+import { Studio } from "./Studio";
+
 export class StudioUser {
   id: number;
   firstName: string;

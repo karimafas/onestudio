@@ -3,6 +3,7 @@ import { ImageHelper, Images } from "../helpers/ImageHelper";
 
 export function StudioInfoCard(props: { collapsed: boolean }) {
   const users = useAppSelector((state) => state.data.studioUsers);
+  const studio = useAppSelector((state) => state.data.studio);
   const categories = useAppSelector((state) => state.data.categories);
   const locations = useAppSelector((state) => state.data.locations);
 
@@ -16,13 +17,13 @@ export function StudioInfoCard(props: { collapsed: boolean }) {
         <div className="border-dashed border-medium_blue border-2 h-12 w-12 rounded-xl flex flex-row items-center justify-center">
           <img src={ImageHelper.image(Images.info)} className="p-[10px]" />
         </div>
-        <div className="flex flex-col ml-3">
+        <div className="flex flex-col justify-center ml-3">
           <span className="text-dark_blue font-semibold text-lg">
-            OneStudio
+            {studio?.name ?? ""}
           </span>
-          <span className="text-light_blue font-medium text-sm">
+          {/* <span className="text-light_blue font-medium text-sm">
             London, UK
-          </span>
+          </span> */}
         </div>
       </div>
       {props.collapsed ? (

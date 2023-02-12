@@ -16,6 +16,7 @@ import { CategoryRepository } from "../repositories/CategoryRepository";
 import { LocationRepository } from "../repositories/LocationRepository";
 import { openSnack, SnackType } from "../features/data/uiSlice";
 import { InventoryItem } from "../objects/InventoryItem";
+import { AddUserCard } from "../components/AddUserCard";
 
 export interface TypesSubmittedData {
   name: string;
@@ -157,9 +158,11 @@ export function SettingsPage() {
       />
       <Header />
       <div className="animate-fade">
-        <div className="h-8"></div>
-        <span className="font-bold text-2xl text-dark_blue">Settings</span>
-        <StudioInfoCard collapsed />
+        <div className="h-4"></div>
+        <div className="flex flex-row w-full">
+          <StudioInfoCard collapsed />
+          <AddUserCard />
+        </div>
         <div className="flex flex-row mt-14 items-start">
           <div className="flex flex-col w-[22rem] h-80 overflow-auto pl-3">
             <div className="flex flex-row items-center justify-between w-full mb-8 pr-4">

@@ -21,6 +21,7 @@ import { FileRepository } from "../../repositories/FileRepository";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import storage from "../../firebaseConfig";
 import { FileUpload } from "../../objects/FileUpload";
+import { Studio } from "../../objects/Studio";
 
 export interface CreateCommentPayload {
   itemId: number;
@@ -62,6 +63,7 @@ interface DataState {
   skipActivity: number;
   notifications: Notification[];
   forceUpdate: number;
+  studio: Studio | undefined;
 }
 
 // Define the initial state using that type
@@ -80,6 +82,7 @@ const initialState: DataState = {
   skipActivity: 10,
   notifications: [],
   forceUpdate: 0,
+  studio: undefined,
 };
 
 export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
@@ -93,6 +96,7 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
   const activity = await ActivityRepository.getStudioActivity();
   const activityCount = await ActivityRepository.getStudioActivityCount();
   const notifications = await NotificationRepository.getNotifications();
+  const studio = await AuthRepository.getStudio();
   notifications.map((n) => n.initialise(studioUsers, items));
 
   return {
@@ -106,6 +110,7 @@ export const initialLoad = createAsyncThunk("users/initialLoad", async () => {
     activity,
     activityCount,
     notifications,
+    studio,
   };
 });
 
@@ -384,6 +389,7 @@ export const counterSlice = createSlice({
       state.activity = payload.activity;
       state.notifications = payload.notifications;
       state.skipActivity = payload.activity.length;
+      state.studio = payload.studio.studio;
       if (payload.activityCount) state.activityCount = payload.activityCount;
       state.loading = false;
     });

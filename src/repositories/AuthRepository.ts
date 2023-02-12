@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import { DelayHelper } from "../helpers/DelayHelper";
+import { Studio } from "../objects/Studio";
 import { StudioUser } from "../objects/StudioUser";
 import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
@@ -234,5 +235,32 @@ export class AuthRepository {
     }
 
     return success;
+  }
+
+  public static async getStudio(): Promise<{
+    success: boolean;
+    studio: Studio | undefined;
+  }> {
+    let success = false;
+    let studio: Studio | undefined;
+
+    try {
+      const resp = await RequestService.request(
+        "auth/currentStudio",
+        RequestType.get
+      );
+
+      LoggerService.log("Loaded current studio from API.", resp);
+
+      const _studio = resp.data;
+
+      if (_studio) {
+        studio = Studio.fromJson(_studio);
+      }
+    } catch (e) {
+      LoggerService.log(`Couldn't load studio.`);
+    }
+
+    return { success, studio };
   }
 }
