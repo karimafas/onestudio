@@ -42,10 +42,12 @@ export function InventoryInfoCard() {
         <div className="flex flex-row px-2">
           <span className="mt-4 text-2xl text-white font-medium">£{price}</span>
         </div>
-        <div className="w-full flex flex-row justify-around text-xs mt-3 text-white">
-          <span>
+        <div className="w-full flex flex-row justify-center items-center text-xs mt-3 text-white">
+          <div className="w-2 h-2 rounded-[100%] bg-green mr-2"></div>
+          <span className="mr-6">
             <span className="font-bold">{working}</span> working
           </span>
+          <div className="w-2 h-2 rounded-[100%] bg-red mr-2"></div>
           <span>
             <span className="font-bold">{faulty}</span> faulty
           </span>
