@@ -2,6 +2,7 @@ export enum ActivityType {
   comment = "comment",
   creation = "creation",
   duplication = "duplication",
+  invitation = "invitation",
   edit = "edit",
   statusChange = "statusChange",
 }

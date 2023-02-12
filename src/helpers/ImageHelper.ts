@@ -48,6 +48,7 @@ export enum Images {
   uploadCloud = "upload-cloud.png",
   uploadFile = "upload-file.png",
   users = "users.png",
+  usersWhite = "users-white.png",
 }
 
 export class ImageHelper {

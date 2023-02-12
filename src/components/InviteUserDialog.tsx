@@ -1,6 +1,7 @@
 import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch } from "../app/hooks";
+import { getLastUserActivity } from "../features/data/dataSlice";
 import { openSnack, SnackType } from "../features/data/uiSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { InvitationRepository } from "../repositories/InvitationRepository";
@@ -32,6 +33,7 @@ const InviteUserDialog = (props: { open: boolean; setOpen: Function }) => {
     await InvitationRepository.sendInvitation(dfo.email);
     setOpen(false);
     setDfo({ email: "" });
+    dispatch(getLastUserActivity());
     dispatch(
       openSnack({
         message: "User invited successfully.",

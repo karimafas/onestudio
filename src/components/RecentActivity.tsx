@@ -74,6 +74,11 @@ export function RecentActivity(props: {
           }  item.`,
           image: ImageHelper.image(Images.changeWhite),
         };
+      case ActivityType.invitation:
+        return {
+          text: "invited a new user to the team.",
+          image: ImageHelper.image(Images.usersWhite),
+        };
     }
   }
 
