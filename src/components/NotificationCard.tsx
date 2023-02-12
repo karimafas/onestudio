@@ -10,9 +10,6 @@ export function NotificationCard(props: { notification: Notification }) {
   const navigate = useNavigate();
   const { notification } = props;
 
-  const unseen = "bg-lightest_purple h-full w-full";
-  const seen = "h-full w-full";
-
   return (
     <div
       className="w-full cursor-pointer min-h-[4em] border-b-[1px] border-b-light_grey hover:bg-lightest_purple2"
@@ -21,7 +18,7 @@ export function NotificationCard(props: { notification: Notification }) {
         navigate(`/inventory/${notification.itemId}/?comments=true`);
       }}
     >
-      <div className={notification.seen ? seen : unseen}>
+      <div className="h-full w-full">
         <div className="flex flex-row w-full h-full items-center px-5">
           <div className="h-[2em] w-[2em]">
             <UserTag user={notification.user} />
@@ -36,6 +33,11 @@ export function NotificationCard(props: { notification: Notification }) {
               {notification.item?.model ?? ""}
             </span>
           </div>
+          {!notification.seen ? (
+            <div className="h-2 w-2 bg-blue rounded-[100%]"></div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
