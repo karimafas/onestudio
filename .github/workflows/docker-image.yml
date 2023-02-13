@@ -1,0 +1,34 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set environment variables
+      run: |
+        touch .env \
+        echo "API_URL=${{ vars.API_URL }}" >> .env \
+        echo "ENVIRONMENT=${{ vars.ENVIRONMENT }}" >> .env
+    
+    - name: Login to DockerHub
+      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+    
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag onestudio
+      
+    - name: Tag the Docker image
+      run: docker tag onestudio karimafas/onestudio
+      
+    - name: Push the Docker image to the registry
+      run: docker push karimafas/onestudio
