@@ -14,7 +14,7 @@ export function NotificationTray() {
         <div className="w-full h-full flex flex-col items-center pt-14">
           <img className="w-8" src={ImageHelper.image(Images.bellPurple)} />
           <span className="px-12 text-center text-xs mt-3 font-medium text-light_purple">
-            Comment, mention, change state... collaborate with your colleagues
+            Collaborate with your colleagues
             to see your first notification!
           </span>
         </div>
