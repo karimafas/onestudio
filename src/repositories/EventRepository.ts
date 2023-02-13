@@ -3,10 +3,8 @@ import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
 
 export class EventRepository {
-  public static async getItemEvents(
-    itemId: number
-  ): Promise<Array<TimelineEvent>> {
-    let events: Array<TimelineEvent> = [];
+  public static async getItemEvents(itemId: number): Promise<TimelineEvent[]> {
+    let events: TimelineEvent[] = [];
 
     try {
       const resp = await RequestService.request(
@@ -29,8 +27,8 @@ export class EventRepository {
     return events;
   }
 
-  public static async getStudioEvents(): Promise<Array<TimelineEvent>> {
-    let events: Array<TimelineEvent> = [];
+  public static async getStudioEvents(): Promise<TimelineEvent[]> {
+    let events: TimelineEvent[] = [];
 
     try {
       const resp = await RequestService.request(`event`, RequestType.get);

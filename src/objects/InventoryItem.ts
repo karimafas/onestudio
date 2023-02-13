@@ -4,21 +4,9 @@ import { Constants } from "../utils/Constants";
 import { TimelineEvent } from "./TimelineEvent";
 import { StudioUser } from "./StudioUser";
 import { EventRepository } from "../repositories/EventRepository";
-import { AuthRepository } from "../repositories/AuthRepository";
-
-export enum ItemStatus {
-  working = "working",
-  faulty = "faulty",
-}
-
-function stringToStatus(status: "faulty" | "working"): ItemStatus {
-  switch (status) {
-    case "faulty":
-      return ItemStatus.faulty;
-    case "working":
-      return ItemStatus.working;
-  }
-}
+import { Status } from "./Status";
+import { Comment } from "./Comment";
+import { CommentRepository } from "../repositories/CommentRepository";
 
 export class InventoryItem {
   id: number;
@@ -26,22 +14,21 @@ export class InventoryItem {
   model: string;
   locationId: number;
   serial: string;
-  mNumber: string;
   price: number;
   categoryId: number;
   ownerId: number;
   notes: string;
   createdAt: Date;
   updatedAt: Date;
-  createdBy: number;
+  userId: number;
 
   user?: StudioUser;
 
-  status: ItemStatus;
+  status: Status;
 
-  events: Array<TimelineEvent> = [];
+  events: TimelineEvent[] = [];
+  comments: Comment[] = [];
 
-  // Internal properties.
   selected: boolean = false;
 
   public get createdAtStr(): string {
@@ -54,31 +41,31 @@ export class InventoryItem {
     return moment(this.updatedAt).format(Constants.dateTimeFormat);
   }
 
-  public async initEvents() {
+  public async loadActivity() {
     LoggerService.log(`Initialising event for item ${this.id}`);
     this.events = await EventRepository.getItemEvents(this.id);
   }
 
-  public async loadUser() {
-    this.user = await AuthRepository.getUser(this.createdBy);
+  public async loadComments() {
+    LoggerService.log(`Loading comments for item ${this.id}`);
+    this.comments = await CommentRepository.getItemComments(this.id);
   }
 
   static fromJson(json: { [key: string]: any }) {
     return new InventoryItem(
-      json["id"],
-      json["manufacturer"],
-      json["model"],
-      json["location_id"],
-      json["serial"],
-      json["m_number"],
-      json["price"],
-      json["category_id"],
-      json["owner_id"],
-      json["notes"],
-      moment(json["created_at"]).toDate(),
-      moment(json["updated_at"]).toDate(),
-      stringToStatus(json["status"]),
-      json["created_by"]
+      json.id,
+      json.manufacturer,
+      json.model,
+      json.locationId,
+      json.serial,
+      json.price,
+      json.categoryId,
+      json.ownerId,
+      json.notes,
+      moment(json.createdAt).toDate(),
+      moment(json.updatedAt).toDate(),
+      Status.fromJson(json.status),
+      json.userId
     );
   }
 
@@ -88,22 +75,20 @@ export class InventoryItem {
     model: string,
     locationId: number,
     serial: string,
-    mNumber: string,
     price: number,
     categoryId: number,
     ownerId: number,
     notes: string,
     createdAt: Date,
     updatedAt: Date,
-    status: ItemStatus,
-    createdBy: number
+    status: Status,
+    userId: number
   ) {
     this.id = id;
     this.manufacturer = manufacturer;
     this.model = model;
     this.locationId = locationId;
     this.serial = serial;
-    this.mNumber = mNumber;
     this.price = price;
     this.categoryId = categoryId;
     this.ownerId = ownerId;
@@ -111,21 +96,20 @@ export class InventoryItem {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.status = status;
-    this.createdBy = createdBy;
+    this.userId = userId;
   }
 
   static fromDfo(i: ItemDfo): ItemDto {
     return {
       manufacturer: i.manufacturer,
       model: i.model,
-      location_id: parseInt(i.location_id),
+      locationId: parseInt(i.locationId),
       serial: i.serial,
-      m_number: i.m_number,
       price: parseFloat(i.price),
-      category_id: parseInt(i.category_id),
-      owner_id: parseInt(i.owner_id),
+      categoryId: parseInt(i.categoryId),
+      ownerId: parseInt(i.ownerId),
       notes: i.notes,
-      updated_at: new Date(),
+      updatedAt: new Date(),
     };
   }
 
@@ -135,12 +119,10 @@ export class InventoryItem {
       model: i.model,
       location: i.location,
       serial: i.serial,
-      m_number: i.m_number,
       price: parseFloat(i.price),
       category: i.category,
       owner: i.owner,
       notes: i.notes,
-      status: ItemStatus.working,
     };
   }
 }
@@ -149,14 +131,12 @@ export interface ItemDfo {
   id?: number;
   manufacturer: string;
   model: string;
-  location_id: string;
+  locationId: string;
   serial: string;
-  m_number: string;
   price: string;
-  category_id: string;
-  owner_id: string;
+  categoryId: string;
+  ownerId: string;
   notes: string;
-  status: ItemStatus;
 }
 
 export interface CsvItemDfo {
@@ -164,12 +144,10 @@ export interface CsvItemDfo {
   model: string;
   location: string;
   serial: string;
-  m_number: string;
   price: string;
   category: string;
   owner: string;
   notes: string;
-  status: ItemStatus;
 }
 
 export interface CsvItemDto {
@@ -177,27 +155,23 @@ export interface CsvItemDto {
   model?: string;
   location?: string;
   serial?: string;
-  m_number?: string;
   price?: number;
   category?: string;
   owner?: string;
   notes?: string;
-  status?: ItemStatus;
 }
 
 export interface ItemDto {
   id?: number;
   manufacturer?: string;
   model?: string;
-  location_id?: number;
+  locationId?: number;
   serial?: string;
-  m_number?: string;
   price?: number;
-  category_id?: number;
-  owner_id?: number;
+  categoryId?: number;
+  ownerId?: number;
   notes?: string;
-  created_at?: Date;
-  updated_at?: Date;
-  status?: ItemStatus;
-  created_by?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  userId?: number;
 }

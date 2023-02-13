@@ -1,0 +1,49 @@
+.mentions {
+  width: 26rem;
+  max-width: 30rem;
+  background-color: transparent;
+}
+
+.mentions--singleLine .mentions__control {
+  display: inline-block;
+  width: 130px;
+}
+.mentions--singleLine .mentions__highlighter {
+  padding: 1px;
+  border: 2px inset transparent;
+}
+.mentions--singleLine .mentions__input {
+  padding-left: 5px;
+  background-color: red;
+}
+
+.mentions--multiLine .mentions__control {
+  font-size: 9pt;
+  color: #120f9c;
+}
+.mentions--multiLine .mentions__highlighter {
+}
+.mentions--multiLine .mentions__input {
+  outline: 0;
+  background-color: red;
+}
+
+.mentions__suggestions__list {
+  background-color: white;
+  font-size: 9pt;
+}
+
+.mentions__suggestions__item {
+  padding: 10px;
+  color: #120F9C;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.mentions__suggestions__item--focused {
+  background-color: #e3e2ff;
+}
+
+.mentions__mention {
+  background-color: rgba(214, 214, 255, 0.5);
+  border-radius: 4px;
+}

@@ -9,8 +9,8 @@ import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
 
 export class ItemRepository {
-  public static async getInventoryItems(): Promise<Array<InventoryItem>> {
-    let items: Array<InventoryItem> = [];
+  public static async getInventoryItems(): Promise<InventoryItem[]> {
+    let items: InventoryItem[] = [];
 
     try {
       const resp = await RequestService.request("item", RequestType.get);
@@ -56,8 +56,8 @@ export class ItemRepository {
 
   public static async createItem(
     i: ItemDfo
-  ): Promise<{ success: boolean; id: any }> {
-    let id;
+  ): Promise<{ success: boolean; item: InventoryItem | undefined }> {
+    let item;
     let success: boolean = false;
 
     try {
@@ -71,14 +71,14 @@ export class ItemRepository {
         success = true;
       }
 
-      id = parseInt(resp.data.id);
+      item = InventoryItem.fromJson(resp.data);
 
       LoggerService.log("Added new item.", success);
     } catch (e: any) {
       LoggerService.log(e.toString());
     }
 
-    return { success: success, id: id };
+    return { success: success, item: item };
   }
 
   public static async createItemsList(items: CsvItemDfo[]): Promise<boolean> {
@@ -112,8 +112,11 @@ export class ItemRepository {
     return success;
   }
 
-  public static async updateItem(i: ItemDfo): Promise<boolean> {
+  public static async updateItem(
+    i: ItemDfo
+  ): Promise<{ success: boolean; item: InventoryItem | undefined }> {
     let success: boolean = false;
+    let updatedItem: InventoryItem | undefined;
     try {
       const item: ItemDto = InventoryItem.fromDfo(i);
 
@@ -125,17 +128,22 @@ export class ItemRepository {
 
       if (resp.status === 200) {
         success = true;
+        updatedItem = InventoryItem.fromJson(resp.data);
         LoggerService.log("Updated item.", resp.data);
       }
     } catch (e) {
       LoggerService.log("Couldn't update item.", e);
     }
 
-    return success;
+    return { success, item: updatedItem };
   }
 
-  public static async duplicateItem(id: number): Promise<boolean> {
+  public static async duplicateItem(
+    id: number
+  ): Promise<{ item: InventoryItem | undefined; success: boolean }> {
     let success: boolean = false;
+    let item: InventoryItem | undefined;
+
     try {
       const resp = await RequestService.request(
         `item/duplicate/${id}`,
@@ -144,16 +152,19 @@ export class ItemRepository {
 
       if (resp.status === 201) {
         success = true;
+
+        item = InventoryItem.fromJson(resp.data);
+
         LoggerService.log("Duplicated item.", resp.data);
       }
     } catch (e) {
       LoggerService.log("Couldn't duplicate item.", e);
     }
 
-    return success;
+    return { item: item, success: success };
   }
 
-  public static async deleteItems(ids: Array<number>): Promise<boolean> {
+  public static async deleteItems(ids: number[]): Promise<boolean> {
     let success: boolean = false;
     try {
       const body = {

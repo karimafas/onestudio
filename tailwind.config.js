@@ -15,6 +15,7 @@ module.exports = {
         light_purple: "#6562FF",
         light_purple2: "#E3E2FF",
         lightest_purple: "#D6D6FF",
+        lightest_purple2: "#F2F1FF",
         grey: "#959595",
         light_grey: "#F6F6F6",
         light_grey2: "#EDEDED",
@@ -24,7 +25,8 @@ module.exports = {
         green: "#98FFA2",
       },
       animation: {
-        fade: "fadeOut 400ms ease-in-out",
+        // fade: "fadeOut 400ms ease-in-out",
+        fade: "",
       },
       keyframes: (theme) => ({
         fadeOut: {

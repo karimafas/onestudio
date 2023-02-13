@@ -1,8 +1,11 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SidebarTab, SidebarTabs } from "./SidebarTab";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { UserTag } from "./UserTag";
+import { useAppSelector } from "../app/hooks";
+import { useEffect, useState } from "react";
+import { AuthRepository } from "../repositories/AuthRepository";
 
 function getTab(location: any): SidebarTabs {
   const path = location.pathname.replace("/", "");
@@ -19,11 +22,13 @@ function getTab(location: any): SidebarTabs {
 }
 
 export default function Sidebar() {
+  const user = useAppSelector((state) => state.data.user);
   const navigate = useNavigate();
   const location = useLocation();
-  const [tab, setTab] = React.useState<SidebarTabs>(getTab(location));
+  const [tab, setTab] = useState<SidebarTabs>(getTab(location));
+  const [showLogout, setShowLogout] = useState<boolean>(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     callback(location);
   }, [location, callback]);
 
@@ -60,37 +65,70 @@ export default function Sidebar() {
 
   return (
     <Box
-      className="flex h-screen flex flex-col"
+      className="h-screen flex flex-col overflow-hidden"
       sx={{
         width: "15em",
       }}
     >
       <div className="h-full w-full flex flex-row">
-        <div>
-          <div className="px-14 pt-8">
-            <img src={ImageHelper.image(Images.logoTyped)} />
+        <div className="flex flex-col justify-between">
+          <div>
+            <div className="px-14 mt-8">
+              <img src={ImageHelper.image(Images.logoTyped)} />
+            </div>
+            <div className="flex-col align-center mt-8 w-full">
+              <SidebarTab
+                onClick={handleChange}
+                tab={SidebarTabs.dashboard}
+                selectedTab={tab}
+              />
+              <SidebarTab
+                onClick={handleChange}
+                tab={SidebarTabs.inventory}
+                selectedTab={tab}
+              />
+              <SidebarTab
+                onClick={handleChange}
+                tab={SidebarTabs.settings}
+                selectedTab={tab}
+              />
+              <div
+                className={`flex flex-row items-center h-12 mb-3 z-[-100] ${getMarginTop()} relative cursor-pointer transition-all duration-300 pr-5`}
+              >
+                <div className="w-2 h-10 bg-blue mr-3 rounded-tr rounded-br"></div>
+                <div className="bg-white rounded drop-shadow-xl h-full w-full"></div>
+              </div>
+            </div>
           </div>
-          <div className="flex-col align-center pt-8 w-full">
-            <SidebarTab
-              onClick={handleChange}
-              tab={SidebarTabs.dashboard}
-              selectedTab={tab}
-            />
-            <SidebarTab
-              onClick={handleChange}
-              tab={SidebarTabs.inventory}
-              selectedTab={tab}
-            />
-            <SidebarTab
-              onClick={handleChange}
-              tab={SidebarTabs.settings}
-              selectedTab={tab}
-            />
+          <div
+            className="h-[10em] p-6 flex flex-col justify-end"
+            onMouseOver={() => {
+              if (!showLogout) return;
+              setShowLogout(true);
+            }}
+            onMouseLeave={() => setShowLogout(false)}
+          >
             <div
-              className={`flex flex-row items-center h-12 mb-3 z-[-100] ${getMarginTop()} relative cursor-pointer transition-all duration-300 pr-5`}
+              className="w-[3em] h-[3em] cursor-pointer"
+              onMouseOver={() => setShowLogout(true)}
+              onMouseLeave={() => setShowLogout(false)}
             >
-              <div className="w-2 h-10 bg-blue mr-3 rounded-tr rounded-br"></div>
-              <div className="bg-white rounded drop-shadow-xl h-full w-full"></div>
+              <UserTag user={user} />
+            </div>
+            <div className="relative w-[9em] h-[3.2em] mt-[-3.1em] ml-[2em] rounded-lg p-2 flex flex-row justify-end pointer-events-none">
+              {showLogout ? (
+                <div
+                  className="h-full w-[80%] bg-white shadow rounded-lg flex flex-row items-center justify-center pointer-events-auto cursor-pointer"
+                  onClick={async () => {
+                    await AuthRepository.logout();
+                    window.location.reload();
+                  }}
+                >
+                  <span className="text-sm font-semibold text-red">Logout</span>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </div>

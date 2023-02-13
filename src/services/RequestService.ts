@@ -1,3 +1,5 @@
+import { AxiosError, AxiosResponse } from "axios";
+import { AppConstants } from "../config/AppConstants";
 import { AuthRepository } from "../repositories/AuthRepository";
 import { LoggerService } from "./LoggerService";
 import { TokenService } from "./TokenService";
@@ -5,13 +7,12 @@ const axios = require("axios");
 
 const baseUrl = `${process.env.API_URL}/`;
 
-const unauthorisedRoutes = ["login", "reset-password"];
-
 export enum RequestType {
   get = "GET",
   post = "POST",
   put = "PUT",
   delete = "DELETE",
+  patch = "PATCH",
 }
 
 export class RequestService {
@@ -28,22 +29,14 @@ export class RequestService {
     try {
       response = await performRequest(type, url, body);
     } catch (e: any) {
-      const status: number = e.response.status;
-      if (
-        !retried &&
-        url !== "auth/login" &&
-        url !== "auth/refreshToken" &&
-        url !== "auth/logout" &&
-        (status === 403 || status === 401)
-      ) {
-        LoggerService.log("Token seems expired, refreshing auth token.");
-        retried = true;
-        const refreshed = await AuthRepository.refreshToken();
-        if (refreshed) {
-          response = await performRequest(type, url, body);
-        } else {
-          window.location.reload();
-        }
+      response = e;
+      if (url.includes("refreshToken")) return;
+
+      LoggerService.log("Token seems expired, refreshing auth token.");
+      retried = true;
+      const success = await AuthRepository.refreshToken();
+      if (success) {
+        response = await performRequest(type, url, body);
       }
     }
 
@@ -51,7 +44,8 @@ export class RequestService {
   }
 
   public static needsAuth(route: string) {
-    if (unauthorisedRoutes.includes(route.replace("/", ""))) return false;
+    if (AppConstants.unauthorisedRoutes.includes(route.replace("/", "")))
+      return false;
     return true;
   }
 }
@@ -67,21 +61,21 @@ async function performRequest(type: RequestType, url: string, body: any) {
       return await axios.get(baseUrl + url, {
         headers,
       });
-      break;
     case RequestType.post:
       return await axios.post(baseUrl + url, body, {
         headers,
       });
-      break;
     case RequestType.put:
       return await axios.put(baseUrl + url, body, {
         headers,
       });
-      break;
+    case RequestType.patch:
+      return await axios.patch(baseUrl + url, body, {
+        headers,
+      });
     case RequestType.delete:
       return await axios.delete(baseUrl + url, {
         headers,
       });
-      break;
   }
 }

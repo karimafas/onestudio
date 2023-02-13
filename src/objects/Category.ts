@@ -8,6 +8,6 @@ export class Category {
   }
   
   static fromJson(json: { [key: string]: any }) {
-    return new Category(json["id"], json["name"]);
+    return new Category(json.id, json.name);
   }
 }

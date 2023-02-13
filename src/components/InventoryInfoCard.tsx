@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
-import { ItemStatus } from "../objects/InventoryItem";
+import { PrimitiveStatuses } from "../objects/Status";
 
 export function InventoryInfoCard() {
   const navigate = useNavigate();
@@ -12,8 +12,12 @@ export function InventoryInfoCard() {
     price += p;
   }
 
-  const faulty = items.filter((i) => i.status === ItemStatus.faulty).length;
-  const working = items.filter((i) => i.status === ItemStatus.working).length;
+  const faulty = items.filter(
+    (i) => i.status.name === PrimitiveStatuses.faulty
+  ).length;
+  const working = items.filter(
+    (i) => i.status.name === PrimitiveStatuses.working
+  ).length;
 
   return (
     <div
@@ -38,16 +42,17 @@ export function InventoryInfoCard() {
         <div className="flex flex-row px-2">
           <span className="mt-4 text-2xl text-white font-medium">£{price}</span>
         </div>
-        <div className="w-full flex flex-row justify-around text-xs mt-3 text-white">
-          <span>
+        <div className="w-full flex flex-row justify-center items-center text-xs mt-3 text-white">
+          <div className="w-2 h-2 rounded-[100%] bg-green mr-2"></div>
+          <span className="mr-6">
             <span className="font-bold">{working}</span> working
           </span>
+          <div className="w-2 h-2 rounded-[100%] bg-red mr-2"></div>
           <span>
             <span className="font-bold">{faulty}</span> faulty
           </span>
         </div>
       </div>
-      
     </div>
   );
 }

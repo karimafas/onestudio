@@ -1,6 +1,9 @@
-import { useAppDispatch } from "../app/hooks";
-import { deleteItems } from "../features/data/inventorySlice";
-import { deleteDataItem } from "../features/data/dataSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import {
+  deleteDataItem,
+  duplicateItem,
+  getLastUserActivity,
+} from "../features/data/dataSlice";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { Header } from "../components/Header";
 import { SearchBar } from "../components/SearchBar";
@@ -8,55 +11,81 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { InventoryTable } from "../components/InventoryTable";
 import { SquareButton } from "../components/SquareButton";
 import { AddItemDialog } from "../components/AddItemDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CopyIcon from "@mui/icons-material/ContentCopyTwoTone";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { useWindowSize } from "@react-hook/window-size";
-import { initialLoad } from "../features/data/dataSlice";
-import { ItemRepository } from "../repositories/ItemRepository";
 import { openSnack, SnackType } from "../features/data/uiSlice";
+import { FilterButton } from "../components/FilterButton";
+import { FilterSection } from "../components/FilterSection";
+import { ItemRepository } from "../repositories/ItemRepository";
+import { FilterService } from "../services/FilterService";
+import { useSearchParams } from "react-router-dom";
+
+function useForceUpdate() {
+  const [value, setValue] = useState(0);
+  return () => setValue((value) => value + 1);
+}
 
 export function InventoryPage() {
   const dispatch = useAppDispatch();
+  const [searchParams] = useSearchParams();
+  const filterState = useAppSelector((state) => state.filter);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [duplicateOpen, setDuplicateOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [selected, setSelected] = useState<number[]>([]);
   const [addDialog, setAddDialog] = useState<boolean>(false);
   const [width, height] = useWindowSize();
+  const items = useAppSelector((state) => state.data.items);
+  const [page, setPage] = useState<number>(0);
+  const itemsPerPage = Math.round(height / 175);
+  const searchedItems = items.filter(
+    (i) =>
+      i.manufacturer.toLowerCase().includes(search.toLowerCase()) ||
+      i.model.toLowerCase().includes(search.toLowerCase()) ||
+      i.price.toString().toLowerCase().includes(search.toLowerCase()) ||
+      i.serial.toLowerCase().includes(search.toLowerCase()) ||
+      i.notes.toLowerCase().includes(search.toLowerCase())
+  );
+  const processedItems = FilterService.filter(filterState, searchedItems);
+  const filteredItems = processedItems.slice(
+    page * itemsPerPage,
+    itemsPerPage * (page + 1)
+  );
+  const totalPages = Math.ceil(processedItems.length / itemsPerPage);
 
-  async function _delete(ids: Array<number>) {
-    const success = await dispatch(deleteItems(ids));
+  useEffect(() => {
+    const createItem = searchParams.get("createItem");
+    if (createItem)
+      setTimeout(() => {
+        setAddDialog(true);
+      }, 200);
+  }, []);
+
+  async function _delete(ids: number[]) {
+    const success = await ItemRepository.deleteItems(ids);
 
     if (success) {
       for (const id of ids) {
         dispatch(deleteDataItem(id));
       }
+
+      setSelected([]);
     }
   }
 
-  async function _duplicate(ids: Array<number>) {
+  async function _duplicate(ids: number[]) {
     const id = ids[0];
-
-    const success = await ItemRepository.duplicateItem(id);
-
-    if (success) {
-      dispatch(initialLoad());
-      dispatch(
-        openSnack({
-          type: SnackType.success,
-          message: "Item duplicated successfully.",
-        })
-      );
-    } else {
-      dispatch(
-        openSnack({
-          type: SnackType.error,
-          message: "Error duplicating item.",
-        })
-      );
-    }
+    const result = await dispatch(duplicateItem(id)).unwrap();
+    if (result.success) return dispatch(getLastUserActivity());
+    dispatch(
+      openSnack({
+        type: SnackType.error,
+        message: "Error duplicating item.",
+      })
+    );
   }
 
   return (
@@ -84,14 +113,16 @@ export function InventoryPage() {
       <AddItemDialog
         open={addDialog}
         setOpen={setAddDialog}
-        callback={(success: boolean) =>
+        callback={(success: boolean) => {
           dispatch(
             openSnack({
-              type: SnackType.success,
-              message: "Item created successfully.",
+              type: success ? SnackType.success : SnackType.error,
+              message: success
+                ? "Item created successfully."
+                : "There was an error creating item.",
             })
-          )
-        }
+          );
+        }}
       />
       <Header />
       <div className="animate-fade grow flex flex-col">
@@ -127,14 +158,22 @@ export function InventoryPage() {
               text="Add an item"
               onClick={() => setAddDialog(true)}
             />
+            <FilterButton />
           </div>
         </div>
+        <FilterSection items={searchedItems} />
         <InventoryTable
           itemsPerPage={Math.round(height / 175)}
           selected={selected}
           setSelected={setSelected}
           searchQuery={search}
           width={width}
+          items={items}
+          filteredItems={filteredItems}
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
+          addItemCallback={() => setAddDialog(true)}
         />
       </div>
     </div>

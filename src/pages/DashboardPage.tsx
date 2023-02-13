@@ -17,7 +17,7 @@ import { useWindowSize } from "@react-hook/window-size";
 
 export function DashboardPage() {
   const user = useAppSelector((state) => state.data.user);
-  const events = useAppSelector((state) => state.data.events);
+  const activity = useAppSelector((state) => state.data.activity);
   const navigate = useNavigate();
   const [width, height] = useWindowSize();
 
@@ -33,23 +33,21 @@ export function DashboardPage() {
             {width > 1330 ? <StudioInfoCard collapsed={false} /> : <></>}
             <InventoryInfoCard />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col mt-6">
             <DashboardButton
+              key="create-item"
               type={DashboardButtonType.inventory}
-              onClick={() => navigate("inventory")}
+              onClick={() => navigate("inventory?createItem=true")}
               image={ImageHelper.image(Images.addCircle)}
             />
             <DashboardButton
+              key="invite-user"
               type={DashboardButtonType.addUser}
-              onClick={() => navigate("inventory")}
+              onClick={() => navigate("settings?inviteUser=true")}
               image={ImageHelper.image(Images.person)}
             />
             <DashboardButton
-              type={DashboardButtonType.viewProfile}
-              onClick={() => navigate("inventory")}
-              image={ImageHelper.image(Images.infoPurple)}
-            />
-            <DashboardButton
+              key="settings"
               type={DashboardButtonType.studioSettings}
               onClick={() => navigate("settings")}
               image={ImageHelper.image(Images.settings)}
@@ -57,7 +55,10 @@ export function DashboardPage() {
           </div>
         </div>
         <div className="w-2/5">
-          <RecentActivity type={RecentActivityType.dashboard} events={events} />
+          <RecentActivity
+            type={RecentActivityType.dashboard}
+            activity={activity}
+          />
         </div>
       </div>
     </div>

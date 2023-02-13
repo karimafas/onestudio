@@ -22,7 +22,7 @@ export function AppAlert(props: {
 
   return (
     <div
-      className={`${background()} bg-green rounded-lg flex flex-col justify-center items-center ${
+      className={`${background()} rounded-lg flex flex-col justify-center items-center ${
         props.style ?? ""
       }`}
     >

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { AppConstants } from "../config/AppConstants";
@@ -7,6 +6,8 @@ import { InventoryItem } from "../objects/InventoryItem";
 import { TableColumn } from "../objects/TableColumn";
 import { CheckBox } from "./CheckBox";
 import { HeaderCheckBox } from "./HeaderCheckBox";
+import { PrimaryButton } from "./PrimaryButton";
+import { UserTag } from "./UserTag";
 
 export function InventoryTable(props: {
   searchQuery: string;
@@ -14,30 +15,19 @@ export function InventoryTable(props: {
   setSelected: Function;
   itemsPerPage: number;
   width: number;
+  items: InventoryItem[];
+  filteredItems: InventoryItem[];
+  page: number;
+  setPage: Function;
+  totalPages: number;
+  addItemCallback: Function;
 }) {
+  const { items, filteredItems, page, setPage, totalPages, addItemCallback } =
+    props;
   const navigate = useNavigate();
-  const [page, setPage] = useState<number>(0);
-  const items = useAppSelector((state) => state.data.items);
   const locations = useAppSelector((state) => state.data.locations);
   const categories = useAppSelector((state) => state.data.categories);
   const owners = useAppSelector((state) => state.data.studioUsers);
-  const totalPages = Math.ceil(items.length / props.itemsPerPage);
-  const filteredItems = items
-    .filter(
-      (i) =>
-        i.manufacturer
-          .toLowerCase()
-          .includes(props.searchQuery.toLowerCase()) ||
-        i.model.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
-        i.price
-          .toString()
-          .toLowerCase()
-          .includes(props.searchQuery.toLowerCase()) ||
-        i.mNumber.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
-        i.serial.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
-        i.notes.toLowerCase().includes(props.searchQuery.toLowerCase())
-    )
-    .slice(page * props.itemsPerPage, props.itemsPerPage * (page + 1));
   const filteredColumns =
     props.width > 1070
       ? AppConstants.tableColumns
@@ -54,8 +44,6 @@ export function InventoryTable(props: {
       case "owner":
         const owner = owners.filter((o) => o.id == i.ownerId)[0];
         return `${owner.firstName} ${owner.lastName}`;
-      case "mNumber":
-        return i.mNumber;
       case "serial":
         return i.serial;
       case "notes":
@@ -66,6 +54,8 @@ export function InventoryTable(props: {
   }
 
   function getRowContent(c: TableColumn, i: InventoryItem) {
+    const onClick = () => navigate(`${i.id}`);
+
     const style = {
       width: `${100 / filteredColumns.length}%`,
       paddingRight: 30,
@@ -105,12 +95,33 @@ export function InventoryTable(props: {
             />
           </div>
         );
+      case "status":
+        return (
+          <div className="flex flex-row items-center" onClick={onClick}>
+            <div
+              className={`h-2 w-2 ${i.status.backgroundColor} rounded-[100%] mr-3`}
+            ></div>
+            <span>{i.status.displayName}</span>
+          </div>
+        );
+      case "owner":
+        return (
+          <div className="flex flex-row" style={style} onClick={onClick}>
+            <div className="h-[2.5em] w-[2.5em]">
+              <UserTag
+                user={owners.filter((o) => o.id === i.ownerId)[0]}
+                pointer
+                tooltip
+              />
+            </div>
+          </div>
+        );
       default:
         return (
           <span
             key={`txt-${c.id}-${i.id}-${columnToItemText(c, i)}`}
             className="h-full flex flex-col justify-center"
-            onClick={() => navigate(`${i.id}`)}
+            onClick={onClick}
             style={style}
           >
             {columnToItemText(c, i)}
@@ -155,6 +166,29 @@ export function InventoryTable(props: {
           </span>
         );
     }
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center">
+        <img className="w-[50%]" src={ImageHelper.image(Images.placeholder1)} />
+        <div className="absolute flex flex-col items-center">
+          <span className="font-medium text-dark_blue text-sm">
+            Don't be shy...
+          </span>
+          <div className="w-[15em]">
+            <PrimaryButton
+              text="Add your first item"
+              style="mt-5"
+              backgroundColor="bg-blue"
+              textColor="text-white"
+              icon={ImageHelper.image(Images.addWhite)}
+              onClick={() => addItemCallback()}
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

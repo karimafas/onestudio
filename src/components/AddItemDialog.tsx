@@ -1,10 +1,10 @@
 import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { initialLoad } from "../features/data/dataSlice";
+import { createItem, getLastUserActivity } from "../features/data/dataSlice";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { Category } from "../objects/Category";
-import { ItemDfo, ItemStatus } from "../objects/InventoryItem";
+import { ItemDfo } from "../objects/InventoryItem";
 import { StudioLocation } from "../objects/StudioLocation";
 import { StudioUser } from "../objects/StudioUser";
 import { ItemRepository } from "../repositories/ItemRepository";
@@ -25,23 +25,21 @@ export function AddItemDialog(props: {
   const initialDfo: ItemDfo = {
     manufacturer: "",
     model: "",
-    location_id: "",
+    locationId: "",
     serial: "",
-    m_number: "",
     price: "",
-    category_id: "",
-    owner_id: "",
+    categoryId: "",
+    ownerId: "",
     notes: "",
-    status: ItemStatus.working,
   };
   const [dfo, setDfo] = useState<ItemDfo>(initialDfo);
-  const categories: Array<Category> = useAppSelector(
+  const categories: Category[] = useAppSelector(
     (state) => state.data.categories
   );
-  const locations: Array<StudioLocation> = useAppSelector(
+  const locations: StudioLocation[] = useAppSelector(
     (state) => state.data.locations
   );
-  const owners: Array<StudioUser> = useAppSelector((state) =>
+  const owners: StudioUser[] = useAppSelector((state) =>
     state.data.studioUsers.filter((u) => u.owner)
   );
   const { open, setOpen } = props;
@@ -52,12 +50,11 @@ export function AddItemDialog(props: {
       notNull: [
         "manufacturer",
         "model",
-        "location_id",
+        "locationId",
         "serial",
-        "m_number",
         "price",
-        "category_id",
-        "owner_id",
+        "categoryId",
+        "ownerId",
       ],
       number: ["price"],
     });
@@ -70,10 +67,10 @@ export function AddItemDialog(props: {
   };
 
   async function _createItem(dfo: ItemDfo) {
-    const result = await ItemRepository.createItem(dfo);
+    const result = await dispatch(createItem(dfo)).unwrap();
 
     if (result.success) {
-      dispatch(initialLoad());
+      dispatch(getLastUserActivity());
       props.callback(true);
       setDfo(initialDfo);
     } else {
@@ -139,14 +136,6 @@ export function AddItemDialog(props: {
             />
           </div>
           <div className="flex flex-row w-full justify-between">
-            <CustomTextField
-              width="w-60"
-              placeholder="M-Number"
-              name="m_number"
-              defaultValue={dfo.m_number}
-              validationObject={validationObject}
-              onChange={(v: string) => setDfo({ ...dfo, m_number: v })}
-            />
             <CustomSelect
               width="w-60"
               elements={locations.map((l) => {
@@ -156,13 +145,11 @@ export function AddItemDialog(props: {
                 };
               })}
               placeholder="Location"
-              name="location_id"
-              defaultValue={dfo.location_id}
+              name="locationId"
+              defaultValue={dfo.locationId}
               validationObject={validationObject}
-              onChange={(v: string) => setDfo({ ...dfo, location_id: v })}
+              onChange={(v: string) => setDfo({ ...dfo, locationId: v })}
             />
-          </div>
-          <div className="flex flex-row w-full justify-between">
             <CustomSelect
               width="w-60"
               elements={categories.map((c) => {
@@ -172,13 +159,15 @@ export function AddItemDialog(props: {
                 };
               })}
               placeholder="Category"
-              name="category_id"
-              defaultValue={dfo.category_id}
+              name="categoryId"
+              defaultValue={dfo.categoryId}
               validationObject={validationObject}
               onChange={(v: string) => {
-                setDfo({ ...dfo, category_id: v });
+                setDfo({ ...dfo, categoryId: v });
               }}
             />
+          </div>
+          <div className="flex flex-row w-full justify-between">
             <CustomSelect
               width="w-60"
               elements={owners.map((o) => {
@@ -188,10 +177,10 @@ export function AddItemDialog(props: {
                 };
               })}
               placeholder="Owner"
-              name="owner_id"
-              defaultValue={dfo.owner_id}
+              name="ownerId"
+              defaultValue={dfo.ownerId}
               validationObject={validationObject}
-              onChange={(v: string) => setDfo({ ...dfo, owner_id: v })}
+              onChange={(v: string) => setDfo({ ...dfo, ownerId: v })}
             />
           </div>
           <CustomTextField
