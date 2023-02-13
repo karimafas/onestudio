@@ -18,7 +18,7 @@ jobs:
     - name: Set environment variables
       run: |
         touch .env
-        echo "API_URL=${{ vars.API_URL }}" >> .env \
+        echo "API_URL=${{ vars.API_URL }}" >> .env
         echo "ENVIRONMENT=${{ vars.ENVIRONMENT }}" >> .env
     
     - name: Login to DockerHub
