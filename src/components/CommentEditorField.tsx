@@ -33,10 +33,13 @@ export function CommentEditorField(props: {
   const marginLeft = viewing ? "" : "ml-4";
   const marginTop = "";
 
+  const loggedInUser = useAppSelector((state) => state.data.user);
   const rawUsers = useAppSelector((state) => state.data.studioUsers);
-  const users = rawUsers.map((u) => {
-    return { id: u.id, display: `${u.firstName} ${u.lastName}` };
-  });
+  const users = rawUsers
+    .filter((u) => u.email !== loggedInUser?.email)
+    .map((u) => {
+      return { id: u.id, display: `${u.firstName} ${u.lastName}` };
+    });
 
   const inputFile = useRef<HTMLInputElement | null>(null);
   let [originalAttachments, setOriginalAttachments] = useState<any[]>([]);
