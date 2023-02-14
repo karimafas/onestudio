@@ -32,9 +32,8 @@ export function AttachedFiles(props: {
         <div
           key={`file-${f.name}-${idx}`}
           className="bg-lightest_purple max-w-max px-2 rounded flex flex-row items-center justify-between mb-1 cursor-pointer"
-          onClick={() => _openAttachment(f)}
         >
-          <span className="text-[12px] text-dark_blue">
+          <span className="text-[12px] text-dark_blue" onClick={() => _openAttachment(f)}>
             {StringHelper.collapseString(f.name)}
           </span>
           {!viewing ? (

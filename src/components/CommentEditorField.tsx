@@ -66,13 +66,14 @@ export function CommentEditorField(props: {
         })
       ).unwrap();
 
-      if (!result.success)
+      if (!result.success) {
         return dispatch(
           openSnack({
             message: "There was an issue updating comment.",
             type: SnackType.error,
           })
         );
+      }
       setEditing(false);
       return;
     }
@@ -89,6 +90,7 @@ export function CommentEditorField(props: {
         })
       );
     }
+    setEditing(false);
 
     dispatch(getLastUserActivity());
 
