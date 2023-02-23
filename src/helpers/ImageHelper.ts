@@ -49,6 +49,7 @@ export enum Images {
   spinner = "spinner.png",
   uploadCloud = "upload-cloud.png",
   uploadFile = "upload-file.png",
+  upload = "upload.png",
   users = "users.png",
   usersWhite = "users-white.png",
   threeCircles = "three-circles.png",
