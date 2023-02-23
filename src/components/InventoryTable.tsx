@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { AppConstants } from "../config/AppConstants";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { StringHelper } from "../helpers/StringHelper";
 import { InventoryItem } from "../objects/InventoryItem";
 import { TableColumn } from "../objects/TableColumn";
 import { CheckBox } from "./CheckBox";
@@ -47,7 +48,7 @@ export function InventoryTable(props: {
       case "serial":
         return i.serial;
       case "notes":
-        return i.notes;
+        return StringHelper.collapseString(i.notes);
       default:
         return "";
     }

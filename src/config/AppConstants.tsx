@@ -29,10 +29,10 @@ export class AppConstants {
     new TableColumn("price", "Price", true, 10, 0),
     new TableColumn("location", "Location", true, 10, 0),
     new TableColumn("category", "Category", true, 10, 0),
-    new TableColumn("serial", "Serial", true, 10, 0),
+    new TableColumn("serial", "Serial", true, 10, 1),
     new TableColumn("notes", "Notes", true, 10, 1),
-    new TableColumn("owner", "Owner", true, 5, 0),
-    new TableColumn("status", "Status", false, 10, 0),
+    new TableColumn("owner", "Owner", true, 5, 1),
+    new TableColumn("status", "Status", false, 10, 1),
   ];
 
   static routesWithoutSidebar: string[] = [

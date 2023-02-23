@@ -52,7 +52,7 @@ export function ImportPage() {
 
   function findMatches(csvColumns: string[]): ColumnCsvMatch[] {
     const match: ColumnCsvMatch[] = [];
-    const lcColumns = AppConstants.columns;
+    const lcColumns = AppConstants.columns.filter((c) => c.name !== "owner");
 
     for (const column of lcColumns) {
       const index = csvColumns
@@ -165,11 +165,11 @@ export function ImportPage() {
       <div className="flex flex-row items-center p-8">
         <div
           className="flex flex-row cursor-pointer items-center"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/inventory")}
         >
           <img className="h-3 mr-2" src={ImageHelper.image(Images.backBlue)} />
           <span className="text-light_purple font-medium text-sm">
-            Back to OneStudio
+            Back to Inventory
           </span>
         </div>
       </div>
@@ -178,7 +178,7 @@ export function ImportPage() {
           Import CSV
         </span>
         <span className="text-dark_blue">
-          Import your studio inventory from a CSV file.
+          Import inventory items from a CSV file.
         </span>
       </div>
       <div className="grow flex flex-col items-center justify-center">

@@ -21,7 +21,7 @@ import { FilterButton } from "../components/FilterButton";
 import { FilterSection } from "../components/FilterSection";
 import { ItemRepository } from "../repositories/ItemRepository";
 import { FilterService } from "../services/FilterService";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function useForceUpdate() {
   const [value, setValue] = useState(0);
@@ -30,6 +30,7 @@ function useForceUpdate() {
 
 export function InventoryPage() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const filterState = useAppSelector((state) => state.filter);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
@@ -157,6 +158,11 @@ export function InventoryPage() {
               icon={ImageHelper.image(Images.addPurple)}
               text="Add an item"
               onClick={() => setAddDialog(true)}
+              style="mr-3"
+            />
+            <SquareButton
+              icon={ImageHelper.image(Images.upload)}
+              onClick={() => navigate("/import")}
             />
             <FilterButton />
           </div>
