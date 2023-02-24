@@ -10,7 +10,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { AddTypesDialog, TypesDialogType } from "../components/AddTypesDialog";
 import { Status } from "../objects/Status";
-import { StringHelper } from "../helpers/StringHelper";
 import { StatusRepository } from "../repositories/StatusRepository";
 import { CategoryRepository } from "../repositories/CategoryRepository";
 import { LocationRepository } from "../repositories/LocationRepository";
@@ -19,6 +18,7 @@ import { InventoryItem } from "../objects/InventoryItem";
 import { AddUserCard } from "../components/AddUserCard";
 import InviteUserDialog from "../components/InviteUserDialog";
 import { useSearchParams } from "react-router-dom";
+import { toFirstUpperCase } from "../helpers/StringHelper";
 
 export interface TypesSubmittedData {
   name: string;
@@ -272,7 +272,7 @@ export function SettingsPage() {
               />
               <div className="bg-white shadow-lg h-10 w-72 group-hover:translate-x-8 transition-all rounded-lg px-4 flex flex-col justify-center relative mt-[-1.8rem]">
                 <span className="font-medium text-sm text-dark_blue">
-                  {StringHelper.toFirstUpperCase(s.displayName ?? "")}
+                  {toFirstUpperCase(s.displayName ?? "")}
                 </span>
               </div>
             </div>

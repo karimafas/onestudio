@@ -1,32 +1,29 @@
+import CopyIcon from "@mui/icons-material/ContentCopyTwoTone";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useWindowSize } from "@react-hook/window-size";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { AddItemDialog } from "../components/AddItemDialog";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { FilterButton } from "../components/FilterButton";
+import { FilterSection } from "../components/FilterSection";
+import { Header } from "../components/Header";
+import { AppTable } from "../components/AppTable";
+import { PrimaryButton } from "../components/PrimaryButton";
+import { SearchBar } from "../components/SearchBar";
+import { SquareButton } from "../components/SquareButton";
+import { AppConstants } from "../config/AppConstants";
 import {
   deleteDataItem,
   duplicateItem,
   getLastUserActivity,
 } from "../features/data/dataSlice";
-import ConfirmDialog from "../components/ConfirmDialog";
-import { Header } from "../components/Header";
-import { SearchBar } from "../components/SearchBar";
-import { PrimaryButton } from "../components/PrimaryButton";
-import { InventoryTable } from "../components/InventoryTable";
-import { SquareButton } from "../components/SquareButton";
-import { AddItemDialog } from "../components/AddItemDialog";
-import { useEffect, useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
-import CopyIcon from "@mui/icons-material/ContentCopyTwoTone";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
-import { useWindowSize } from "@react-hook/window-size";
 import { openSnack, SnackType } from "../features/data/uiSlice";
-import { FilterButton } from "../components/FilterButton";
-import { FilterSection } from "../components/FilterSection";
+import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { TableItem } from "../objects/TableItem";
 import { ItemRepository } from "../repositories/ItemRepository";
 import { FilterService } from "../services/FilterService";
-import { useNavigate, useSearchParams } from "react-router-dom";
-
-function useForceUpdate() {
-  const [value, setValue] = useState(0);
-  return () => setValue((value) => value + 1);
-}
 
 export function InventoryPage() {
   const dispatch = useAppDispatch();
@@ -168,18 +165,25 @@ export function InventoryPage() {
           </div>
         </div>
         <FilterSection items={searchedItems} />
-        <InventoryTable
+        <AppTable
           itemsPerPage={Math.round(height / 175)}
           selected={selected}
           setSelected={setSelected}
           searchQuery={search}
           width={width}
-          items={items}
-          filteredItems={filteredItems}
+          items={items.map((i) => TableItem.fromInventoryItem(i))}
+          filteredItems={filteredItems.map((i) =>
+            TableItem.fromInventoryItem(i)
+          )}
           page={page}
           setPage={setPage}
           totalPages={totalPages}
           addItemCallback={() => setAddDialog(true)}
+          columns={
+            width > 1070
+              ? AppConstants.tableColumns
+              : AppConstants.tableColumns.filter((c) => c.priority === 0)
+          }
         />
       </div>
     </div>

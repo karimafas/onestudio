@@ -1,5 +1,10 @@
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { clearAllFilters, FilterType } from "../features/data/filterSlice";
+import {
+  clearAllFilters,
+  FilterType,
+  hideFilters,
+} from "../features/data/filterSlice";
 import { InventoryItem } from "../objects/InventoryItem";
 import { FilterService } from "../services/FilterService";
 import { FilterCard } from "./FilterCard";
@@ -14,17 +19,39 @@ export function FilterSection(props: { items: InventoryItem[] }) {
   const owners = useAppSelector((state) => state.data.studioUsers);
   const statuses = useAppSelector((state) => state.data.statuses);
 
-  const height = visible ? "h-[4em]" : "h-0";
-  const margin = visible ? "mt-4" : "";
-  const opacity = visible ? "opacity-100" : "opacity-0";
-  const itemsOpacity = visible ? "opacity-100" : "opacity-0";
+  const [isVisible, setIsVisible] = useState<boolean>(visible);
+  const [animationVisible, setAnimationVisible] = useState<boolean>(visible);
+
+  const height = isVisible ? "h-[3em]" : "h-0";
+  const margin = isVisible ? "mt-4" : "";
+  const itemsOpacity = isVisible ? "opacity-100" : "opacity-0";
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsVisible(visible);
+    }, 100);
+
+    if (visible) {
+      setAnimationVisible(visible);
+    } else {
+      setTimeout(() => {
+        setAnimationVisible(visible);
+      }, 350);
+    }
+  }, [visible]);
+
+  if (!animationVisible) return <></>;
 
   return (
     <div
-      className={`transition-all duration-300 ${height} ${margin} rounded-lg bg-lightest_purple2`}
+      className={`transition-all duration-200 ${height} ${margin} rounded-lg bg-lightest_purple2 ${
+        !visible ? "delay-50" : ""
+      }`}
     >
       <div
-        className={`w-full h-full ${itemsOpacity} transition-all flex flex-row items-center px-5 justify-around`}
+        className={`w-full h-full ${itemsOpacity} transition-all ${
+          visible ? "delay-50" : ""
+        } flex flex-row items-center px-5 justify-around`}
       >
         <FilterCard
           title="Manufacturer"

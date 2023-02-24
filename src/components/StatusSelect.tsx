@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { getLastUserActivity } from "../features/data/dataSlice";
-import { StringHelper } from "../helpers/StringHelper";
+import { toFirstUpperCase } from "../helpers/StringHelper";
 
 export interface SelectElement {
   id: number;
@@ -86,7 +86,7 @@ export function StatusSelect(props: {
     }
 
     return {
-      title: StringHelper.toFirstUpperCase(
+      title: toFirstUpperCase(
         statuses.filter((s) => s.id === id)[0].displayName
       ),
       hasFlag: true,
