@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { AppBackground } from "../../components/AppBackground";
+import { AppConstants } from "../../config/AppConstants";
+import { refreshToken } from "../../reducers/authSlice";
+import { LoginPage } from "../login/LoginPage";
 import App from "./App";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { AppBackground } from "./components/AppBackground";
-import { AppConstants } from "./config/AppConstants";
-import { LoginPage } from "./features/login/LoginPage";
-import { refreshToken } from "./reducers/authSlice";
 
 export function AppAuth() {
   const dispatch = useAppDispatch();

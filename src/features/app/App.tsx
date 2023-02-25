@@ -1,21 +1,21 @@
 import { CircularProgress } from "@mui/material";
 import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { AppBackground } from "./components/AppBackground";
-import { CustomSnackBar } from "./components/CustomSnackBar";
-import { LoadingOverlay } from "./components/LoadingOverlay";
-import Sidebar from "./components/Sidebar";
-import { AppConstants } from "./config/AppConstants";
-import { DashboardPage } from "./features/dashboard/DashboardPage";
-import { ImportPage } from "./features/import/ImportPage";
-import { InventoryPage } from "./features/inventory/InventoryPage";
-import { InvitationPage } from "./features/invitation/InvitationPage";
-import { ItemPage } from "./features/item/ItemPage";
-import { NotFound } from "./features/not-found/NotFoundPage";
-import { ResetPassword } from "./features/reset-password/ResetPasswordPage";
-import { SettingsPage } from "./features/settings/SettingsPage";
-import { initialLoad, stopLoading } from "./reducers/dataSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { AppBackground } from "../../components/AppBackground";
+import { CustomSnackBar } from "../../components/CustomSnackBar";
+import { LoadingOverlay } from "../../components/LoadingOverlay";
+import Sidebar from "../../components/Sidebar";
+import { AppConstants } from "../../config/AppConstants";
+import { DashboardPage } from "../dashboard/DashboardPage";
+import { ImportPage } from "../import/ImportPage";
+import { InventoryPage } from "../inventory/InventoryPage";
+import { InvitationPage } from "../invitation/InvitationPage";
+import { ItemPage } from "../item/ItemPage";
+import { NotFound } from "../not-found/NotFoundPage";
+import { ResetPassword } from "../reset-password/ResetPasswordPage";
+import { SettingsPage } from "../settings/SettingsPage";
+import { initialLoad, stopLoading } from "../../reducers/dataSlice";
 
 export default function App(props: { loadData: boolean }) {
   const dispatch = useAppDispatch();
