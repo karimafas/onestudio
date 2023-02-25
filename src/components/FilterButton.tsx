@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { hideFilters, showFilters } from "../features/data/filterSlice";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
+import { hideFilters, showFilters } from "../reducers/filterSlice";
 
 export function FilterButton() {
   const dispatch = useAppDispatch();

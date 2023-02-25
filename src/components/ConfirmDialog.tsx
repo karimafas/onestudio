@@ -1,5 +1,5 @@
 import { Dialog } from "@mui/material";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
 import { PrimaryButton } from "./PrimaryButton";
 
 const ConfirmDialog = (props: {
@@ -11,7 +11,7 @@ const ConfirmDialog = (props: {
   onConfirm: Function;
 }) => {
   const { title, body, open, setOpen, onConfirm } = props;
-  
+
   return (
     <Dialog
       PaperProps={{

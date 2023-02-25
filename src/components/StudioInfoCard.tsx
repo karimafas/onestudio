@@ -1,5 +1,5 @@
 import { useAppSelector } from "../app/hooks";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
 
 export function StudioInfoCard(props: { collapsed: boolean }) {
   const users = useAppSelector((state) => state.data.studioUsers);

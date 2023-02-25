@@ -1,8 +1,8 @@
 import { AxiosResponse } from "axios";
-import { DelayHelper } from "../helpers/DelayHelper";
+import { RegistrationDfo } from "../features/invitation/InvitationPage";
+import { DelayHelper } from "../helpers/DelayHelpers";
 import { Studio } from "../objects/Studio";
 import { StudioUser } from "../objects/StudioUser";
-import { RegistrationDfo } from "../pages/InvitationPage";
 import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
 import { TokenService } from "../services/TokenService";

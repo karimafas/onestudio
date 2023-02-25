@@ -1,5 +1,5 @@
-import { ImageHelper, Images } from "../helpers/ImageHelper";
-import { collapseString } from "../helpers/StringHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
+import { collapseString } from "../helpers/StringHelpers";
 
 export function AttachedFiles(props: {
   uploadedFiles: any[];
@@ -33,7 +33,10 @@ export function AttachedFiles(props: {
           key={`file-${f.name}-${idx}`}
           className="bg-lightest_purple max-w-max px-2 rounded flex flex-row items-center justify-between mb-1 cursor-pointer"
         >
-          <span className="text-[12px] text-dark_blue" onClick={() => _openAttachment(f)}>
+          <span
+            className="text-[12px] text-dark_blue"
+            onClick={() => _openAttachment(f)}
+          >
             {collapseString(f.name)}
           </span>
           {!viewing ? (

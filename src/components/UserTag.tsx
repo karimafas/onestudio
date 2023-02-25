@@ -1,6 +1,6 @@
 import { Tooltip } from "@mui/material";
 import { ReactElement } from "react";
-import { userInitials } from "../helpers/StringHelper";
+import { userInitials } from "../helpers/StringHelpers";
 import { StudioUser } from "../objects/StudioUser";
 
 function tag(

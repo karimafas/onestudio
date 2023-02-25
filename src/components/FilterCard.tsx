@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppDispatch } from "../app/hooks";
-import {
-  clearFilter,
-  FilterType,
-  selectOption,
-} from "../features/data/filterSlice";
+import { clearFilter, FilterType, selectOption } from "../reducers/filterSlice";
 
 export interface FilterOption {
   id: number;

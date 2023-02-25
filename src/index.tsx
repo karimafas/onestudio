@@ -4,7 +4,7 @@ import reportWebVitals from "./reportWebVitals";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { AppAuth } from "./AppAuth";
+import { AppAuth } from "./features/app/AppAuth";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

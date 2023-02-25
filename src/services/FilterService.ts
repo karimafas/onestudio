@@ -1,11 +1,11 @@
 import { FilterOption } from "../components/FilterCard";
-import { FilterState, FilterType } from "../features/data/filterSlice";
+import { ArrayHelper } from "../helpers/ArrayHelpers";
 import { Category } from "../objects/Category";
 import { InventoryItem } from "../objects/InventoryItem";
+import { Status } from "../objects/Status";
 import { StudioLocation } from "../objects/StudioLocation";
 import { StudioUser } from "../objects/StudioUser";
-import { ArrayHelper } from "../helpers/ArrayHelper";
-import { Status } from "../objects/Status";
+import { FilterState, FilterType } from "../reducers/filterSlice";
 
 export class FilterService {
   static filter(filterState: FilterState, items: InventoryItem[]) {

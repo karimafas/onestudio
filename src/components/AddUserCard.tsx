@@ -1,4 +1,4 @@
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
 
 export function AddUserCard(props: { onClick: Function }) {
   return (

@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authSlice from "../features/data/authSlice";
-import dataSlice from "../features/data/dataSlice";
-import fileUploadSlice from "../features/data/fileUploadSlice";
-import filterSlice from "../features/data/filterSlice";
-import uiSlice from "../features/data/uiSlice";
+import authSlice from "../reducers/authSlice";
+import dataSlice from "../reducers/dataSlice";
+import fileUploadSlice from "../reducers/fileUploadSlice";
+import filterSlice from "../reducers/filterSlice";
+import uiSlice from "../reducers/uiSlice";
 
 export const store = configureStore({
   reducer: {

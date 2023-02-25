@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import {
-  clearAllFilters,
-  FilterType,
-  hideFilters,
-} from "../features/data/filterSlice";
 import { InventoryItem } from "../objects/InventoryItem";
+import { clearAllFilters, FilterType } from "../reducers/filterSlice";
 import { FilterService } from "../services/FilterService";
 import { FilterCard } from "./FilterCard";
 

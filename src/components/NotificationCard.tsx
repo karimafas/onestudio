@@ -1,8 +1,8 @@
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
-import { viewNotification } from "../features/data/dataSlice";
 import { Notification } from "../objects/Notification";
+import { viewNotification } from "../reducers/dataSlice";
 import { UserTag } from "./UserTag";
 
 export function NotificationCard(props: { notification: Notification }) {

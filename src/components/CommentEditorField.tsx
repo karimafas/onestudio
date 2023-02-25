@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { MentionsInput, Mention } from "react-mentions";
+import { Mention, MentionsInput } from "react-mentions";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
+import { Comment } from "../objects/Comment";
+import { FileUpload } from "../objects/FileUpload";
+import { InventoryItem } from "../objects/InventoryItem";
 import {
   createComment,
   getLastUserActivity,
   reloadStatus,
   updateComment,
-} from "../features/data/dataSlice";
-import { openSnack, SnackType } from "../features/data/uiSlice";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
-import { Comment } from "../objects/Comment";
-import { FileUpload } from "../objects/FileUpload";
-import { InventoryItem } from "../objects/InventoryItem";
+} from "../reducers/dataSlice";
+import { openSnack, SnackType } from "../reducers/uiSlice";
 import classNames from "../styles/mentions.module.css";
 import { AttachedFiles } from "./AttachedFiles";
 import { PrimaryButton } from "./PrimaryButton";

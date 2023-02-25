@@ -1,4 +1,4 @@
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
 
 export function TablePaginationControls(props: {
   page: number;

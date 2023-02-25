@@ -1,11 +1,11 @@
 import Box from "@mui/material/Box";
-import { useLocation, useNavigate } from "react-router-dom";
-import { SidebarTab, SidebarTabs } from "./SidebarTab";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
-import { UserTag } from "./UserTag";
-import { useAppSelector } from "../app/hooks";
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../app/hooks";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
 import { AuthRepository } from "../repositories/AuthRepository";
+import { SidebarTab, SidebarTabs } from "./SidebarTab";
+import { UserTag } from "./UserTag";
 
 function getTab(location: any): SidebarTabs {
   const path = location.pathname.replace("/", "");
