@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { closeSnack, SnackType } from "../features/data/uiSlice";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
+import { closeSnack, SnackType } from "../reducers/uiSlice";
 
 export function CustomSnackBar() {
   const dispatch = useAppDispatch();

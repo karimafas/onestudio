@@ -1,7 +1,7 @@
 import moment from "moment";
 import { useAppDispatch } from "../app/hooks";
-import { unauthorise } from "../features/data/authSlice";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
+import { unauthorise } from "../reducers/authSlice";
 import { AuthRepository } from "../repositories/AuthRepository";
 import { NotificationButton } from "./NotificationButton";
 

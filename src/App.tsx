@@ -1,22 +1,21 @@
+import { CircularProgress } from "@mui/material";
+import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { InventoryPage } from "./pages/InventoryPage";
-import { ItemPage } from "./pages/ItemPage";
-import Sidebar from "./components/Sidebar";
-import { SettingsPage } from "./pages/SettingsPage";
-import { DashboardPage } from "./pages/DashboardPage";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { AppBackground } from "./components/AppBackground";
-import { NotFound } from "./pages/NotFound";
-import { ResetPassword } from "./pages/ResetPassword";
-import { ImportPage } from "./pages/ImportPage";
-import { AppConstants } from "./config/AppConstants";
 import { CustomSnackBar } from "./components/CustomSnackBar";
 import { LoadingOverlay } from "./components/LoadingOverlay";
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { initialLoad } from "./features/data/dataSlice";
-import { CircularProgress } from "@mui/material";
-import { InvitationPage } from "./pages/InvitationPage";
-import { stopLoading } from "./features/data/dataSlice";
+import Sidebar from "./components/Sidebar";
+import { AppConstants } from "./config/AppConstants";
+import { DashboardPage } from "./features/dashboard/DashboardPage";
+import { ImportPage } from "./features/import/ImportPage";
+import { InventoryPage } from "./features/inventory/InventoryPage";
+import { InvitationPage } from "./features/invitation/InvitationPage";
+import { ItemPage } from "./features/item/ItemPage";
+import { NotFound } from "./features/not-found/NotFoundPage";
+import { ResetPassword } from "./features/reset-password/ResetPasswordPage";
+import { SettingsPage } from "./features/settings/SettingsPage";
+import { initialLoad, stopLoading } from "./reducers/dataSlice";
 
 export default function App(props: { loadData: boolean }) {
   const dispatch = useAppDispatch();

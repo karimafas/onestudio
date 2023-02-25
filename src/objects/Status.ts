@@ -1,4 +1,4 @@
-import { toFirstUpperCase } from "../helpers/StringHelper";
+import { toFirstUpperCase } from "../helpers/StringHelpers";
 
 export enum PrimitiveStatuses {
   faulty = "faulty",

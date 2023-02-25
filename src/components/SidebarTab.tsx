@@ -1,4 +1,4 @@
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
 
 export enum SidebarTabs {
   dashboard = "Dashboard",

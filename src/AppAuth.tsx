@@ -4,8 +4,8 @@ import App from "./App";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { AppBackground } from "./components/AppBackground";
 import { AppConstants } from "./config/AppConstants";
-import { refreshToken } from "./features/data/authSlice";
-import { LoginPage } from "./pages/LoginPage";
+import { LoginPage } from "./features/login/LoginPage";
+import { refreshToken } from "./reducers/authSlice";
 
 export function AppAuth() {
   const dispatch = useAppDispatch();

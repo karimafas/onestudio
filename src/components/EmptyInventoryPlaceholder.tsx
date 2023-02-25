@@ -1,4 +1,4 @@
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
 import { PrimaryButton } from "./PrimaryButton";
 
 export function EmptyInventoryPlaceholder(props: {

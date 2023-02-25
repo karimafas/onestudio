@@ -1,5 +1,5 @@
 import { useAppSelector } from "../app/hooks";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
 import { NotificationCard } from "./NotificationCard";
 
 export function NotificationTray() {
@@ -14,8 +14,7 @@ export function NotificationTray() {
         <div className="w-full h-full flex flex-col items-center pt-14">
           <img className="w-8" src={ImageHelper.image(Images.bellPurple)} />
           <span className="px-12 text-center text-xs mt-3 font-medium text-light_purple">
-            Collaborate with your colleagues
-            to see your first notification!
+            Collaborate with your colleagues to see your first notification!
           </span>
         </div>
       ) : (

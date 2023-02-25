@@ -33,7 +33,9 @@ export function PrimaryButton(props: {
       {!props.icon ? (
         <> </>
       ) : (
-        <img className={`w-5 ${props.iconStyle ?? ""}`} src={props.icon} />
+        <div className={props.iconStyle}>
+          <img className="object-contain h-full w-full" src={props.icon} />
+        </div>
       )}
     </div>
   );

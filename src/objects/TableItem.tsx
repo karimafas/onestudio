@@ -1,10 +1,10 @@
-import { collapseString } from "../helpers/StringHelper";
+import { UserTag } from "../components/UserTag";
+import { collapseString } from "../helpers/StringHelpers";
 import { Category } from "./Category";
 import { InventoryItem } from "./InventoryItem";
 import { StudioLocation } from "./StudioLocation";
 import { StudioUser } from "./StudioUser";
 import { TableColumn } from "./TableColumn";
-import { UserTag } from "../components/UserTag";
 
 export class TableItem {
   item?: InventoryItem;

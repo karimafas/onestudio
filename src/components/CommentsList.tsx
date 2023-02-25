@@ -1,13 +1,12 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { deleteComment, reloadItem } from "../features/data/dataSlice";
+import { useAppDispatch } from "../app/hooks";
 import { Comment } from "../objects/Comment";
 import { InventoryItem } from "../objects/InventoryItem";
-import { CommentRepository } from "../repositories/CommentRepository";
-import ConfirmDialog from "./ConfirmDialog";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteComment } from "../reducers/dataSlice";
+import { openSnack, SnackType } from "../reducers/uiSlice";
 import { CommentPosted } from "./CommentPosted";
-import { openSnack, SnackType } from "../features/data/uiSlice";
+import ConfirmDialog from "./ConfirmDialog";
 
 export function CommentsList(props: {
   comments: Comment[];

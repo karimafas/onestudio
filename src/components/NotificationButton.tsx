@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../app/hooks";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
 import { NotificationTray } from "./NotificationTray";
 
 export function NotificationButton() {

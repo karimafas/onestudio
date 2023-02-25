@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
-import { ImageHelper, Images } from "../helpers/ImageHelper";
+import { ImageHelper, Images } from "../helpers/ImageHelpers";
 import { PrimitiveStatuses } from "../objects/Status";
 
 export function InventoryInfoCard() {
