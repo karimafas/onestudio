@@ -1,6 +1,6 @@
 import { Tooltip } from "@mui/material";
 import { ReactElement } from "react";
-import { StringHelper } from "../helpers/StringHelper";
+import { userInitials } from "../helpers/StringHelper";
 import { StudioUser } from "../objects/StudioUser";
 
 function tag(
@@ -18,7 +18,7 @@ function tag(
       } ${pointer ? "cursor-pointer" : "cursor-default"}`}
     >
       <span className="font-semibold text-white text-sm">
-        {StringHelper.userInitials(user)}
+        {userInitials(user)}
       </span>
     </div>
   );

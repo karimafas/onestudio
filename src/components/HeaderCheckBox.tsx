@@ -15,7 +15,7 @@ export function HeaderCheckBox(props: {
           props.selectAll();
         }
       }}
-      className={`cursor-pointer min-h-[20px] min-w-[20px] transition-all border border-light_purple2 border-[3px] rounded flex flex-column justify-center items-center ${
+      className={`cursor-pointer min-h-[20px] min-w-[20px] transition-all border-light_purple2 border-[3px] rounded flex flex-column justify-center items-center ${
         props.selectedCount === 0 ? "" : "bg-light_purple border-light_purple"
       }`}
     >

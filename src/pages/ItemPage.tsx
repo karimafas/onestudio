@@ -6,7 +6,6 @@ import {
   deleteDataItem,
   getLastUserActivity,
   loadItemComments,
-  reloadItem,
   updateItem,
 } from "../features/data/dataSlice";
 import { ItemDfo } from "../objects/InventoryItem";
@@ -19,12 +18,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
 import { openSnack, SnackType } from "../features/data/uiSlice";
 import { Status } from "../objects/Status";
-import { StringHelper } from "../helpers/StringHelper";
 import { ItemForm } from "../components/ItemForm";
 import { CommentSection } from "../components/CommentSection";
 import { StatusSelect } from "../components/StatusSelect";
 import { ItemRepository } from "../repositories/ItemRepository";
 import { CustomSelect } from "../components/CustomSelect";
+import { toFirstUpperCase } from "../helpers/StringHelper";
 
 function useForceUpdate() {
   const [_, setValue] = useState(0);
@@ -228,7 +227,7 @@ export function ItemPage() {
               elements={statuses.map((s) => {
                 return {
                   id: s.id,
-                  value: StringHelper.toFirstUpperCase(s.name),
+                  value: toFirstUpperCase(s.name),
                 };
               })}
             />

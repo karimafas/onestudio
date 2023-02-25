@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ImageHelper, Images } from "../helpers/ImageHelper";
-import { StringHelper } from "../helpers/StringHelper";
+import { toFirstUpperCase } from "../helpers/StringHelper";
 import { ColumnCsvMatch } from "../pages/ImportPage";
 import { ValidationObject } from "../services/ValidationService";
 import { CustomSelect, SelectElement } from "./CustomSelect";
@@ -28,7 +28,7 @@ export function MissingColumns(props: {
       {missingColumns.map((m) => (
         <div className="flex flex-row justify-between items-start w-[20rem] mb-4">
           <span className="text-light_blue font-semibold mt-[5px]">
-            {StringHelper.toFirstUpperCase(m)}
+            {toFirstUpperCase(m)}
           </span>
           <CustomSelect
             elements={elements}

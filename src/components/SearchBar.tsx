@@ -1,6 +1,6 @@
 export function SearchBar(props: { onChange: Function }) {
   return (
-    <div className="h-10 w-1/3 rounded-lg border border border-light_purple2 border-[3px] px-2">
+    <div className="h-10 w-1/3 rounded-lg border-light_purple2 border-[2px] px-2">
       <input
         onChange={(e) => props.onChange(e.target.value)}
         placeholder="Search..."

@@ -4,7 +4,7 @@ import { PrimaryButton } from "./PrimaryButton";
 import Papa from "papaparse";
 import { ImportError } from "../pages/ImportPage";
 import { AppAlert, AppAlertType } from "./AppAlert";
-import { StringHelper } from "../helpers/StringHelper";
+import { toFirstUpperCase } from "../helpers/StringHelper";
 
 export function UploadCsv(props: {
   callback: Function;
@@ -43,7 +43,7 @@ export function UploadCsv(props: {
   const message =
     props.error === ImportError.missingColumns
       ? `${props.error} ${props.missingColumns
-          .map((mc) => StringHelper.toFirstUpperCase(mc))
+          .map((mc) => toFirstUpperCase(mc))
           .join(", ")}.`
       : props.error;
 

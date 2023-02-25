@@ -1,4 +1,4 @@
-import { StringHelper } from "../helpers/StringHelper";
+import { toFirstUpperCase } from "../helpers/StringHelper";
 
 export enum PrimitiveStatuses {
   faulty = "faulty",
@@ -37,6 +37,6 @@ export class Status {
   public get displayName() {
     let value = "";
     this.name === "repairing" ? (value = "in repair") : (value = this.name);
-    return StringHelper.toFirstUpperCase(value);
+    return toFirstUpperCase(value);
   }
 }

@@ -24,7 +24,6 @@ export class AppConstants {
   ];
 
   static tableColumns = [
-    new TableColumn("select", "", true, 5, 0),
     new TableColumn("details", "Details", true, 15, 0),
     new TableColumn("price", "Price", true, 10, 0),
     new TableColumn("location", "Location", true, 10, 0),
