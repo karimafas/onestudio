@@ -208,13 +208,14 @@ export function ItemPage() {
             </div>
           </div>
           <div className="w-1/2 flex flex-col items-end">
-            <div className="flex flex-row justify-end w-[10em]">
+            <div className="flex flex-row justify-end w-[11em]">
               <SquareButton
                 icon={ImageHelper.image(Images.delete)}
                 onClick={() => setDeleteOpen(true)}
               />
               <PrimaryButton
                 style="ml-4"
+                iconStyle="w-5"
                 icon={ImageHelper.image(Images.save)}
                 text="Save"
                 onClick={() => handleSubmit()}

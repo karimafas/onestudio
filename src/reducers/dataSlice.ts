@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import storage from "../firebaseConfig";
+import storage from "../config/FirebaseConfig";
 import { Category } from "../objects/Category";
 import { Comment } from "../objects/Comment";
 import { FileUpload } from "../objects/FileUpload";

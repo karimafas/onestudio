@@ -1,8 +1,8 @@
-import { ref, deleteObject } from "firebase/storage";
+import { deleteObject, ref } from "firebase/storage";
+import storage from "../config/FirebaseConfig";
 import { FileUpload } from "../objects/FileUpload";
 import { LoggerService } from "../services/LoggerService";
 import { RequestService, RequestType } from "../services/RequestService";
-import storage from "../firebaseConfig";
 
 export class FileRepository {
   public static async createFile(
