@@ -152,6 +152,7 @@ export function InvitationPage() {
         backgroundColor="bg-blue"
         textColor="text-white"
         icon={ImageHelper.image(Images.check)}
+        iconStyle="w-4"
         onClick={_register}
         style="mt-8"
       />

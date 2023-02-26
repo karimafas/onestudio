@@ -60,7 +60,7 @@ export function ResetEmailForm() {
             validationObject={validationObject}
             variant="outlined"
             placeholder="Email"
-            width="w-64"
+            width="w-[16em]"
             style="mt-8"
           />
           <PrimaryButton

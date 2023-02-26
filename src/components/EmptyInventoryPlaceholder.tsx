@@ -19,6 +19,7 @@ export function EmptyInventoryPlaceholder(props: {
             textColor="text-white"
             icon={ImageHelper.image(Images.addWhite)}
             onClick={() => props.addItemCallback()}
+            iconStyle="w-5"
           />
         </div>
       </div>

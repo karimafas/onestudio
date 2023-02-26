@@ -30,7 +30,6 @@ export function ResetPasswordForm(props: { token: string }) {
     setValidationObject(object);
 
     if (object.isValid) {
-      // Reset password endpoint.
       const success = await AuthRepository.resetPassword(token, dfo.password);
 
       if (success) navigate("/?reset=true");
@@ -82,7 +81,7 @@ export function ResetPasswordForm(props: { token: string }) {
             validationObject={validationObject}
             variant="outlined"
             placeholder="Password"
-            width="w-64"
+            width="w-[16em]"
             style="mt-8"
             obscureText
           />
